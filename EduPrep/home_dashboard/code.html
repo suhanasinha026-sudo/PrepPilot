@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep - Home Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_chatbot.css"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .hover-shadow:hover { box-shadow: 0 10px 30px rgba(99, 102, 241, 0.08); transform: translateY(-2px); }
+    .gradient-bg { background: linear-gradient(135deg, #4648d4 0%, #b10e6b 100%); }
+    .progress-gradient { background: linear-gradient(90deg, #4648d4 0%, #b10e6b 100%); }
+    .safe-area-pb { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+    
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.94; transform: scale(0.99); }
+    }
+    .animate-pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+    
+    .academic-bg {
+      background-color: #f8f9fc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(70, 72, 212, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(177, 14, 107, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(70, 72, 212, 0.03) 0px, transparent 50%),
+        radial-gradient(#4648d4 0.6px, transparent 0.6px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+    }
+
+    :focus-visible {
+      outline: 2px solid #4648d4 !important;
+      outline-offset: 2px !important;
+    }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="bg-background text-on-background min-h-screen flex flex-col items-center w-full antialiased academic-bg">
+  
+  <!-- TopAppBar -->
+  <header class="w-full top-0 sticky z-40 bg-surface shadow-sm border-b border-surface-container">
+    <div class="flex justify-between items-center px-4 md:px-8 py-3 w-full max-w-7xl mx-auto">
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="flex items-center gap-2.5" title="EduPrep Public Homepage">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-on-primary shadow-md">
+            <span class="material-symbols-outlined text-xl">school</span>
+          </div>
+          <span class="font-extrabold text-xl tracking-tight text-primary">EduPrep</span>
+        </a>
+
+        <!-- Desktop Student Website Navigation Links -->
+        <nav aria-label="Student Navigation" class="hidden lg:flex items-center gap-1 ml-4 text-xs font-semibold text-on-surface-variant">
+          <a href="../home_dashboard/code.html" class="px-2.5 py-1.5 rounded-lg bg-primary-fixed text-primary">Dashboard</a>
+          <a href="../previous_year_papers/code.html" class="px-2.5 py-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">Question Papers</a>
+          <a href="../mcq_practice_exam/code.html" class="px-2.5 py-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">Practice Tests</a>
+          <a href="../revision_flashcards/code.html" class="px-2.5 py-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">Flashcards</a>
+          <a href="../academic_setup/code.html" class="px-2.5 py-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">Study Planner</a>
+          <a href="../user_profile_progress/code.html" class="px-2.5 py-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors">Profile</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <!-- Interactive Current Semester Switcher Button -->
+        <button onclick="EduPrep.openSemesterModal((s) => onSemesterSelected(s))" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant/60 text-xs font-bold text-primary hover:bg-primary-fixed/30 hover:border-primary transition-all" title="Click to Switch Active Semester">
+          <span class="material-symbols-outlined text-sm">calendar_month</span>
+          <span id="activeSemesterBadge">Sem 4</span>
+          <span class="material-symbols-outlined text-xs">arrow_drop_down</span>
+        </button>
+
+        <!-- Notification Center Button -->
+        <button onclick="toggleNotificationsModal()" class="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant relative" title="Notifications">
+          <span class="material-symbols-outlined text-xl">notifications</span>
+          <span class="w-2 h-2 rounded-full bg-error absolute top-2 right-2 ring-2 ring-surface"></span>
+        </button>
+
+        <!-- Student Profile Avatar -->
+        <a href="../user_profile_progress/code.html" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary-container hover:scale-105 transition-transform" title="View Profile">
+          <img id="userHeaderAvatar" alt="Student Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTVTYsIgi8LHdNnRRuWq7WIQKHVif0TlNP2ZGt5StF7Jud3Gs6vJQFkiI_qUrzoEb70z07NIkSS2_FPOt1QOJAbG_z1UCQF3WZREwn8LQ303AF2KGL_FvIsWwcEBv_58SCacYxsAa4LwQhFIaWqE0p3A6nQmz2-PaZX8Kg5GnREbykYMsqeY9iQUPepRuFz-BLvUMNC7zQs_yEkbyzAAZa8CifAo7-8Qk5s6x_H8lKuQkdoWTzOKzRA"/>
+        </a>
+
+        <!-- Sign Out Action Button -->
+        <button onclick="EduPrep.logout()" class="p-2 rounded-full hover:bg-error-container/30 text-on-surface-variant hover:text-error transition-colors" title="Sign Out of EduPrep">
+          <span class="material-symbols-outlined text-lg">logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow safe-area-pb space-y-6">
+    
+    <!-- Greeting & Academic Context Card (Balanced Desktop 2-column flex) -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 bg-surface-container-lowest rounded-2xl p-5 md:p-6 border border-outline-variant/30 ambient-shadow">
+      <div class="space-y-1.5 max-w-3xl">
+        <div class="flex items-center gap-2 flex-wrap">
+          <h2 class="text-xl md:text-2xl font-extrabold text-on-surface tracking-tight" id="greetingHeading">Good morning, Aryan Sharma 👋</h2>
+          <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1 shrink-0">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span>
+            Exam Prep Active
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm text-outline flex flex-wrap items-center gap-2 leading-relaxed break-words" id="academicSubtitle">
+          <span class="font-medium text-on-surface-variant">Vidyalankar Institute of Technology (VIT Wadala)</span>
+          <span>•</span>
+          <span class="font-medium text-on-surface-variant">Mumbai University</span>
+          <span>•</span>
+          <span class="font-medium text-on-surface-variant">Computer Engineering</span>
+          <span>•</span>
+          <span class="font-bold text-primary px-2 py-0.5 rounded bg-primary-fixed/50">Semester 4</span>
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+        <button onclick="EduPrep.openSemesterModal(() => window.location.reload())" class="px-4 py-2.5 rounded-xl border border-outline-variant/70 hover:bg-surface-container text-xs font-semibold text-on-surface flex items-center gap-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-primary" title="Switch Active Semester">
+          <span class="material-symbols-outlined text-sm text-outline">swap_horiz</span>
+          <span>Switch Semester</span>
+        </button>
+        <a href="../academic_setup/code.html" class="px-4 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:bg-primary-container flex items-center gap-1.5 shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-primary" title="Open Study Planner and Syllabus Blueprint">
+          <span class="material-symbols-outlined text-sm">explore</span>
+          <span>Curriculum Blueprint</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Search Bar with Live Suggestions Dropdown (Max width 4xl) -->
+    <div class="relative w-full max-w-4xl mx-auto">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+          <span class="material-symbols-outlined">search</span>
+        </div>
+        <input id="globalSearchInput" oninput="handleGlobalSearch(this.value)" onkeydown="handleSearchKeyDown(event)" class="w-full h-13 pl-12 pr-12 rounded-2xl bg-surface-container-lowest border border-outline-variant/60 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all text-sm font-medium text-on-surface placeholder:text-on-surface-variant/70 ambient-shadow" placeholder="Search subjects (OS, DBMS, Networks, Anatomy), chapters, formulas, PYQs, flashcards..." type="text" autocomplete="off" aria-label="Search Subjects and Chapters"/>
+        <button onclick="clearSearch()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-outline hover:text-primary transition-colors" title="Clear Search">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <!-- Live Search Results Dropdown -->
+      <div id="searchResultsDropdown" class="hidden absolute top-14 left-0 right-0 bg-surface-container-lowest border border-outline-variant/50 rounded-2xl shadow-xl z-50 overflow-hidden max-h-96 overflow-y-auto p-2" role="listbox" aria-label="Search Results">
+        <!-- populated dynamically -->
+      </div>
+    </div>
+
+    <!-- Dashboard Grid (Bento style) -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+      
+      <!-- Finals Countdown (Spans 4 col on desktop) -->
+      <div onclick="openFinalsScheduleModal()" class="md:col-span-4 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all relative overflow-hidden group cursor-pointer border border-outline-variant/30 flex flex-col justify-between h-full">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-error-container rounded-bl-full opacity-20 -z-10 group-hover:scale-110 transition-transform"></div>
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-xs text-error bg-error-container/80 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs">timer</span>
+              Upcoming Finals
+            </span>
+            <span class="material-symbols-outlined text-outline">event</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tighter">14</span>
+            <span class="text-lg font-semibold text-outline">Days Remaining</span>
+          </div>
+          <p class="text-xs font-semibold text-on-surface-variant mt-2" id="nextExamSubjectLabel">CSC401: Operating Systems & CSC403: DBMS</p>
+        </div>
+        <div class="mt-6 pt-4 border-t border-surface-container flex items-center justify-between">
+          <p class="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">
+            <span>View Full Time Table</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </p>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-medium">MU / Autonomous</span>
+        </div>
+      </div>
+
+      <!-- Preparation Progress (Spans 8 col on desktop) -->
+      <div class="md:col-span-8 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-base font-bold text-on-surface">Overall Semester Syllabus Preparation</h3>
+              <p class="text-xs text-outline mt-0.5" id="prepSyllabusLabel">Semester 4 • 5 Core Disciplines Mapped</p>
+            </div>
+            <div class="bg-primary-fixed text-primary px-3.5 py-1.5 rounded-xl text-sm font-extrabold">
+              <span id="prepPercentage">68%</span> Ready
+            </div>
+          </div>
+
+          <div class="space-y-2 mb-5">
+            <div class="flex justify-between text-xs font-semibold">
+              <span class="text-on-surface-variant">Syllabus Completion & Mastery</span>
+              <span class="text-on-surface" id="prepReadySubjectsLabel">0 of 5 Subjects Exam-Ready</span>
+            </div>
+            <div class="w-full bg-surface-container-high rounded-full h-3 overflow-hidden">
+              <div id="prepOverallProgressBar" class="progress-gradient h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Subject Mini-Tags (Clickable to switch subject context or details) -->
+        <div>
+          <span class="text-[11px] font-semibold text-outline uppercase tracking-wider block mb-2">Enrolled Subjects in Active Semester:</span>
+          <div class="flex flex-wrap gap-2" id="subjectChipsContainer">
+            <!-- Dynamically populated from active sem -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access Grid (Spans 12 col) -->
+      <div class="md:col-span-12">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-base">bolt</span>
+            <span>Quick Study Shortcuts</span>
+          </h3>
+          <span class="text-xs text-on-surface-variant">Instant jump to prep tools</span>
+        </div>
+
+          <!-- Questions / Practice Tests -->
+          <a href="../mcq_practice_exam/code.html" class="bg-surface-container-lowest p-4 rounded-2xl ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col items-start gap-2.5 group active:scale-95">
+            <div class="p-3 bg-secondary-fixed rounded-xl text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+              <span class="material-symbols-outlined text-2xl">quiz</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface group-hover:text-secondary">MCQ Practice Exam</h4>
+              <p class="text-[11px] text-on-surface-variant">Timed questions with scoring</p>
+            </div>
+          </a>
+
+          <!-- Resources Library -->
+          <a href="../resources_dashboard/code.html" class="bg-surface-container-lowest p-4 rounded-2xl ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col items-start gap-2.5 group active:scale-95">
+            <div class="p-3 bg-primary-fixed rounded-xl text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+              <span class="material-symbols-outlined text-2xl">menu_book</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface group-hover:text-primary">Study Resources</h4>
+              <p class="text-[11px] text-on-surface-variant">Notes, videos & chapters</p>
+            </div>
+          </a>
+
+          <!-- Revision Flashcards -->
+          <a href="../revision_flashcards/code.html" class="bg-surface-container-lowest p-4 rounded-2xl ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col items-start gap-2.5 group active:scale-95">
+            <div class="p-3 bg-tertiary-fixed rounded-xl text-tertiary group-hover:bg-tertiary group-hover:text-on-tertiary transition-colors">
+              <span class="material-symbols-outlined text-2xl">style</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface group-hover:text-tertiary">3D Flashcards</h4>
+              <p class="text-[11px] text-on-surface-variant">15 revision concept cards</p>
+            </div>
+          </a>
+
+          <!-- PYQs -->
+          <a href="../previous_year_papers/code.html" class="bg-surface-container-lowest p-4 rounded-2xl ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col items-start gap-2.5 group active:scale-95">
+            <div class="p-3 bg-surface-container-high rounded-xl text-on-surface group-hover:bg-primary group-hover:text-on-primary transition-colors">
+              <span class="material-symbols-outlined text-2xl">history_edu</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface group-hover:text-primary">Past Year Papers</h4>
+              <p class="text-[11px] text-on-surface-variant">2018–2023 exam papers</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Continue Studying & Study AI Promo Row -->
+      <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-12 gap-5">
+        
+        <!-- Continue Studying (8 cols) -->
+        <div class="md:col-span-8 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div class="flex-grow w-full">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Continue Subject Preparation</span>
+            </div>
+            <h4 class="text-lg font-bold text-on-surface mb-0.5" id="resumeSubjectTitle">Operating Systems (CSC401)</h4>
+            <p class="text-xs text-outline mb-3" id="resumeSubjectUnit">Unit 3: Process Synchronization & Semaphore Solutions</p>
+            <div class="flex items-center gap-3">
+              <div class="flex-grow bg-surface-container-high rounded-full h-2">
+                <div class="bg-primary h-2 rounded-full" id="resumeSubjectBar" style="width: 58%"></div>
+              </div>
+              <span class="text-xs font-bold text-on-surface-variant" id="resumeSubjectPercent">58%</span>
+            </div>
+          </div>
+
+          <a id="resumeSubjectBtn" href="../resources_dashboard/code.html?subject=CSC401" class="w-full sm:w-auto px-6 py-3 bg-primary text-on-primary rounded-xl text-xs font-bold hover:opacity-90 active:scale-95 transition-all whitespace-nowrap flex items-center justify-center gap-2 shadow-sm">
+            <span>Resume Subject</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </a>
+        </div>
+
+        <!-- Study AI Promo (4 cols) -->
+        <div onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();" class="md:col-span-4 gradient-bg rounded-2xl p-6 text-on-primary shadow-[0_10px_30px_rgba(99,102,241,0.2)] hover:shadow-[0_15px_40px_rgba(99,102,241,0.3)] transition-all cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 w-24 h-24 border-4 border-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+          <div class="relative z-10">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+              <span class="text-xs font-bold bg-white/20 px-2.5 py-0.5 rounded-full text-white backdrop-blur-sm">EduPrep AI Tutor</span>
+            </div>
+            <h4 class="text-xl font-extrabold text-white mb-1">Stuck on a Concept?</h4>
+            <p class="text-xs text-white/90 leading-relaxed mb-4">Ask Banker's algorithm, subnetting, or 5-mark answer templates for your semester exams.</p>
+          </div>
+          <div class="relative z-10 flex items-center justify-between pt-2">
+            <span class="text-xs font-bold text-white group-hover:underline">Start AI Study Chat →</span>
+            <div class="bg-white text-primary p-2 rounded-full shadow-lg group-hover:translate-x-1 transition-transform">
+              <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- PART 1: THIS SEMESTER ACADEMIC SUMMARY (Compact Overview) -->
+      <!-- ========================================================= -->
+      <div class="md:col-span-12 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-container">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-xl">auto_stories</span>
+            </div>
+            <div>
+              <h3 class="text-base font-extrabold text-on-surface" id="thisSemHeaderTitle">This Semester: Semester 4 — Computer Engineering</h3>
+              <p class="text-xs text-outline" id="thisSemHeaderSubtitle">Rev-2019 'C' Scheme Syllabus • Mumbai University Mapped</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              Curriculum Synchronized
+            </span>
+          </div>
+        </div>
+
+        <!-- Academic Resource Metrics Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-4">
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-primary-fixed/60 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">menu_book</span>
+            </div>
+            <div>
+              <span class="text-lg font-black text-on-surface block leading-tight" id="metricSubjectCount">5</span>
+              <span class="text-[11px] text-outline font-medium">Core Subjects</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-secondary-fixed/60 text-secondary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">layers</span>
+            </div>
+            <div>
+              <span class="text-lg font-black text-on-surface block leading-tight" id="metricResourcesCount">28</span>
+              <span class="text-[11px] text-outline font-medium">Study Units & Notes</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-tertiary-fixed/60 text-tertiary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">style</span>
+            </div>
+            <div>
+              <span class="text-lg font-black text-on-surface block leading-tight" id="metricFlashcardsCount">60</span>
+              <span class="text-[11px] text-outline font-medium">3D Flashcards</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">fact_check</span>
+            </div>
+            <div>
+              <span class="text-lg font-black text-on-surface block leading-tight" id="metricMcqCount">60</span>
+              <span class="text-[11px] text-outline font-medium">Practice MCQs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- PART 2: YOUR CURRENT SUBJECTS CURRICULUM GRID -->
+      <!-- ========================================================= -->
+      <div class="md:col-span-12">
+        <div class="flex items-center justify-between mb-3.5">
+          <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-base">collections_bookmark</span>
+            <span>Your Current Subjects</span>
+          </h3>
+          <span class="text-xs text-on-surface-variant" id="subjectsCountLabel">5 Enrolled Courses</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="currentSubjectsGridContainer">
+          <!-- Dynamically populated from active semester subjects -->
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- PART 2B: CHAPTER PROGRESS & REVISION STATUS TRACKER -->
+      <!-- ========================================================= -->
+      <div class="md:col-span-12 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-container">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-xl">checklist</span>
+            </div>
+            <div>
+              <h3 class="text-base font-extrabold text-on-surface">Chapter Progress & Status Tracker</h3>
+              <p class="text-xs text-outline">Real-time completion tracking with direct chapter resumption and safe restart controls</p>
+            </div>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="filterChapterStatus('all')" id="btnFilterChAll" class="px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold transition-colors">All Chapters</button>
+            <button onclick="filterChapterStatus('completed')" id="btnFilterChCompleted" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant transition-colors">Completed</button>
+            <button onclick="filterChapterStatus('inprogress')" id="btnFilterChInProgress" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant transition-colors">In Progress</button>
+            <button onclick="filterChapterStatus('pending')" id="btnFilterChPending" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant transition-colors">Pending</button>
+          </div>
+        </div>
+
+        <!-- Chapters List Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-5" id="chapterStatusGridContainer">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- PART 3: RECOMMENDED FOR YOU & UPCOMING PRACTICE -->
+      <!-- ========================================================= -->
+      <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-12 gap-5">
+        
+        <!-- Recommended For You (7 Cols) -->
+        <div class="md:col-span-7 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary text-base">recommend</span>
+                <span>Recommended For You</span>
+              </h3>
+              <span class="text-[11px] font-semibold text-outline">Based on Exam Syllabus</span>
+            </div>
+            
+            <div class="space-y-2.5" id="recommendationsListContainer">
+              <!-- Dynamically populated clickable recommendations -->
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs text-outline">
+            <span>High-Yield Revision Pathways</span>
+            <a href="../resources_dashboard/code.html" class="text-primary font-bold hover:underline">Explore Library →</a>
+          </div>
+        </div>
+
+        <!-- Upcoming Practice & Mock Exams (5 Cols) -->
+        <div class="md:col-span-5 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">edit_calendar</span>
+                <span>Upcoming Practice</span>
+              </h3>
+              <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Active Prep</span>
+            </div>
+
+            <div class="space-y-3">
+              <a href="../mcq_practice_exam/code.html" class="p-3.5 rounded-xl bg-surface-container-low hover:bg-primary-fixed/20 border border-outline-variant/30 flex items-center justify-between transition-all group">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs">
+                    <span class="material-symbols-outlined text-base">quiz</span>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-on-surface group-hover:text-primary">15-Question MCQ Benchmark</h4>
+                    <p class="text-[11px] text-outline">Timed test with instant accuracy score</p>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </a>
+
+              <a href="../previous_year_papers/code.html" class="p-3.5 rounded-xl bg-surface-container-low hover:bg-secondary-fixed/20 border border-outline-variant/30 flex items-center justify-between transition-all group">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-secondary-fixed text-secondary flex items-center justify-center font-bold text-xs">
+                    <span class="material-symbols-outlined text-base">history_edu</span>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-on-surface group-hover:text-secondary">Past 5-Year Question Papers</h4>
+                    <p class="text-[11px] text-outline">May 2024 & Dec 2023 solved papers</p>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined text-base text-outline group-hover:text-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </a>
+
+              <a href="../mcq_practice_exam/code.html" class="p-3.5 rounded-xl bg-surface-container-low hover:bg-tertiary-fixed/20 border border-outline-variant/30 flex items-center justify-between transition-all group">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-tertiary-fixed text-tertiary flex items-center justify-center font-bold text-xs">
+                    <span class="material-symbols-outlined text-base">quiz</span>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-on-surface group-hover:text-tertiary">MCQ Practice & Tests</h4>
+                    <p class="text-[11px] text-outline">Timed assessments with scoring</p>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined text-base text-outline group-hover:text-tertiary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs text-outline">
+            <span>Marking Scheme: +1 / 0.0</span>
+            <span class="text-primary font-bold">Standard Model</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- PART 4: HIGH PRIORITY TOPICS & RECENT LEARNING ACTIVITY -->
+      <!-- ========================================================= -->
+      <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-12 gap-5">
+        
+        <!-- High Priority Topics (7 Cols) -->
+        <div class="md:col-span-7 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-600 text-base">star</span>
+                <span>High Priority Exam Topics</span>
+              </h3>
+              <span class="text-[11px] text-outline font-semibold">Sorted by PYQ Frequency</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="highPriorityTopicsContainer">
+              <!-- Dynamically populated from high yield topic catalog -->
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs text-outline">
+            <span>Guaranteed 10-Mark Questions</span>
+            <a href="../previous_year_papers/code.html" class="text-primary font-bold hover:underline">View All PYQ Trends →</a>
+          </div>
+        </div>
+
+        <!-- Recent Activity (5 Cols) -->
+        <div class="md:col-span-5 bg-surface-container-lowest rounded-2xl p-6 ambient-shadow hover-shadow transition-all border border-outline-variant/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-base">schedule</span>
+                <span>Recent Learning Activity</span>
+              </h3>
+              <span class="text-[11px] text-outline font-semibold">Active Session</span>
+            </div>
+
+            <div class="space-y-3" id="recentActivityListContainer">
+              <!-- Dynamically rendered activity or proper empty state -->
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs text-outline">
+            <span id="sessionStreakLabel">Current Streak: 5 Days</span>
+            <a href="../user_profile_progress/code.html" class="text-primary font-bold hover:underline">View Learning Analytics →</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Restart Chapter Confirmation Modal -->
+  <div id="restartChapterModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-outline-variant/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-surface-container pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-xl">restart_alt</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-on-surface">Restart Chapter Progress?</h3>
+            <p class="text-xs text-outline" id="restartModalSubjectLabel">Operating Systems</p>
+          </div>
+        </div>
+        <button onclick="closeRestartChapterModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-2 text-xs leading-relaxed text-on-surface-variant">
+        <p>
+          Are you sure you want to reset your progress for <strong class="text-on-surface" id="restartModalChapterTitle">Chapter</strong>?
+        </p>
+        <p class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 text-[11px]">
+          Resetting will set this chapter's status back to <span class="font-bold text-outline">Pending</span> and recalculate your overall semester preparation score. Your notes, bookmarked PYQs, and other subjects will not be changed.
+        </p>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2.5">
+        <button onclick="closeRestartChapterModal()" class="px-4 py-2.5 rounded-xl border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container transition-colors">
+          Cancel
+        </button>
+        <button id="btnConfirmRestartChapter" onclick="confirmRestartChapter()" class="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">restart_alt</span>
+          <span>Reset Chapter</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finals Schedule Modal -->
+  <div id="finalsScheduleModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-outline-variant/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-surface-container pb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-error text-2xl">event_upcoming</span>
+          <div>
+            <h3 class="font-bold text-base text-on-surface">Final Semester Exam Schedule</h3>
+            <p class="text-xs text-on-surface-variant" id="modalSemSubtitle">Semester 4 • Theory Examination (80 Marks)</p>
+          </div>
+        </div>
+        <button onclick="closeFinalsScheduleModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-2.5 text-xs" id="finalsTimetableList">
+        <!-- Dynamically generated for active semester -->
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="closeFinalsScheduleModal()" class="px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-opacity">
+          Close Schedule
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Center Modal -->
+  <div id="notificationsModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-5 shadow-2xl border border-outline-variant/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-surface-container pb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">notifications</span>
+          <h3 class="font-bold text-sm text-on-surface">Academic Alerts & Notices</h3>
+        </div>
+        <button onclick="toggleNotificationsModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-xl bg-primary-fixed/20 border border-primary/20">
+          <span class="font-bold text-primary block">Official KT / Internal Assessment Window</span>
+          <p class="text-on-surface-variant mt-0.5">Term work and lab journal submissions deadline extended to next Friday.</p>
+          <span class="text-[10px] text-outline mt-1 block">2 hours ago</span>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <span class="font-bold text-on-surface block">Smart India Hackathon 2026 Nominated</span>
+          <p class="text-on-surface-variant mt-0.5">Explore college-level internal screening criteria in Opportunities tab.</p>
+          <span class="text-[10px] text-outline mt-1 block">1 day ago</span>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <span class="font-bold text-on-surface block">PYQ 2023 Answer Keys Uploaded</span>
+          <p class="text-on-surface-variant mt-0.5">Verified solutions for Operating Systems Dec 2023 are now accessible.</p>
+          <span class="text-[10px] text-outline mt-1 block">3 days ago</span>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="toggleNotificationsModal()" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface">
+          Mark all as read
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BottomNavBar (Mobile Only) -->
+  <nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 bg-surface shadow-[0_-4px_20px_rgba(0,0,0,0.04)] z-40 md:hidden border-t border-surface-container">
+    <a class="flex flex-col items-center justify-center text-primary font-bold transition-all text-xs" href="../home_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../resources_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">menu_book</span>
+      <span class="text-[10px] mt-0.5">Resources</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();">
+      <span class="material-symbols-outlined text-xl">smart_toy</span>
+      <span class="text-[10px] mt-0.5">Study AI</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../previous_year_papers/code.html">
+      <span class="material-symbols-outlined text-xl">description</span>
+      <span class="text-[10px] mt-0.5">Papers</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../user_profile_progress/code.html">
+      <span class="material-symbols-outlined text-xl">person</span>
+      <span class="text-[10px] mt-0.5">Profile</span>
+    </a>
+  </nav>
+
+  <script src="../shared/eduprep_chapters_data.js"></script>
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_chatbot.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    let activeChapterFilter = 'all';
+    let pendingRestartType = 'chapter'; // 'chapter' | 'subject'
+    let pendingRestartId = null;
+    let pendingRestartTitle = '';
+    let pendingRestartSubject = '';
+
+    document.addEventListener("DOMContentLoaded", () => {
+      refreshDashboardState();
+    });
+
+    function refreshDashboardState() {
+      const state = EduPrep.getState();
+      
+      // Update greeting
+      document.getElementById("greetingHeading").textContent = `Good day, ${state.user.name} 👋`;
+      
+      // Determine college category / autonomous badge
+      const col = EduPrep.colleges.find(c => c.id === state.academic.collegeId) || 
+                  EduPrep.colleges.find(c => c.name === state.academic.college);
+      const colCategory = col ? (col.isAutonomous ? "Autonomous" : "Affiliated") : "Autonomous";
+
+      document.getElementById("academicSubtitle").innerHTML = `
+        <span class="font-semibold text-on-surface">${state.academic.college}</span>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-bold">${colCategory}</span>
+        <span>•</span>
+        <span>${state.academic.university}</span>
+        <span>•</span>
+        <span>${state.academic.branch}</span>
+        <span>•</span>
+        <span class="font-bold text-primary">Semester ${state.academic.semester}</span>
+      `;
+
+      // Active semester badge
+      document.getElementById("activeSemesterBadge").textContent = `Sem ${state.academic.semester}`;
+      
+      const subjects = EduPrep.getSubjects(state.academic.branch, state.academic.semester);
+      document.getElementById("prepSyllabusLabel").textContent = `Semester ${state.academic.semester} • ${subjects.length} Core Disciplines Mapped`;
+
+      // Real Overall Progress Calculation from Chapters & Topics
+      const completedChapters = state.progress.completedChapters || [];
+      let totalSemChapters = 0;
+      let completedSemChapters = 0;
+      let readySubjectsCount = 0;
+
+      subjects.forEach(s => {
+        const chs = (typeof EduPrepChapters !== 'undefined' ? EduPrepChapters.getChapters(s.name, state.academic.semester) : []) || [];
+        totalSemChapters += chs.length;
+        const done = chs.filter(c => completedChapters.includes(c.id)).length;
+        completedSemChapters += done;
+        if (chs.length > 0 && done === chs.length) {
+          readySubjectsCount++;
+        }
+      });
+
+      const overallPct = totalSemChapters > 0 ? Math.round((completedSemChapters / totalSemChapters) * 100) : 0;
+      const prepPctEl = document.getElementById("prepPercentage");
+      if (prepPctEl) prepPctEl.textContent = `${overallPct}%`;
+      const prepBarEl = document.getElementById("prepOverallProgressBar");
+      if (prepBarEl) prepBarEl.style.width = `${overallPct}%`;
+      const readyLabelEl = document.getElementById("prepReadySubjectsLabel");
+      if (readyLabelEl) readyLabelEl.textContent = `${readySubjectsCount} of ${subjects.length} Subjects Exam-Ready`;
+
+      // Update resume card dynamically with last active subject & chapter
+      if (subjects.length > 0) {
+        const activeSubjName = state.progress.lastActiveSubject || subjects[0].name;
+        const activeSubj = subjects.find(s => s.name.toLowerCase() === activeSubjName.toLowerCase() || s.code.toLowerCase() === activeSubjName.toLowerCase()) || subjects[0];
+        const activeChList = (typeof EduPrepChapters !== 'undefined' ? EduPrepChapters.getChapters(activeSubj.name, state.academic.semester) : []) || [];
+        const activeChId = state.progress.lastActiveChapter || (activeChList[0] ? activeChList[0].id : null);
+        const activeCh = (activeChId && typeof EduPrepChapters !== 'undefined') ? EduPrepChapters.getChapterById(activeChId) : (activeChList[0] || null);
+        
+        const activeSubjDone = activeChList.filter(c => completedChapters.includes(c.id)).length;
+        const activeSubjPct = activeChList.length > 0 ? Math.round((activeSubjDone / activeChList.length) * 100) : 0;
+
+        const subTitleEl = document.getElementById("resumeSubjectTitle");
+        const subUnitEl = document.getElementById("resumeSubjectUnit");
+        const subBtnEl = document.getElementById("resumeSubjectBtn");
+        const subBarEl = document.getElementById("resumeSubjectBar");
+        const subPctEl = document.getElementById("resumeSubjectPercent");
+        const examLabel = document.getElementById("nextExamSubjectLabel");
+
+        if (subTitleEl) subTitleEl.textContent = `${activeSubj.name} (${activeSubj.code})`;
+        if (subUnitEl) subUnitEl.textContent = activeCh ? `${activeCh.number ? 'Chapter ' + activeCh.number + ': ' : ''}${activeCh.title}` : "Unit 1: Foundations & Architecture";
+        if (subBarEl) subBarEl.style.width = `${activeSubjPct}%`;
+        if (subPctEl) subPctEl.textContent = `${activeSubjPct}%`;
+        if (subBtnEl) subBtnEl.href = `../resources_dashboard/code.html?subject=${encodeURIComponent(activeSubj.name)}${activeChId ? '&chapter=' + encodeURIComponent(activeChId) : ''}`;
+        if (examLabel) {
+          const secondSubj = subjects[1] || activeSubj;
+          examLabel.textContent = `${activeSubj.code}: ${activeSubj.name} & ${secondSubj.code}: ${secondSubj.name}`;
+        }
+      }
+
+      // Update avatar
+      if (state.user.avatar) {
+        document.getElementById("userHeaderAvatar").src = state.user.avatar;
+      }
+
+      // Populate all dynamic dashboard academic sections
+      renderSubjectChips(state.academic.branch, state.academic.semester);
+      renderThisSemesterOverview(state.academic.branch, state.academic.semester, subjects);
+      renderCurrentSubjectsGrid(subjects);
+      renderChapterStatusTracker(subjects);
+      renderRecommendations(subjects);
+      renderHighPriorityTopics();
+      renderRecentActivity();
+    }
+
+    function renderSubjectChips(branch, sem) {
+      const container = document.getElementById("subjectChipsContainer");
+      const subjects = EduPrep.getSubjects(branch, sem);
+      
+      container.innerHTML = subjects.map((s, idx) => `
+        <a href="../resources_dashboard/code.html?subject=${encodeURIComponent(s.name)}" class="px-3 py-1.5 bg-surface-container-low hover:bg-primary-fixed/30 rounded-xl text-xs font-semibold text-on-surface flex items-center gap-1.5 border border-surface-variant transition-colors group" title="Open ${s.name} Resources">
+          <span class="w-2 h-2 rounded-full ${idx < 3 ? 'bg-primary' : 'bg-surface-variant'} block"></span>
+          <span class="group-hover:text-primary">${s.name}</span>
+          <span class="text-[10px] text-outline font-normal">(${s.code})</span>
+        </a>
+      `).join('');
+    }
+
+    function renderThisSemesterOverview(branch, sem, subjects) {
+      const state = EduPrep.getState();
+      const branchName = state.academic.branchName || state.academic.branch || "Computer Engineering";
+      
+      const headerTitle = document.getElementById("thisSemHeaderTitle");
+      if (headerTitle) headerTitle.textContent = `This Semester: Semester ${sem} — ${branchName}`;
+
+      const headerSubtitle = document.getElementById("thisSemHeaderSubtitle");
+      if (headerSubtitle) headerSubtitle.textContent = `Rev-2019 'C' Scheme Syllabus • ${state.academic.university || 'Mumbai University'} Mapped`;
+
+      const allFlash = EduPrep.getFlashcards();
+      const allMcq = EduPrep.getMcqBank();
+
+      const subCountEl = document.getElementById("metricSubjectCount");
+      if (subCountEl) subCountEl.textContent = subjects.length;
+
+      const resCountEl = document.getElementById("metricResourcesCount");
+      if (resCountEl) resCountEl.textContent = `${subjects.length * 6}`;
+
+      const flashCountEl = document.getElementById("metricFlashcardsCount");
+      if (flashCountEl) flashCountEl.textContent = `${allFlash.length}`;
+
+      const mcqCountEl = document.getElementById("metricMcqCount");
+      if (mcqCountEl) mcqCountEl.textContent = `${allMcq.length}`;
+
+      const subjectsCountLabel = document.getElementById("subjectsCountLabel");
+      if (subjectsCountLabel) subjectsCountLabel.textContent = `${subjects.length} Enrolled Disciplines`;
+    }
+
+    function renderCurrentSubjectsGrid(subjects) {
+      const container = document.getElementById("currentSubjectsGridContainer");
+      if (!container) return;
+
+      const state = EduPrep.getState();
+      const completedChapters = state.progress.completedChapters || [];
+
+      const subjectColors = [
+        { bg: "bg-primary-fixed", text: "text-primary", border: "border-primary/20" },
+        { bg: "bg-secondary-fixed", text: "text-secondary", border: "border-secondary/20" },
+        { bg: "bg-tertiary-fixed", text: "text-tertiary", border: "border-tertiary/20" },
+        { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-300/40" },
+        { bg: "bg-purple-100", text: "text-purple-800", border: "border-purple-300/40" }
+      ];
+
+      container.innerHTML = subjects.map((s, idx) => {
+        const col = subjectColors[idx % subjectColors.length];
+        const chList = (typeof EduPrepChapters !== 'undefined' ? EduPrepChapters.getChapters(s.name, state.academic.semester) : []) || [];
+        const sDone = chList.filter(c => completedChapters.includes(c.id)).length;
+        const progressPct = chList.length > 0 ? Math.round((sDone / chList.length) * 100) : 0;
+
+        return `
+          <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 ambient-shadow hover-shadow transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg ${col.bg} ${col.text} uppercase tracking-wider">
+                  ${s.code}
+                </span>
+                <span class="text-[11px] text-outline font-medium">80M Theory</span>
+              </div>
+
+              <h4 class="font-extrabold text-sm sm:text-base text-on-surface leading-snug mb-1">
+                ${s.name}
+              </h4>
+              <p class="text-xs text-outline mb-4">${chList.length} Structured Chapters • High-Yield Notes</p>
+
+              <div class="space-y-1.5 mb-4">
+                <div class="flex justify-between text-[11px] font-semibold">
+                  <span class="text-on-surface-variant">Syllabus Progress (${sDone}/${chList.length} Chapters)</span>
+                  <span class="text-on-surface font-bold">${progressPct}%</span>
+                </div>
+                <div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+                  <div class="bg-primary h-2 rounded-full transition-all" style="width: ${progressPct}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-surface-container flex items-center justify-between gap-2 text-xs">
+              <a href="../resources_dashboard/code.html?subject=${encodeURIComponent(s.name)}" class="font-bold text-primary hover:underline flex items-center gap-1">
+                <span>Study Chapters</span>
+                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </a>
+              <div class="flex items-center gap-1.5">
+                <button onclick="openRestartSubjectModal('${s.name.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg bg-surface-container hover:bg-amber-100 text-on-surface-variant hover:text-amber-800 transition-colors" title="Restart Progress for ${s.name}">
+                  <span class="material-symbols-outlined text-base">restart_alt</span>
+                </button>
+                <a href="../revision_flashcards/code.html?subject=${encodeURIComponent(s.name)}" class="p-1.5 rounded-lg bg-surface-container hover:bg-tertiary-fixed/30 text-on-surface-variant hover:text-tertiary transition-colors" title="Open Flashcards for ${s.name}">
+                  <span class="material-symbols-outlined text-base">style</span>
+                </a>
+                <a href="../mcq_practice_exam/code.html?subject=${encodeURIComponent(s.name)}" class="p-1.5 rounded-lg bg-surface-container hover:bg-primary-fixed/30 text-on-surface-variant hover:text-primary transition-colors" title="Open MCQs for ${s.name}">
+                  <span class="material-symbols-outlined text-base">quiz</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderChapterStatusTracker(subjects) {
+      const container = document.getElementById("chapterStatusGridContainer");
+      if (!container) return;
+
+      const state = EduPrep.getState();
+      const completedChapters = state.progress.completedChapters || [];
+      const lastActiveCh = state.progress.lastActiveChapter;
+
+      let allChapters = [];
+      subjects.forEach(s => {
+        const chList = (typeof EduPrepChapters !== 'undefined' ? EduPrepChapters.getChapters(s.name, state.academic.semester) : []) || [];
+        chList.forEach(ch => {
+          const isComp = completedChapters.includes(ch.id);
+          const isInProg = !isComp && (lastActiveCh === ch.id);
+          const status = isComp ? 'completed' : (isInProg ? 'inprogress' : 'pending');
+          allChapters.push({
+            ...ch,
+            subjectName: s.name,
+            subjectCode: s.code,
+            status: status
+          });
+        });
+      });
+
+      let filtered = allChapters;
+      if (activeChapterFilter !== 'all') {
+        filtered = allChapters.filter(c => c.status === activeChapterFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 text-center bg-surface-container-low rounded-xl border border-dashed border-outline-variant/50">
+            <span class="material-symbols-outlined text-3xl text-outline mb-1">checklist</span>
+            <p class="text-xs font-bold text-on-surface">No chapters found for filter: "${activeChapterFilter}"</p>
+            <p class="text-[11px] text-outline mt-0.5">Switch filter to view other semester chapters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(ch => {
+        let badgeHtml = '';
+        if (ch.status === 'completed') {
+          badgeHtml = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Completed</span>`;
+        } else if (ch.status === 'inprogress') {
+          badgeHtml = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>In Progress</span>`;
+        } else {
+          badgeHtml = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-surface-container text-on-surface-variant flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>Pending</span>`;
+        }
+
+        return `
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-surface-container text-primary">
+                  ${ch.subjectCode}
+                </span>
+                ${badgeHtml}
+              </div>
+              <h4 class="text-xs sm:text-sm font-bold text-on-surface leading-snug line-clamp-2">
+                ${ch.number ? 'Chapter ' + ch.number + ': ' : ''}${ch.title}
+              </h4>
+              <p class="text-[11px] text-outline mt-1 line-clamp-1">${ch.subjectName}</p>
+            </div>
+
+            <div class="pt-3 mt-3 border-t border-surface-container flex items-center justify-between text-xs">
+              <a href="../resources_dashboard/code.html?subject=${encodeURIComponent(ch.subjectName)}&chapter=${encodeURIComponent(ch.id)}" onclick="EduPrep.setLastActiveChapter('${ch.subjectName.replace(/'/g, "\\'")}', '${ch.id}')" class="font-bold text-primary hover:underline flex items-center gap-1">
+                <span>Resume</span>
+                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </a>
+              <button onclick="openRestartChapterModal('${ch.id}', '${ch.title.replace(/'/g, "\\'")}', '${ch.subjectName.replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-lg hover:bg-amber-100 text-[11px] font-semibold text-outline hover:text-amber-800 flex items-center gap-1 transition-colors" title="Restart Progress for this Chapter">
+                <span class="material-symbols-outlined text-xs">restart_alt</span>
+                <span>Restart</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterChapterStatus(filterKey) {
+      activeChapterFilter = filterKey;
+      ['btnFilterChAll', 'btnFilterChCompleted', 'btnFilterChInProgress', 'btnFilterChPending'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = "px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant transition-colors";
+      });
+      if (filterKey === 'all') document.getElementById('btnFilterChAll').className = "px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold transition-colors";
+      if (filterKey === 'completed') document.getElementById('btnFilterChCompleted').className = "px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold transition-colors";
+      if (filterKey === 'inprogress') document.getElementById('btnFilterChInProgress').className = "px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold transition-colors";
+      if (filterKey === 'pending') document.getElementById('btnFilterChPending').className = "px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold transition-colors";
+
+      const state = EduPrep.getState();
+      const subjects = EduPrep.getSubjects(state.academic.branch, state.academic.semester);
+      renderChapterStatusTracker(subjects);
+    }
+
+    function openRestartChapterModal(chapterId, chapterTitle, subjectName) {
+      pendingRestartType = 'chapter';
+      pendingRestartId = chapterId;
+      pendingRestartTitle = chapterTitle;
+      pendingRestartSubject = subjectName;
+
+      document.getElementById("restartModalChapterTitle").textContent = chapterTitle;
+      document.getElementById("restartModalSubjectLabel").textContent = `${subjectName} Chapter`;
+      document.getElementById("restartChapterModal").classList.remove("hidden");
+    }
+
+    function openRestartSubjectModal(subjectName) {
+      pendingRestartType = 'subject';
+      pendingRestartId = subjectName;
+      pendingRestartTitle = `All Chapters in ${subjectName}`;
+      pendingRestartSubject = subjectName;
+
+      document.getElementById("restartModalChapterTitle").textContent = `All chapters in ${subjectName}`;
+      document.getElementById("restartModalSubjectLabel").textContent = `${subjectName} Subject Reset`;
+      document.getElementById("restartChapterModal").classList.remove("hidden");
+    }
+
+    function closeRestartChapterModal() {
+      document.getElementById("restartChapterModal").classList.add("hidden");
+    }
+
+    function confirmRestartChapter() {
+      if (pendingRestartType === 'chapter' && pendingRestartId) {
+        EduPrep.restartChapter(pendingRestartId);
+        EduPrep.showToast(`Progress for "${pendingRestartTitle}" has been reset.`, 'info');
+      } else if (pendingRestartType === 'subject' && pendingRestartId) {
+        const state = EduPrep.getState();
+        const chs = (typeof EduPrepChapters !== 'undefined' ? EduPrepChapters.getChapters(pendingRestartId, state.academic.semester) : []) || [];
+        chs.forEach(c => EduPrep.restartChapter(c.id));
+        EduPrep.showToast(`Progress for all ${pendingRestartId} chapters has been reset.`, 'info');
+      }
+
+      closeRestartChapterModal();
+      refreshDashboardState();
+    }
+
+    function renderRecommendations(subjects) {
+      const container = document.getElementById("recommendationsListContainer");
+      if (!container) return;
+
+      const recommendations = [
+        {
+          title: "Revise Operating Systems Flashcards",
+          detail: "15 Memory concept cards on Paging, Deadlocks & Synchronization",
+          icon: "style",
+          iconColor: "text-tertiary bg-tertiary-fixed",
+          url: "../revision_flashcards/code.html?subject=Operating%20Systems"
+        },
+        {
+          title: "Practice Computer Networks MCQs",
+          detail: "15-Question timed benchmark covering Subnetting & TCP Handshake",
+          icon: "quiz",
+          iconColor: "text-primary bg-primary-fixed",
+          url: "../mcq_practice_exam/code.html?subject=Computer%20Networks"
+        },
+        {
+          title: "Review DSA Algorithm Flashcards",
+          detail: "AVL Tree Rotations, Graph BFS/DFS, Heaps & Sorting complexities",
+          icon: "psychology",
+          iconColor: "text-secondary bg-secondary-fixed",
+          url: "../revision_flashcards/code.html?subject=Data%20Structures%20%26%20Algorithms"
+        },
+        {
+          title: "Attempt Database Management Systems Exam",
+          detail: "15 Questions covering 1NF–BCNF Normalization & ACID Transactions",
+          icon: "fact_check",
+          iconColor: "text-emerald-700 bg-emerald-100",
+          url: "../mcq_practice_exam/code.html?subject=Database%20Management%20Systems"
+        }
+      ];
+
+      container.innerHTML = recommendations.map(rec => `
+        <a href="${rec.url}" class="p-3 rounded-xl bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 flex items-center justify-between transition-all group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg ${rec.iconColor} flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-base">${rec.icon}</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">${rec.title}</h4>
+              <p class="text-[11px] text-outline">${rec.detail}</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </a>
+      `).join('');
+    }
+
+    function renderHighPriorityTopics() {
+      const container = document.getElementById("highPriorityTopicsContainer");
+      if (!container) return;
+
+      const topics = [
+        {
+          title: "Banker's Algorithm & Safety State",
+          subject: "Operating Systems",
+          subjectCode: "CSC401",
+          unitIdx: 2,
+          topicIdx: 3,
+          pyq: "May 24 Q4(b) (10M)",
+          badgeColor: "bg-error-container text-error"
+        },
+        {
+          title: "Belady's Anomaly & Page Faults",
+          subject: "Operating Systems",
+          subjectCode: "CSC401",
+          unitIdx: 3,
+          topicIdx: 3,
+          pyq: "May 24 Q5(b) (10M)",
+          badgeColor: "bg-amber-100 text-amber-800"
+        },
+        {
+          title: "TCP 3-Way Handshake Flow",
+          subject: "Computer Networks",
+          subjectCode: "CSC402",
+          unitIdx: 3,
+          topicIdx: 1,
+          pyq: "Dec 23 Q4(b) (10M)",
+          badgeColor: "bg-primary-fixed text-primary"
+        },
+        {
+          title: "BCNF Normalization Decomposition",
+          subject: "Database Systems",
+          subjectCode: "CSC403",
+          unitIdx: 2,
+          topicIdx: 3,
+          pyq: "May 23 Q3(a) (10M)",
+          badgeColor: "bg-secondary-fixed text-secondary"
+        }
+      ];
+
+      container.innerHTML = topics.map(t => `
+        <div onclick="EduPrep.openTopicModal('${t.subjectCode}', ${t.unitIdx}, ${t.topicIdx})" class="p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 transition-all cursor-pointer group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-1.5">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${t.badgeColor}">${t.pyq}</span>
+              <span class="text-[10px] text-outline">${t.subject}</span>
+            </div>
+            <h4 class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors leading-snug">${t.title}</h4>
+          </div>
+          <div class="mt-2 pt-2 border-t border-surface-container flex items-center justify-between text-[10px] text-primary font-bold">
+            <span>Study High-Yield Note</span>
+            <span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderRecentActivity() {
+      const container = document.getElementById("recentActivityListContainer");
+      if (!container) return;
+
+      const state = EduPrep.getState();
+      const quizScores = (state.progress && state.progress.quizScores) || [];
+
+      if (quizScores.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 rounded-xl bg-surface-container-low border border-dashed border-outline-variant/40 text-center">
+            <span class="material-symbols-outlined text-outline text-2xl mb-1 block">history</span>
+            <p class="text-xs font-bold text-on-surface">No Recent Exam Attempts Yet</p>
+            <p class="text-[11px] text-outline mt-0.5">Start learning or take an MCQ benchmark to see your activity here.</p>
+            <a href="../mcq_practice_exam/code.html" class="inline-block mt-3 px-3.5 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-opacity">
+              Start 15-Q Benchmark
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = quizScores.slice(0, 3).map(q => `
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-on-surface block">MCQ Practice Benchmark</span>
+              <span class="text-[10px] text-outline">${q.date || 'Recent'} • Accuracy: ${q.accuracy || '80%'}</span>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black">
+            ${q.score}/${q.total}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function onSemesterSelected(newSem) {
+      EduPrep.setSemester(newSem);
+      refreshDashboardState();
+      EduPrep.showToast(`Switched active curriculum to Semester ${newSem}`, 'success');
+    }
+
+    let dashSearchActiveIndex = -1;
+
+    function handleSearchKeyDown(e) {
+      const dropdown = document.getElementById("searchResultsDropdown");
+      if (!dropdown || dropdown.classList.contains("hidden")) return;
+      const links = Array.from(dropdown.querySelectorAll("a"));
+      if (links.length === 0) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        dashSearchActiveIndex = (dashSearchActiveIndex + 1) % links.length;
+        if (links[dashSearchActiveIndex]) links[dashSearchActiveIndex].focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (dashSearchActiveIndex <= 0) {
+          dashSearchActiveIndex = -1;
+          const input = document.getElementById("globalSearchInput");
+          if (input) input.focus();
+        } else {
+          dashSearchActiveIndex -= 1;
+          if (links[dashSearchActiveIndex]) links[dashSearchActiveIndex].focus();
+        }
+      } else if (e.key === "Escape") {
+        clearSearch();
+      } else if (e.key === "Enter") {
+        if (dashSearchActiveIndex >= 0 && links[dashSearchActiveIndex]) {
+          e.preventDefault();
+          links[dashSearchActiveIndex].click();
+        } else if (links.length > 0) {
+          e.preventDefault();
+          links[0].click();
+        }
+      }
+    }
+
+    function handleGlobalSearch(val) {
+      dashSearchActiveIndex = -1;
+      const dropdown = document.getElementById("searchResultsDropdown");
+      const cleanVal = (val || "").trim();
+
+      if (cleanVal.length < 2) {
+        dropdown.classList.add("hidden");
+        return;
+      }
+
+      // Universal curriculum search across 70 subjects, all chapters, and topics
+      const results = EduPrep.searchCurriculum(cleanVal, { limit: 20 });
+      
+      // Also match flashcards & MCQs for additional convenience
+      const qLower = cleanVal.toLowerCase();
+      const flashcards = EduPrep.getFlashcards ? EduPrep.getFlashcards().filter(f => f.q.toLowerCase().includes(qLower) || f.a.toLowerCase().includes(qLower)).slice(0, 3) : [];
+      const mcqs = EduPrep.getMcqBank ? EduPrep.getMcqBank().filter(m => m.q.toLowerCase().includes(qLower)).slice(0, 2) : [];
+
+      if (!results.hasMatches && flashcards.length === 0 && mcqs.length === 0) {
+        dropdown.innerHTML = `
+          <div class="p-5 text-center text-xs text-on-surface-variant space-y-1.5">
+            <span class="material-symbols-outlined text-2xl text-outline block mx-auto">search_off</span>
+            <p class="font-bold text-on-surface">No subjects or chapters found for "${escapeHtml(cleanVal)}"</p>
+            <p class="text-[11px] text-outline">Try searching for <button onclick="selectSearchSuggestion('Operating Systems')" class="text-primary underline">Operating Systems</button>, <button onclick="selectSearchSuggestion('Anatomy')" class="text-primary underline">Anatomy</button>, <button onclick="selectSearchSuggestion('Matrices')" class="text-primary underline">Matrices</button>, or <button onclick="selectSearchSuggestion('Microeconomics')" class="text-primary underline">Microeconomics</button>.</p>
+          </div>
+        `;
+        dropdown.classList.remove("hidden");
+        return;
+      }
+
+      let html = '';
+
+      // 1. Subjects Group
+      if (results.subjects.length > 0) {
+        html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-primary flex items-center justify-between">
+          <span>Subjects (${results.subjects.length})</span>
+          <span class="text-[9px] text-outline font-medium">Curriculum Catalogs</span>
+        </div>`;
+        results.subjects.forEach(s => {
+          html += `
+            <a href="../resources_dashboard/code.html?subject=${encodeURIComponent(s.title)}&stream=${encodeURIComponent(s.stream)}&sem=${s.semester}" class="flex items-center justify-between p-2.5 hover:bg-surface-container-low rounded-xl text-xs text-on-surface transition-colors group">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs shrink-0">
+                  <span class="material-symbols-outlined text-sm">menu_book</span>
+                </div>
+                <div class="min-w-0">
+                  <span class="font-bold group-hover:text-primary transition-colors block truncate">${escapeHtml(s.title)}</span>
+                  <span class="text-[10px] text-outline">${escapeHtml(s.streamName)} • ${escapeHtml(s.semesterLabel)}${s.code ? ' • ' + escapeHtml(s.code) : ''}</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold text-primary shrink-0 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                <span>View Subject</span>
+                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </span>
+            </a>
+          `;
+        });
+      }
+
+      // 2. Chapters Group
+      if (results.chapters.length > 0) {
+        html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-secondary flex items-center justify-between mt-2 pt-2 border-t border-surface-container">
+          <span>Chapters & Modules (${results.chapters.length})</span>
+          <span class="text-[9px] text-outline font-medium">Syllabus Chapters</span>
+        </div>`;
+        results.chapters.forEach(c => {
+          html += `
+            <a href="../resources_dashboard/code.html?subject=${encodeURIComponent(c.subjectName)}&stream=${encodeURIComponent(c.stream)}&sem=${c.semester}&ch=${encodeURIComponent(c.id)}" class="flex items-center justify-between p-2.5 hover:bg-surface-container-low rounded-xl text-xs text-on-surface transition-colors group">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-secondary-fixed text-secondary flex items-center justify-center font-bold text-xs shrink-0">
+                  <span class="material-symbols-outlined text-sm">auto_stories</span>
+                </div>
+                <div class="min-w-0">
+                  <span class="font-bold group-hover:text-secondary transition-colors block truncate">${escapeHtml(c.title)}</span>
+                  <span class="text-[10px] text-outline">in <span class="font-semibold text-on-surface-variant">${escapeHtml(c.subjectName)}</span> • ${escapeHtml(c.streamName)} • ${escapeHtml(c.semesterLabel)}</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold text-secondary shrink-0 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                <span>Open Chapter</span>
+                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </span>
+            </a>
+          `;
+        });
+      }
+
+      // 3. Flashcards Group
+      if (flashcards.length > 0) {
+        html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-tertiary flex items-center justify-between mt-2 pt-2 border-t border-surface-container">
+          <span>Revision Flashcards</span>
+        </div>`;
+        flashcards.forEach(f => {
+          html += `
+            <a href="../revision_flashcards/code.html" class="flex items-center justify-between p-2.5 hover:bg-surface-container-low rounded-xl text-xs text-on-surface group">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="material-symbols-outlined text-tertiary text-sm shrink-0">style</span>
+                <span class="truncate max-w-[320px] text-[11px]">${escapeHtml(f.q)}</span>
+              </div>
+              <span class="text-[10px] text-outline shrink-0">Flashcard →</span>
+            </a>
+          `;
+        });
+      }
+
+      // 4. MCQs Group
+      if (mcqs.length > 0) {
+        html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 flex items-center justify-between mt-2 pt-2 border-t border-surface-container">
+          <span>Practice MCQs</span>
+        </div>`;
+        mcqs.forEach(m => {
+          html += `
+            <a href="../mcq_practice_exam/code.html" class="flex items-center justify-between p-2.5 hover:bg-surface-container-low rounded-xl text-xs text-on-surface group">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="material-symbols-outlined text-emerald-600 text-sm shrink-0">fact_check</span>
+                <span class="truncate max-w-[320px] text-[11px]">${escapeHtml(m.q)}</span>
+              </div>
+              <span class="text-[10px] text-outline shrink-0">Practice Exam →</span>
+            </a>
+          `;
+        });
+      }
+
+      dropdown.innerHTML = html;
+      dropdown.classList.remove("hidden");
+    }
+
+    function selectSearchSuggestion(text) {
+      const input = document.getElementById("globalSearchInput");
+      input.value = text;
+      handleGlobalSearch(text);
+      input.focus();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById("globalSearchInput");
+      input.value = '';
+      document.getElementById("searchResultsDropdown").classList.add("hidden");
+      input.focus();
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function openFinalsScheduleModal() {
+      const state = EduPrep.getState();
+      const modal = document.getElementById("finalsScheduleModal");
+      const list = document.getElementById("finalsTimetableList");
+      const subjects = EduPrep.getSubjects(state.academic.branch, state.academic.semester);
+
+      const examDates = [
+        { date: "May 18, 2026", time: "11:00 AM – 02:00 PM" },
+        { date: "May 21, 2026", time: "11:00 AM – 02:00 PM" },
+        { date: "May 25, 2026", time: "11:00 AM – 02:00 PM" },
+        { date: "May 28, 2026", time: "11:00 AM – 02:00 PM" },
+        { date: "June 02, 2026", time: "11:00 AM – 02:00 PM" }
+      ];
+
+      document.getElementById("modalSemSubtitle").textContent = `Semester ${state.academic.semester} • Theory Examination (80 Marks)`;
+
+      list.innerHTML = subjects.map((s, idx) => {
+        const schedule = examDates[idx] || { date: "TBD", time: "11:00 AM" };
+        return `
+          <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between">
+            <div>
+              <span class="font-bold text-on-surface">${s.name} (${s.code})</span>
+              <p class="text-[11px] text-on-surface-variant">${schedule.date} • ${schedule.time}</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-primary-fixed text-primary font-bold text-[10px]">
+              Paper ${idx + 1}
+            </span>
+          </div>
+        `;
+      }).join('');
+
+      modal.classList.remove("hidden");
+    }
+
+    function closeFinalsScheduleModal() {
+      document.getElementById("finalsScheduleModal").classList.add("hidden");
+    }
+
+    function toggleNotificationsModal() {
+      const modal = document.getElementById("notificationsModal");
+      if (modal.classList.contains("hidden")) {
+        modal.classList.remove("hidden");
+      } else {
+        modal.classList.add("hidden");
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      const dropdown = document.getElementById("searchResultsDropdown");
+      const input = document.getElementById("globalSearchInput");
+      if (dropdown && !dropdown.classList.contains("hidden")) {
+        if (!dropdown.contains(e.target) && e.target !== input) {
+          dropdown.classList.add("hidden");
+        }
+      }
+    });
+  </script>
+</body>
+</html>

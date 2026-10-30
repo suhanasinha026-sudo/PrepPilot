@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "name": "eduprep",
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/api/ai-assistant",
+      "destination": "/api/ai-assistant.js"
+    },
+    {
+      "source": "/api/youtube/search",
+      "destination": "/api/youtube-search.js"
+    },
+    {
+      "source": "/login",
+      "destination": "/EduPrep/login_registration/code.html"
+    },
+    {
+      "source": "/register",
+      "destination": "/EduPrep/login_registration/code.html"
+    },
+    {
+      "source": "/forgot-password",
+      "destination": "/EduPrep/login_registration/code.html"
+    },
+    {
+      "source": "/update-password",
+      "destination": "/EduPrep/login_registration/code.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/EduPrep/home_dashboard/code.html"
+    },
+    {
+      "source": "/subjects",
+      "destination": "/EduPrep/subject_details_os/code.html"
+    },
+    {
+      "source": "/question-papers",
+      "destination": "/EduPrep/previous_year_papers/code.html"
+    },
+    {
+      "source": "/practice",
+      "destination": "/EduPrep/mcq_practice_exam/code.html"
+    },
+    {
+      "source": "/flashcards",
+      "destination": "/EduPrep/revision_flashcards/code.html"
+    },
+    {
+      "source": "/study-planner",
+      "destination": "/EduPrep/academic_setup/code.html"
+    },
+    {
+      "source": "/progress",
+      "destination": "/EduPrep/user_profile_progress/code.html"
+    },
+    {
+      "source": "/profile",
+      "destination": "/EduPrep/user_profile_progress/code.html"
+    },
+    {
+      "source": "/resources",
+      "destination": "/EduPrep/resources_dashboard/code.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}

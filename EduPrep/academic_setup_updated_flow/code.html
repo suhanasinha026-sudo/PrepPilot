@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>University & Academic Setup - EduPrep</title>
+  <script>
+    // This onboarding setup wizard has been removed from EduPrep. Redirecting directly to Student Dashboard.
+    window.location.replace('../home_dashboard/code.html');
+  </script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c7c4d7;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+  <!-- TopAppBar -->
+  <header class="w-full top-0 sticky bg-surface dark:bg-surface-dim shadow-sm z-40 border-b border-surface-container">
+    <div class="flex justify-between items-center px-4 md:px-8 py-3 w-full max-w-5xl mx-auto">
+      <div class="flex items-center gap-3">
+        <a href="../login_registration/code.html" class="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors" title="Back to Login">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-on-primary shadow-md">
+            <span class="material-symbols-outlined text-xl">auto_stories</span>
+          </div>
+          <div>
+            <span class="font-bold text-lg md:text-xl tracking-tight text-primary">EduPrep</span>
+            <span class="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-primary-fixed text-primary">Academic Onboarding</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="EduPrep.openSemesterModal((s) => selectSemester(s))" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant/50 text-xs font-semibold text-primary hover:bg-primary-fixed/30 transition-colors">
+          <span class="material-symbols-outlined text-sm">calendar_month</span>
+          <span id="headerSemLabel">Sem 4</span>
+        </button>
+        <button onclick="EduPrep.showToast('Active setup session. Finish configuring your profile to curate syllabus-tailored study tools.', 'info')" class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Notifications">
+          <span class="material-symbols-outlined text-xl">notifications</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 pb-32 w-full">
+    <!-- Header Hero -->
+    <div class="mb-8 text-center max-w-xl mx-auto">
+      <h1 class="text-2xl md:text-3xl font-extrabold text-on-background tracking-tight mb-2">Personalize Your Academic Curriculum</h1>
+      <p class="text-sm md:text-base text-on-surface-variant">Configure your university, college, course, and semester to automatically curate verified notes, question banks, PYQs, and AI study tutors.</p>
+    </div>
+
+    <!-- Progress Steps Tracker -->
+    <div class="flex items-center justify-between mb-8 max-w-md mx-auto relative px-2">
+      <div class="absolute left-6 right-6 top-4 h-1 bg-surface-container-high -z-10 rounded-full"></div>
+      <div class="absolute left-6 w-3/4 top-4 h-1 bg-gradient-to-r from-primary to-primary-container -z-10 rounded-full"></div>
+      
+      <div class="flex flex-col items-center gap-1.5">
+        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold shadow-md ring-4 ring-primary/20">1</div>
+        <span class="text-xs font-semibold text-primary">University</span>
+      </div>
+      <div class="flex flex-col items-center gap-1.5">
+        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold shadow-md ring-4 ring-primary/20">2</div>
+        <span class="text-xs font-semibold text-primary">College</span>
+      </div>
+      <div class="flex flex-col items-center gap-1.5">
+        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold shadow-md ring-4 ring-primary/20">3</div>
+        <span class="text-xs font-semibold text-primary">Course</span>
+      </div>
+      <div class="flex flex-col items-center gap-1.5">
+        <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-xs font-bold shadow-md ring-4 ring-primary-container/20">4</div>
+        <span class="text-xs font-semibold text-primary-container">Semester</span>
+      </div>
+    </div>
+
+    <!-- Main Configuration Card -->
+    <div class="bg-surface-container-lowest rounded-2xl p-5 sm:p-8 shadow-sm border border-outline-variant/40 space-y-8">
+      
+      <!-- Section 1: University Selection (Searchable Combobox) -->
+      <div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-container pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">account_balance</span>
+            <h2 class="text-lg font-bold text-on-background">1. Select University / Governing Board</h2>
+          </div>
+          <span class="text-xs text-on-surface-variant font-medium" id="univCatalogCountBadge">15 Universities Available</span>
+        </div>
+
+        <div class="space-y-3 mb-4">
+          <!-- Searchable University Combobox -->
+          <div class="relative" id="univComboboxWrapper">
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">University / Governing Board (Searchable Combobox)</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl pointer-events-none">account_balance</span>
+              <input 
+                id="univComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Search or select university (e.g. type 'M' for Mumbai, 'P' for Pune, 'COEP', 'DBATU'...)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-medium transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="univClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear selection">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="univDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <!-- Combobox dropdown menu -->
+            <div id="univComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+            <p id="univComboboxError" class="hidden text-xs text-error font-medium mt-1 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">error</span>
+              <span id="univComboboxErrorText"></span>
+            </p>
+          </div>
+
+          <!-- Quick category pills -->
+          <div class="flex flex-wrap gap-2 text-xs">
+            <button onclick="setUnivFilter('all')" id="filterUnivAll" class="px-3 py-1 rounded-full bg-primary text-on-primary font-medium transition-colors">All Universities</button>
+            <button onclick="setUnivFilter('state')" id="filterUnivState" class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-medium transition-colors">State Technical</button>
+            <button onclick="setUnivFilter('autonomous')" id="filterUnivAuto" class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-medium transition-colors">Autonomous / Deemed</button>
+          </div>
+        </div>
+
+        <!-- University Cards Grid (Visual Preview) -->
+        <div id="universityCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
+          <!-- Populated via renderUniversitiesGrid() -->
+        </div>
+      </div>
+
+      <!-- Section 2: Institution Type & College Selection -->
+      <div class="border-t border-surface-container pt-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-container pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">school</span>
+            <h2 class="text-lg font-bold text-on-background">2. Institution Type & College Selection</h2>
+          </div>
+          <a href="../affiliated_college_selection/code.html" class="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
+            <span>Browse Full Directory (76 Colleges)</span>
+            <span class="material-symbols-outlined text-sm">open_in_new</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Searchable Institution Type Combobox -->
+          <div class="relative" id="instTypeComboboxWrapper">
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">Institution Type (Searchable)</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl pointer-events-none">corporate_fare</span>
+              <input 
+                id="instTypeComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Search or select type (e.g. type 'A' for Autonomous, 'Af' for Affiliated)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-medium transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="instTypeClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear selection">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="instTypeDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <!-- Combobox dropdown menu -->
+            <div id="instTypeComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+          </div>
+
+          <!-- Searchable College Combobox -->
+          <div class="relative" id="collegeComboboxWrapper">
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-semibold text-on-surface-variant">College / Institute (Searchable)</label>
+              <span class="text-[11px] text-primary font-medium" id="collegeCountSummary">Showing colleges</span>
+            </div>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl pointer-events-none">domain</span>
+              <input 
+                id="collegeComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Search or select college (e.g. type 'D' for Datta Meghe, 'V' for Vidyalankar, 'VJTI'...)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-medium transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="collegeClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear selection">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="collegeDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <!-- Combobox dropdown menu -->
+            <div id="collegeComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+          </div>
+        </div>
+
+        <!-- Featured Highlights Banner -->
+        <div class="mt-4 p-3 bg-surface-container-low rounded-xl border border-outline-variant/30 flex items-start gap-2 text-xs text-on-surface-variant">
+          <span class="material-symbols-outlined text-primary text-base shrink-0 mt-0.5">verified</span>
+          <div>
+            <span class="font-semibold text-on-background">Key Autonomous & Affiliated Institutions:</span>
+            <span>Datta Meghe College of Engineering (DMCE Airoli), Vidyalankar Institute of Technology (VIT Wadala), VJTI Mumbai, SPIT, DJ Sanghvi, PICT Pune, PCCOE, and COEP Technological University.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Degree Course & Specialization Branch (Searchable Comboboxes) -->
+      <div class="border-t border-surface-container pt-6">
+        <div class="flex items-center gap-2 border-b border-surface-container pb-3 mb-4">
+          <span class="material-symbols-outlined text-primary text-2xl">menu_book</span>
+          <h2 class="text-lg font-bold text-on-background">3. Degree Program & Specialization Branch</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Searchable Degree Course Combobox -->
+          <div class="relative" id="degreeComboboxWrapper">
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">Degree Course / Program (Searchable)</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl pointer-events-none">school</span>
+              <input 
+                id="degreeComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Search or select degree (e.g. B.Tech, BCA, MCA, M.Tech...)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-medium transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="degreeClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear selection">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="degreeDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <div id="degreeComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+          </div>
+
+          <!-- Searchable Branch Combobox -->
+          <div class="relative" id="branchComboboxWrapper">
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5" id="branchLabel">Engineering Branch / Discipline (Searchable)</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl pointer-events-none">engineering</span>
+              <input 
+                id="branchComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Search or select branch (e.g. type 'Co' for Computer, 'I' for IT/IoT, 'Cyb' for Cyber...)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-medium transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="branchClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear selection">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="branchDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <div id="branchComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Current Active Semester (Searchable Combobox & Input with 1-8 Validation) -->
+      <div class="border-t border-surface-container pt-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-container pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">calendar_month</span>
+            <h2 class="text-lg font-bold text-on-background">4. Current Active Semester</h2>
+          </div>
+          <span class="text-xs text-on-surface-variant font-medium" id="semesterSubtext">Type 1 to 8 or select from dropdown</span>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Primary Functional Semester Combobox Input -->
+          <div class="relative max-w-md" id="semesterComboboxWrapper">
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">Active Semester Input / Combobox</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-xl pointer-events-none">calendar_today</span>
+              <input 
+                id="semesterComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Type semester number (e.g. type '1' for Semester 1, '4' for Semester 4)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-bold text-primary transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="semClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="semDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <!-- Semester Dropdown menu -->
+            <div id="semesterComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+            <!-- Semester Validation Error Alert -->
+            <p id="semesterComboboxError" class="hidden text-xs text-error font-semibold mt-1.5 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">error</span>
+              <span id="semesterComboboxErrorText">Please select a semester from 1 to 8.</span>
+            </p>
+          </div>
+
+          <!-- Quick Semester Pill Buttons Grid (1 to 8 in two-way sync) -->
+          <div>
+            <span class="text-xs font-semibold text-on-surface-variant mb-2 block">Quick Switcher Pills:</span>
+            <div class="grid grid-cols-4 sm:grid-cols-8 gap-2.5" id="semesterButtonsGrid">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Dedicated Subject Dropdown (Searchable Combobox) -->
+      <div class="border-t border-surface-container pt-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-container pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-2xl">view_list</span>
+            <h2 class="text-lg font-bold text-on-background">5. Dedicated Subject Dropdown</h2>
+          </div>
+          <span class="text-xs text-primary font-semibold" id="subjectDropdownHelper">Search Core & Elective Subjects</span>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Searchable Subject Combobox -->
+          <div class="relative max-w-xl" id="subjectComboboxWrapper">
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">Subject / Course Module (Grouped by Core & Other)</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl pointer-events-none">menu_book</span>
+              <input 
+                id="subjectComboboxInput" 
+                type="text" 
+                autocomplete="off" 
+                placeholder="Search or select subject (e.g. type 'O' for Operating Systems, 'C' for Computer Networks...)" 
+                class="w-full h-11 pl-11 pr-20 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs sm:text-sm font-medium transition-all"
+              />
+              <div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button type="button" id="subjectClearBtn" class="hidden p-1 text-on-surface-variant hover:text-primary transition-colors" title="Clear">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+                <button type="button" id="subjectDropdownBtn" class="p-1 text-on-surface-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+                </button>
+              </div>
+            </div>
+            <!-- Subject Dropdown menu -->
+            <div id="subjectComboboxMenu" class="hidden absolute top-full left-0 right-0 mt-1 max-h-72 overflow-y-auto bg-white dark:bg-slate-900 border border-outline-variant/80 rounded-xl shadow-xl z-50 py-1.5 custom-scrollbar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6: Live Syllabus & Curriculum Preview (5 Core Subjects Cards) -->
+      <div class="border-t border-surface-container pt-6">
+        <div class="bg-primary-fixed/20 rounded-2xl p-5 border border-primary/20 space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-primary/20 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-2xl">auto_stories</span>
+              <h3 class="font-bold text-base md:text-lg text-on-background" id="curriculumPreviewTitle">Curriculum Preview — Computer Engineering (Semester 4)</h3>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-primary text-on-primary shrink-0 self-start md:self-auto shadow-xs" id="coreSubjectsBadge">5 Core Subjects</span>
+          </div>
+
+          <!-- 5 Core Subjects Cards Grid -->
+          <div id="coreSubjectsCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            <!-- Populated via renderCoreSubjectCards() -->
+          </div>
+
+          <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-on-surface-variant">
+            <p class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-primary">verified_user</span>
+              <span>All 5 Core Subjects are aligned with university syllabus schemes, unit blueprints, and PYQ trends.</span>
+            </p>
+            <span class="font-semibold text-primary">Click any card or dropdown item to open Subject Learning Hub</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation Action Bar -->
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <button onclick="goToCurriculumDiscovery()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-semibold text-on-surface flex items-center justify-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-base">explore</span>
+          <span>Explore Syllabus Blueprint</span>
+        </button>
+        <button onclick="goToSubjectDetails('CSC401')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-semibold text-primary flex items-center justify-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-base">menu_book</span>
+          <span>Open Operating Systems Hub</span>
+        </button>
+      </div>
+
+      <button onclick="saveAndContinue()" class="w-full sm:w-auto h-12 px-8 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-sm shadow-md hover:shadow-lg hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span>Save & Continue to Dashboard</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </button>
+    </div>
+
+  </main>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script>
+    // State initialization
+    let currentUnivId = "mu";
+    let selectedInstType = "all";
+    let selectedColId = "vit_wadala";
+    let selectedCourse = "B.Tech";
+    let selectedBranch = "Computer Engineering";
+    let selectedSem = 4;
+    let selectedSubjectCode = "CSC401";
+    let univCategoryFilter = "all";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const state = EduPrep.getState();
+      currentUnivId = state.academic.universityId || "mu";
+      selectedColId = state.academic.collegeId || "vit_wadala";
+      selectedCourse = state.academic.course || "B.Tech";
+      selectedBranch = state.academic.branch || "Computer Engineering";
+      selectedSem = state.academic.semester || 4;
+
+      // Initialize all searchable comboboxes
+      initUnivCombobox();
+      initInstTypeCombobox();
+      initCollegeCombobox();
+      initDegreeCombobox();
+      initBranchCombobox();
+      initSemesterCombobox();
+      initSubjectCombobox();
+
+      // Render supplementary visual grids
+      renderUniversitiesGrid();
+      renderSemesterGrid();
+      updateCurriculumPreview();
+    });
+
+    // Helper: Prefix first string sorter
+    function sortByPrefix(items, query, key) {
+      if (!query) return items;
+      const q = query.toLowerCase();
+      return [...items].sort((a, b) => {
+        const valA = (a[key] || "").toLowerCase();
+        const valB = (b[key] || "").toLowerCase();
+        const aStarts = valA.startsWith(q);
+        const bStarts = valB.startsWith(q);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+        return valA.localeCompare(valB);
+      });
+    }
+
+    // ----------------------------------------------------
+    // 1. UNIVERSITY SEARCHABLE COMBOBOX
+    // ----------------------------------------------------
+    function initUnivCombobox() {
+      const input = document.getElementById("univComboboxInput");
+      const menu = document.getElementById("univComboboxMenu");
+      const clearBtn = document.getElementById("univClearBtn");
+      const dropdownBtn = document.getElementById("univDropdownBtn");
+
+      const curr = EduPrep.universities.find(u => u.id === currentUnivId);
+      input.value = curr ? `${curr.name} (${curr.shortName})` : "";
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        let list = EduPrep.universities.filter(u => {
+          const matchesQ = !q || u.name.toLowerCase().includes(q) || (u.shortName && u.shortName.toLowerCase().includes(q)) || (u.canonicalName && u.canonicalName.toLowerCase().includes(q)) || u.location.toLowerCase().includes(q);
+          let matchesCat = true;
+          if (univCategoryFilter === 'state') matchesCat = u.type.includes("State") || u.type.includes("Technical");
+          if (univCategoryFilter === 'autonomous') matchesCat = u.isAutonomousUniv || u.type.includes("Autonomous") || u.type.includes("Private");
+          return matchesQ && matchesCat;
+        });
+
+        list = sortByPrefix(list, q, "name");
+
+        if (list.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No university found matching "${query}".</div>`;
+        } else {
+          menu.innerHTML = list.map((u, idx) => {
+            const isSelected = u.id === currentUnivId;
+            return `
+              <div 
+                data-idx="${idx}" 
+                data-id="${u.id}" 
+                class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+              >
+                <div>
+                  <div class="text-xs sm:text-sm font-semibold">${u.name} <span class="text-xs font-normal opacity-70">(${u.shortName})</span></div>
+                  <div class="text-[11px] text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+                    <span>${u.location}</span>
+                    <span>•</span>
+                    <span class="text-primary font-medium">${u.type}</span>
+                  </div>
+                </div>
+                ${isSelected ? '<span class="material-symbols-outlined text-sm font-bold text-primary">check</span>' : ''}
+              </div>
+            `;
+          }).join('');
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectUniversity(el.dataset.id);
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      // Keyboard navigation
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) {
+            menu.classList.remove("hidden");
+            return;
+          }
+          if (activeIndex < items.length - 1) activeIndex++;
+          else activeIndex = 0;
+          items.forEach((item, idx) => item.classList.toggle("active-item", idx === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (activeIndex > 0) activeIndex--;
+          else activeIndex = items.length - 1;
+          items.forEach((item, idx) => item.classList.toggle("active-item", idx === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectUniversity(items[activeIndex].dataset.id);
+            menu.classList.add("hidden");
+          } else if (items.length > 0) {
+            selectUniversity(items[0].dataset.id);
+            menu.classList.add("hidden");
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("univComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          const u = EduPrep.universities.find(x => x.id === currentUnivId);
+          if (u) input.value = `${u.name} (${u.shortName})`;
+        }
+      });
+    }
+
+    function selectUniversity(univId) {
+      currentUnivId = univId;
+      const u = EduPrep.universities.find(x => x.id === univId);
+      const input = document.getElementById("univComboboxInput");
+      if (input && u) input.value = `${u.name} (${u.shortName})`;
+
+      // Refresh dependent dropdowns
+      refreshCollegeOptions();
+      renderUniversitiesGrid();
+      updateCurriculumPreview();
+      EduPrep.showToast(`Selected University: ${u ? u.name : univId}`, 'success');
+    }
+
+    function setUnivFilter(type) {
+      univCategoryFilter = type;
+      ["filterUnivAll", "filterUnivState", "filterUnivAuto"].forEach(id => {
+        const btn = document.getElementById(id);
+        btn.className = "px-3 py-1 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-medium transition-colors";
+      });
+      if (type === 'all') document.getElementById('filterUnivAll').className = "px-3 py-1 rounded-full bg-primary text-on-primary font-medium transition-colors";
+      if (type === 'state') document.getElementById('filterUnivState').className = "px-3 py-1 rounded-full bg-primary text-on-primary font-medium transition-colors";
+      if (type === 'autonomous') document.getElementById('filterUnivAuto').className = "px-3 py-1 rounded-full bg-primary text-on-primary font-medium transition-colors";
+
+      renderUniversitiesGrid();
+      const input = document.getElementById("univComboboxInput");
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    function renderUniversitiesGrid() {
+      const container = document.getElementById("universityCardsContainer");
+      let list = EduPrep.universities.filter(u => {
+        if (univCategoryFilter === 'state') return u.type.includes("State") || u.type.includes("Technical");
+        if (univCategoryFilter === 'autonomous') return u.isAutonomousUniv || u.type.includes("Autonomous") || u.type.includes("Private");
+        return true;
+      });
+
+      container.innerHTML = list.map(u => {
+        const isSelected = u.id === currentUnivId;
+        return `
+          <div onclick="selectUniversity('${u.id}')" class="relative group cursor-pointer rounded-xl border-2 transition-all p-3 flex flex-col justify-between ${
+            isSelected 
+              ? 'border-primary bg-primary-fixed/25 shadow-sm' 
+              : 'border-outline-variant/50 bg-surface-container-lowest hover:border-primary/60 hover:bg-surface-container-low'
+          }">
+            ${isSelected ? `
+              <div class="absolute top-2 right-2 bg-primary text-on-primary rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+                <span class="material-symbols-outlined text-xs font-bold">check</span>
+              </div>
+            ` : ''}
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold text-xs shrink-0 border border-outline-variant/40">
+                ${u.shortName.slice(0, 4)}
+              </div>
+              <div class="pr-4">
+                <h4 class="font-bold text-xs text-on-background line-clamp-1 group-hover:text-primary transition-colors">${u.name}</h4>
+                <p class="text-[10px] text-on-surface-variant flex items-center gap-1 mt-0.5">
+                  <span class="material-symbols-outlined text-[10px]">location_on</span>
+                  <span>${u.location}</span>
+                </p>
+              </div>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-surface-container flex items-center justify-between text-[9px] text-on-surface-variant">
+              <span class="font-semibold text-primary">${u.type}</span>
+              <span>${u.collegesCount}+ Colleges</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ----------------------------------------------------
+    // 2. INSTITUTION TYPE SEARCHABLE COMBOBOX
+    // ----------------------------------------------------
+    const INSTITUTION_TYPES = [
+      { id: "all", name: "All Institution Types", desc: "Autonomous & Affiliated institutions" },
+      { id: "autonomous", name: "Autonomous Institution", desc: "Institutions with independent syllabus & examinations" },
+      { id: "affiliated", name: "Affiliated College", desc: "State university affiliated colleges following university syllabus" }
+    ];
+
+    function initInstTypeCombobox() {
+      const input = document.getElementById("instTypeComboboxInput");
+      const menu = document.getElementById("instTypeComboboxMenu");
+      const clearBtn = document.getElementById("instTypeClearBtn");
+      const dropdownBtn = document.getElementById("instTypeDropdownBtn");
+
+      const curr = INSTITUTION_TYPES.find(t => t.id === selectedInstType);
+      input.value = curr ? curr.name : "All Institution Types";
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        let list = INSTITUTION_TYPES.filter(t => !q || t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
+        list = sortByPrefix(list, q, "name");
+
+        if (list.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No institution types match "${query}".</div>`;
+        } else {
+          menu.innerHTML = list.map((t, idx) => {
+            const isSelected = t.id === selectedInstType;
+            return `
+              <div 
+                data-idx="${idx}" 
+                data-id="${t.id}" 
+                class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+              >
+                <div>
+                  <div class="text-xs sm:text-sm font-semibold">${t.name}</div>
+                  <div class="text-[11px] text-on-surface-variant mt-0.5">${t.desc}</div>
+                </div>
+                ${isSelected ? '<span class="material-symbols-outlined text-sm font-bold text-primary">check</span>' : ''}
+              </div>
+            `;
+          }).join('');
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectInstType(el.dataset.id);
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) { menu.classList.remove("hidden"); return; }
+          activeIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectInstType(items[activeIndex].dataset.id);
+            menu.classList.add("hidden");
+          } else if (items.length > 0) {
+            selectInstType(items[0].dataset.id);
+            menu.classList.add("hidden");
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("instTypeComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          const t = INSTITUTION_TYPES.find(x => x.id === selectedInstType);
+          if (t) input.value = t.name;
+        }
+      });
+    }
+
+    function selectInstType(typeId) {
+      selectedInstType = typeId;
+      const t = INSTITUTION_TYPES.find(x => x.id === typeId);
+      const input = document.getElementById("instTypeComboboxInput");
+      if (input && t) input.value = t.name;
+
+      refreshCollegeOptions();
+      EduPrep.showToast(`Institution Filter: ${t ? t.name : typeId}`, 'info');
+    }
+
+    // ----------------------------------------------------
+    // 3. COLLEGE SEARCHABLE COMBOBOX
+    // ----------------------------------------------------
+    function initCollegeCombobox() {
+      const input = document.getElementById("collegeComboboxInput");
+      const menu = document.getElementById("collegeComboboxMenu");
+      const clearBtn = document.getElementById("collegeClearBtn");
+      const dropdownBtn = document.getElementById("collegeDropdownBtn");
+
+      refreshCollegeOptions();
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        let colleges = EduPrep.getColleges(currentUnivId, selectedInstType, "");
+
+        // If specific search matches across all colleges, allow broad fallback search
+        if (q) {
+          const directMatch = colleges.filter(c => c.name.toLowerCase().includes(q) || c.abbreviation.toLowerCase().includes(q) || c.location.toLowerCase().includes(q));
+          if (directMatch.length > 0) {
+            colleges = directMatch;
+          } else {
+            colleges = EduPrep.getColleges("", selectedInstType, q);
+          }
+        }
+
+        colleges = sortByPrefix(colleges, q, "name");
+
+        const countBadge = document.getElementById("collegeCountSummary");
+        if (countBadge) countBadge.textContent = `${colleges.length} colleges available`;
+
+        if (colleges.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No colleges found matching "${query}".</div>`;
+        } else {
+          menu.innerHTML = colleges.map((c, idx) => {
+            const isSelected = c.id === selectedColId;
+            return `
+              <div 
+                data-idx="${idx}" 
+                data-id="${c.id}" 
+                class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+              >
+                <div class="pr-3">
+                  <div class="text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                    <span class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-mono text-primary font-bold">${c.abbreviation}</span>
+                    <span>${c.name}</span>
+                  </div>
+                  <div class="text-[11px] text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+                    <span>${c.location}</span>
+                    <span>•</span>
+                    <span class="font-medium ${c.isAutonomous ? 'text-primary' : 'text-secondary'}">${c.isAutonomous ? 'Autonomous' : 'Affiliated'}</span>
+                  </div>
+                </div>
+                ${isSelected ? '<span class="material-symbols-outlined text-sm font-bold text-primary">check</span>' : ''}
+              </div>
+            `;
+          }).join('');
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectCollege(el.dataset.id);
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) { menu.classList.remove("hidden"); return; }
+          activeIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectCollege(items[activeIndex].dataset.id);
+            menu.classList.add("hidden");
+          } else if (items.length > 0) {
+            selectCollege(items[0].dataset.id);
+            menu.classList.add("hidden");
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("collegeComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          const c = EduPrep.colleges.find(x => x.id === selectedColId);
+          if (c) input.value = `${c.name} (${c.abbreviation})`;
+        }
+      });
+    }
+
+    function refreshCollegeOptions() {
+      const colleges = EduPrep.getColleges(currentUnivId, selectedInstType, "");
+      const input = document.getElementById("collegeComboboxInput");
+      const countBadge = document.getElementById("collegeCountSummary");
+      if (countBadge) countBadge.textContent = `${colleges.length} colleges match filter`;
+
+      // Check if current selected college still fits
+      const stillValid = colleges.some(c => c.id === selectedColId);
+      if (!stillValid && colleges.length > 0) {
+        selectedColId = colleges[0].id;
+      }
+
+      const colObj = EduPrep.colleges.find(c => c.id === selectedColId);
+      if (input && colObj) {
+        input.value = `${colObj.name} (${colObj.abbreviation})`;
+      }
+    }
+
+    function selectCollege(colId) {
+      selectedColId = colId;
+      const col = EduPrep.colleges.find(c => c.id === colId);
+      const input = document.getElementById("collegeComboboxInput");
+      if (input && col) input.value = `${col.name} (${col.abbreviation})`;
+
+      EduPrep.showToast(`Selected College: ${col ? col.name : colId}`, 'success');
+      updateCurriculumPreview();
+    }
+
+    // ----------------------------------------------------
+    // 4. DEGREE COURSE & BRANCH SEARCHABLE COMBOBOXES
+    // ----------------------------------------------------
+    function initDegreeCombobox() {
+      const input = document.getElementById("degreeComboboxInput");
+      const menu = document.getElementById("degreeComboboxMenu");
+      const clearBtn = document.getElementById("degreeClearBtn");
+      const dropdownBtn = document.getElementById("degreeDropdownBtn");
+
+      const curr = EduPrep.courses.find(c => c.name === selectedCourse) || EduPrep.courses[0];
+      input.value = curr ? `${curr.name} (${curr.duration})` : "";
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        let list = EduPrep.courses.filter(c => !q || c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q));
+        list = sortByPrefix(list, q, "name");
+
+        if (list.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No courses found matching "${query}".</div>`;
+        } else {
+          menu.innerHTML = list.map((c, idx) => {
+            const isSelected = c.name === selectedCourse;
+            return `
+              <div 
+                data-idx="${idx}" 
+                data-name="${c.name}" 
+                class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+              >
+                <div>
+                  <div class="text-xs sm:text-sm font-semibold">${c.name}</div>
+                  <div class="text-[11px] text-on-surface-variant mt-0.5">${c.duration} • ${c.semesters} Semesters</div>
+                </div>
+                ${isSelected ? '<span class="material-symbols-outlined text-sm font-bold text-primary">check</span>' : ''}
+              </div>
+            `;
+          }).join('');
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectDegree(el.dataset.name);
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) { menu.classList.remove("hidden"); return; }
+          activeIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectDegree(items[activeIndex].dataset.name);
+            menu.classList.add("hidden");
+          } else if (items.length > 0) {
+            selectDegree(items[0].dataset.name);
+            menu.classList.add("hidden");
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("degreeComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          const c = EduPrep.courses.find(x => x.name === selectedCourse);
+          if (c) input.value = `${c.name} (${c.duration})`;
+        }
+      });
+    }
+
+    function selectDegree(courseName) {
+      selectedCourse = courseName;
+      const c = EduPrep.courses.find(x => x.name === courseName);
+      const input = document.getElementById("degreeComboboxInput");
+      if (input && c) input.value = `${c.name} (${c.duration})`;
+
+      // Adjust max sem if course has fewer semesters
+      if (c && selectedSem > c.semesters) {
+        selectedSem = c.semesters;
+        syncSemesterDisplay();
+      }
+
+      refreshBranchOptions();
+      renderSemesterGrid();
+      updateCurriculumPreview();
+      EduPrep.showToast(`Degree Program: ${courseName}`, 'info');
+    }
+
+    function initBranchCombobox() {
+      const input = document.getElementById("branchComboboxInput");
+      const menu = document.getElementById("branchComboboxMenu");
+      const clearBtn = document.getElementById("branchClearBtn");
+      const dropdownBtn = document.getElementById("branchDropdownBtn");
+
+      refreshBranchOptions();
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        const courseObj = EduPrep.courses.find(c => c.name === selectedCourse) || EduPrep.courses[0];
+        let branches = EduPrep.getBranches(courseObj.id);
+
+        if (q) {
+          branches = branches.filter(b => b.name.toLowerCase().includes(q) || b.code.toLowerCase().includes(q));
+        }
+        branches = sortByPrefix(branches, q, "name");
+
+        if (branches.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No branch found matching "${query}".</div>`;
+        } else {
+          menu.innerHTML = branches.map((b, idx) => {
+            const isSelected = b.name === selectedBranch;
+            return `
+              <div 
+                data-idx="${idx}" 
+                data-name="${b.name}" 
+                class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+              >
+                <div>
+                  <div class="text-xs sm:text-sm font-semibold">${b.name}</div>
+                  <div class="text-[11px] text-on-surface-variant mt-0.5">Code: ${b.code} • ${b.category}</div>
+                </div>
+                ${isSelected ? '<span class="material-symbols-outlined text-sm font-bold text-primary">check</span>' : ''}
+              </div>
+            `;
+          }).join('');
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectBranch(el.dataset.name);
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) { menu.classList.remove("hidden"); return; }
+          activeIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectBranch(items[activeIndex].dataset.name);
+            menu.classList.add("hidden");
+          } else if (items.length > 0) {
+            selectBranch(items[0].dataset.name);
+            menu.classList.add("hidden");
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("branchComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          input.value = selectedBranch;
+        }
+      });
+    }
+
+    function refreshBranchOptions() {
+      const courseObj = EduPrep.courses.find(c => c.name === selectedCourse) || EduPrep.courses[0];
+      const branches = EduPrep.getBranches(courseObj.id);
+      const input = document.getElementById("branchComboboxInput");
+      const label = document.getElementById("branchLabel");
+
+      if (courseObj.category === 'management') {
+        label.textContent = "Management Track / Specialization (Searchable)";
+      } else if (courseObj.category === 'commerce') {
+        label.textContent = "Commerce Discipline / Specialization (Searchable)";
+      } else if (courseObj.category.includes('computing')) {
+        label.textContent = "Computing Track / Specialization (Searchable)";
+      } else {
+        label.textContent = "Engineering Branch / Discipline (Searchable)";
+      }
+
+      if (!branches.some(b => b.name === selectedBranch) && branches.length > 0) {
+        selectedBranch = branches[0].name;
+      }
+      if (input) input.value = selectedBranch;
+    }
+
+    function selectBranch(branchName) {
+      selectedBranch = branchName;
+      const input = document.getElementById("branchComboboxInput");
+      if (input) input.value = branchName;
+
+      updateCurriculumPreview();
+      refreshSubjectCombobox();
+      EduPrep.showToast(`Discipline Selected: ${branchName}`, 'info');
+    }
+
+    // ----------------------------------------------------
+    // 5. CURRENT ACTIVE SEMESTER COMBOBOX & INPUT (1-8 VALIDATION)
+    // ----------------------------------------------------
+    function initSemesterCombobox() {
+      const input = document.getElementById("semesterComboboxInput");
+      const menu = document.getElementById("semesterComboboxMenu");
+      const clearBtn = document.getElementById("semClearBtn");
+      const dropdownBtn = document.getElementById("semDropdownBtn");
+      const errorEl = document.getElementById("semesterComboboxError");
+      const errorText = document.getElementById("semesterComboboxErrorText");
+
+      syncSemesterDisplay();
+
+      function getValidSemesters() {
+        const courseObj = EduPrep.courses.find(c => c.name === selectedCourse) || EduPrep.courses[0];
+        return EduPrep.getSemesters(courseObj.id);
+      }
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        const validSems = getValidSemesters();
+
+        let list = validSems.filter(s => {
+          if (!q) return true;
+          // Match single digit "1", "4" or "Semester 4", "Sem 4"
+          if (q === String(s.number)) return true;
+          return s.label.toLowerCase().includes(q) || s.year.toLowerCase().includes(q);
+        });
+
+        if (list.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No semester matching "${query}".</div>`;
+        } else {
+          menu.innerHTML = list.map((s, idx) => {
+            const isSelected = s.number === selectedSem;
+            return `
+              <div 
+                data-idx="${idx}" 
+                data-num="${s.number}" 
+                class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+              >
+                <div>
+                  <div class="text-xs sm:text-sm font-semibold">${s.label}</div>
+                  <div class="text-[11px] text-on-surface-variant mt-0.5">${s.year}</div>
+                </div>
+                ${isSelected ? '<span class="material-symbols-outlined text-sm font-bold text-primary">check</span>' : ''}
+              </div>
+            `;
+          }).join('');
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectSemester(parseInt(el.dataset.num, 10));
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      function validateInputVal(val) {
+        const trimmed = (val || "").trim();
+        if (!trimmed) {
+          clearSemesterError();
+          return false;
+        }
+
+        // Check if user entered "Semester X" or "X"
+        let num = null;
+        if (/^semester\s*([0-9]+)$/i.test(trimmed)) {
+          num = parseInt(trimmed.match(/^semester\s*([0-9]+)$/i)[1], 10);
+        } else if (/^[0-9]+$/.test(trimmed)) {
+          num = parseInt(trimmed, 10);
+        }
+
+        if (num !== null) {
+          if (num >= 1 && num <= 8) {
+            clearSemesterError();
+            return num;
+          } else {
+            showSemesterError("Please select a semester from 1 to 8.");
+            return null;
+          }
+        } else {
+          // Check if matches partial string like "Sem 4"
+          const match = trimmed.match(/\b([1-8])\b/);
+          if (match) {
+            clearSemesterError();
+            return parseInt(match[1], 10);
+          }
+          showSemesterError("Please select a semester from 1 to 8.");
+          return null;
+        }
+      }
+
+      function showSemesterError(msg) {
+        errorEl.classList.remove("hidden");
+        errorText.textContent = msg;
+        input.classList.add("border-error", "ring-2", "ring-error/20");
+      }
+
+      function clearSemesterError() {
+        errorEl.classList.add("hidden");
+        input.classList.remove("border-error", "ring-2", "ring-error/20");
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        const val = input.value;
+        const validNum = validateInputVal(val);
+
+        if (validNum) {
+          selectSemester(validNum, false); // Update state without overwriting typed input yet
+        }
+        filterMenu(val);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("blur", () => {
+        const validNum = validateInputVal(input.value);
+        if (validNum) {
+          selectSemester(validNum, true);
+        } else if (input.value.trim() !== "") {
+          showSemesterError("Please select a semester from 1 to 8.");
+        } else {
+          syncSemesterDisplay();
+        }
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        clearSemesterError();
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) { menu.classList.remove("hidden"); return; }
+          activeIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectSemester(parseInt(items[activeIndex].dataset.num, 10));
+            menu.classList.add("hidden");
+          } else {
+            const validNum = validateInputVal(input.value);
+            if (validNum) {
+              selectSemester(validNum);
+              menu.classList.add("hidden");
+            }
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("semesterComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          syncSemesterDisplay();
+        }
+      });
+    }
+
+    function syncSemesterDisplay() {
+      const input = document.getElementById("semesterComboboxInput");
+      const errorEl = document.getElementById("semesterComboboxError");
+      if (input) {
+        input.value = `Semester ${selectedSem}`;
+        input.classList.remove("border-error", "ring-2", "ring-error/20");
+      }
+      if (errorEl) errorEl.classList.add("hidden");
+
+      const headerSem = document.getElementById("headerSemLabel");
+      if (headerSem) headerSem.textContent = `Semester ${selectedSem}`;
+    }
+
+    function selectSemester(semNum, updateInputVal = true) {
+      if (semNum < 1 || semNum > 8) return;
+      selectedSem = semNum;
+
+      if (updateInputVal) {
+        syncSemesterDisplay();
+      }
+
+      renderSemesterGrid();
+      updateCurriculumPreview();
+      refreshSubjectCombobox();
+      EduPrep.showToast(`Switched active curriculum to Semester ${semNum}`, 'info');
+    }
+
+    function renderSemesterGrid() {
+      const grid = document.getElementById("semesterButtonsGrid");
+      const courseObj = EduPrep.courses.find(c => c.name === selectedCourse) || EduPrep.courses[0];
+      const semestersList = EduPrep.getSemesters(courseObj.id);
+
+      grid.innerHTML = semestersList.map(s => {
+        const isSelected = s.number === selectedSem;
+        return `
+          <button type="button" onclick="selectSemester(${s.number})" class="aspect-square rounded-xl flex flex-col items-center justify-center font-bold text-sm transition-all ${
+            isSelected 
+              ? 'bg-primary text-on-primary shadow-md scale-105 ring-2 ring-primary-container' 
+              : 'border border-outline-variant/60 text-on-background hover:border-primary hover:bg-surface-container-low'
+          }">
+            <span class="text-[9px] uppercase tracking-tight opacity-75 ${isSelected ? 'text-on-primary' : 'text-on-surface-variant'}">${s.year.slice(0, 2)}</span>
+            <span class="text-base">${s.number}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // ----------------------------------------------------
+    // 6. DEDICATED SUBJECT DROPDOWN (SEARCHABLE COMBOBOX)
+    // ----------------------------------------------------
+    function initSubjectCombobox() {
+      const input = document.getElementById("subjectComboboxInput");
+      const menu = document.getElementById("subjectComboboxMenu");
+      const clearBtn = document.getElementById("subjectClearBtn");
+      const dropdownBtn = document.getElementById("subjectDropdownBtn");
+
+      refreshSubjectCombobox();
+
+      function filterMenu(query) {
+        const q = (query || "").trim().toLowerCase();
+        const coreSubs = EduPrep.getCoreSubjects(selectedBranch, selectedSem);
+        const otherSubs = EduPrep.getOtherSubjects(selectedBranch, selectedSem);
+
+        const filteredCore = coreSubs.filter(s => !q || s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+        const filteredOther = otherSubs.filter(s => !q || s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+
+        if (filteredCore.length === 0 && filteredOther.length === 0) {
+          menu.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-medium">No subjects found matching "${query}".</div>`;
+        } else {
+          let html = "";
+          if (filteredCore.length > 0) {
+            html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-primary bg-primary-fixed/30 sticky top-0 flex items-center gap-1"><span class="material-symbols-outlined text-xs">verified</span> Core Subjects (${filteredCore.length})</div>`;
+            html += filteredCore.map(s => renderSubjectItem(s)).join('');
+          }
+          if (filteredOther.length > 0) {
+            html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-on-surface-variant bg-surface-container-low sticky top-0 flex items-center gap-1"><span class="material-symbols-outlined text-xs">category</span> Other Subjects & Electives (${filteredOther.length})</div>`;
+            html += filteredOther.map(s => renderSubjectItem(s)).join('');
+          }
+          menu.innerHTML = html;
+
+          menu.querySelectorAll(".combobox-item").forEach(el => {
+            el.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              selectSubject(el.dataset.code);
+              menu.classList.add("hidden");
+            });
+          });
+        }
+      }
+
+      function renderSubjectItem(s) {
+        const isSelected = s.code === selectedSubjectCode;
+        return `
+          <div 
+            data-code="${s.code}" 
+            class="combobox-item px-3.5 py-2.5 hover:bg-surface-container cursor-pointer flex items-center justify-between transition-colors ${isSelected ? 'bg-primary/10 text-primary font-bold' : 'text-on-surface'}"
+          >
+            <div>
+              <div class="text-xs sm:text-sm font-semibold flex items-center gap-2">
+                <span>${s.name}</span>
+                <span class="px-1.5 py-0.5 rounded bg-primary-fixed text-primary text-[10px] font-mono font-bold">${s.code}</span>
+              </div>
+              <div class="text-[11px] text-on-surface-variant mt-0.5">${s.credits} Credits • ${s.hours} Hours • Units: ${s.units}</div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              ${s.isCore ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary text-white">Core</span>' : ''}
+              <span class="material-symbols-outlined text-sm text-outline">arrow_forward</span>
+            </div>
+          </div>
+        `;
+      }
+
+      input.addEventListener("focus", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("hidden", !input.value);
+        filterMenu(input.value);
+        menu.classList.remove("hidden");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.add("hidden");
+        filterMenu("");
+        input.focus();
+      });
+
+      dropdownBtn.addEventListener("click", () => {
+        if (menu.classList.contains("hidden")) {
+          filterMenu(input.value);
+          menu.classList.remove("hidden");
+          input.focus();
+        } else {
+          menu.classList.add("hidden");
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const items = Array.from(menu.querySelectorAll(".combobox-item"));
+        let activeIndex = items.findIndex(i => i.classList.contains("active-item"));
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (menu.classList.contains("hidden")) { menu.classList.remove("hidden"); return; }
+          activeIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          activeIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          items.forEach((it, i) => it.classList.toggle("active-item", i === activeIndex));
+          if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            selectSubject(items[activeIndex].dataset.code);
+            menu.classList.add("hidden");
+          } else if (items.length > 0) {
+            selectSubject(items[0].dataset.code);
+            menu.classList.add("hidden");
+          }
+        } else if (e.key === "Escape") {
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("subjectComboboxWrapper").contains(e.target)) {
+          menu.classList.add("hidden");
+          const s = EduPrep.getSubjectByCode(selectedSubjectCode);
+          if (s) input.value = `${s.name} (${s.code})`;
+        }
+      });
+    }
+
+    function refreshSubjectCombobox() {
+      const subjects = EduPrep.getSubjects(selectedBranch, selectedSem);
+      const input = document.getElementById("subjectComboboxInput");
+      if (subjects.length > 0) {
+        // Default to first core subject
+        const coreSubs = EduPrep.getCoreSubjects(selectedBranch, selectedSem);
+        const targetSubj = coreSubs[0] || subjects[0];
+        selectedSubjectCode = targetSubj.code;
+        if (input) input.value = `${targetSubj.name} (${targetSubj.code})`;
+      }
+    }
+
+    function selectSubject(code) {
+      selectedSubjectCode = code;
+      const s = EduPrep.getSubjectByCode(code);
+      const input = document.getElementById("subjectComboboxInput");
+      if (input && s) input.value = `${s.name} (${s.code})`;
+
+      EduPrep.showToast(`Selected Subject: ${s ? s.name : code}. Navigating to Subject Learning Hub...`, 'success');
+      setTimeout(() => {
+        goToSubjectDetails(code);
+      }, 500);
+    }
+
+    // ----------------------------------------------------
+    // 7. CORE SUBJECTS CARDS & CURRICULUM PREVIEW
+    // ----------------------------------------------------
+    function updateCurriculumPreview() {
+      const title = document.getElementById("curriculumPreviewTitle");
+      if (title) title.textContent = `Curriculum Preview — ${selectedBranch} (Semester ${selectedSem})`;
+
+      const coreSubs = EduPrep.getCoreSubjects(selectedBranch, selectedSem);
+      const allSubs = EduPrep.getSubjects(selectedBranch, selectedSem);
+      const badge = document.getElementById("coreSubjectsBadge");
+      if (badge) badge.textContent = `${coreSubs.length} Core Subjects`;
+
+      renderCoreSubjectCards(coreSubs.length > 0 ? coreSubs : allSubs);
+    }
+
+    function renderCoreSubjectCards(subjects) {
+      const container = document.getElementById("coreSubjectsCardsGrid");
+      if (!container) return;
+
+      container.innerHTML = subjects.map(s => {
+        return `
+          <div onclick="goToSubjectDetails('${s.code}')" class="group relative p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/60 hover:border-primary hover:shadow-md transition-all cursor-pointer flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <span class="px-2 py-0.5 rounded-md bg-primary-fixed text-primary font-mono text-xs font-bold">${s.code}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.isCore ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'}">
+                  ${s.isCore ? 'Core Subject' : 'Elective'}
+                </span>
+              </div>
+              <h4 class="font-extrabold text-sm text-on-background group-hover:text-primary transition-colors line-clamp-1">${s.name}</h4>
+              <p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Units: ${s.units} Modules • ${s.hours} Teaching Hours • ${s.credits} University Exam Credits</p>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-semibold text-primary">
+              <span>Explore Subject Hub</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function goToSubjectDetails(code) {
+      EduPrep.navigateTo(`subject_details_os?subject=${encodeURIComponent(code || 'CSC401')}`);
+    }
+
+    function goToCurriculumDiscovery() {
+      EduPrep.navigateTo("academic_setup");
+    }
+
+    function saveAndContinue() {
+      const univ = EduPrep.universities.find(u => u.id === currentUnivId);
+      const col = EduPrep.colleges.find(c => c.id === selectedColId);
+
+      const universityName = univ ? univ.name : "Mumbai University";
+      const collegeName = col ? col.name : "Vidyalankar Institute of Technology (VIT Wadala)";
+
+      EduPrep.updateAcademic({
+        university: universityName,
+        universityId: currentUnivId,
+        institutionType: selectedInstType,
+        college: collegeName,
+        collegeId: selectedColId,
+        course: selectedCourse,
+        branch: selectedBranch,
+        semester: selectedSem,
+        activeSubject: selectedSubjectCode
+      });
+
+      EduPrep.showToast("Academic profile successfully customized! Loading Home Dashboard...", "success");
+
+      setTimeout(() => {
+        EduPrep.navigateTo("home_dashboard");
+      }, 600);
+    }
+  </script>
+</body>
+</html>

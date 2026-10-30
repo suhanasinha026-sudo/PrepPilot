@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — Previous Year Question Papers</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_chatbot.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="bg-background text-on-background min-h-screen flex flex-col pb-24 md:pb-8 antialiased">
+  
+  <!-- TopAppBar -->
+  <header class="w-full top-0 sticky bg-surface shadow-sm z-40 border-b border-surface-container">
+    <div class="flex justify-between items-center px-4 md:px-8 py-3 w-full max-w-6xl mx-auto">
+      <div class="flex items-center gap-3">
+        <a href="../home_dashboard/code.html" class="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors" title="Back to Dashboard">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-on-primary shadow-md">
+            <span class="material-symbols-outlined text-xl">history_edu</span>
+          </div>
+          <div>
+            <span class="font-extrabold text-xl tracking-tight text-primary">EduPrep</span>
+            <span class="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">PYQ Archives</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="EduPrep.openSemesterModal((s) => changeSemesterFilter(s))" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant/60 text-xs font-bold text-primary hover:bg-primary-fixed/30 transition-all">
+          <span class="material-symbols-outlined text-sm">calendar_month</span>
+          <span id="pyqSemBadge">Sem 4</span>
+        </button>
+        <a href="../user_profile_progress/code.html" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary-container">
+          <img id="pyqAvatar" alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTVTYsIgi8LHdNnRRuWq7WIQKHVif0TlNP2ZGt5StF7Jud3Gs6vJQFkiI_qUrzoEb70z07NIkSS2_FPOt1QOJAbG_z1UCQF3WZREwn8LQ303AF2KGL_FvIsWwcEBv_58SCacYxsAa4LwQhFIaWqE0p3A6nQmz2-PaZX8Kg5GnREbykYMsqeY9iQUPepRuFz-BLvUMNC7zQs_yEkbyzAAZa8CifAo7-8Qk5s6x_H8lKuQkdoWTzOKzRA"/>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 md:px-8 py-6 flex-grow space-y-6 w-full">
+    
+    <!-- Hero Banner -->
+    <div class="bg-surface-container-lowest rounded-2xl p-5 md:p-6 border border-outline-variant/30 ambient-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary">University Question Papers (2022–2024)</span>
+          <span class="text-xs text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">Sample Reference Format</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-extrabold text-on-surface" id="pyqPageTitle">Previous Year University Question Papers</h1>
+        <p class="text-xs sm:text-sm text-on-surface-variant mt-0.5">Practice structured past university and autonomous papers to identify recurring 10-mark questions, marks distribution &amp; passing thresholds.</p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <a href="../mcq_practice_exam/code.html" class="px-4 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 flex items-center gap-1.5 shadow-sm transition-all">
+          <span class="material-symbols-outlined text-base">quiz</span>
+          <span>Timed MCQ Exam</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 1. Academic Selection Controls (Field -> Subject -> Chapter -> Year) -->
+    <div class="bg-surface-container-lowest rounded-2xl p-5 md:p-6 border border-outline-variant/30 ambient-shadow space-y-5">
+      <!-- Step 1: Academic Field (Stream) Selection -->
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">1. Academic Field (Stream)</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="pyqFieldButtonGroup">
+          <button type="button" onclick="selectPyqField('engineering')" id="btnPyqFieldEng" class="p-3 rounded-xl border-2 border-primary bg-primary text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
+            <span class="material-symbols-outlined text-base">engineering</span>
+            <span>Engineering</span>
+          </button>
+          <button type="button" onclick="selectPyqField('medical')" id="btnPyqFieldMed" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
+            <span class="material-symbols-outlined text-base">medical_services</span>
+            <span>Medical</span>
+          </button>
+          <button type="button" onclick="selectPyqField('commerce')" id="btnPyqFieldCom" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
+            <span class="material-symbols-outlined text-base">monitoring</span>
+            <span>Commerce</span>
+          </button>
+          <button type="button" onclick="selectPyqField('arts')" id="btnPyqFieldArts" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
+            <span class="material-symbols-outlined text-base">palette</span>
+            <span>Arts</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Subject, Chapter & Year Selectors (NO SEARCH BAR) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-surface-container">
+        <div>
+          <label for="filterSubjectSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">2. Subject</label>
+          <select id="filterSubjectSelect" onchange="onPyqSubjectChanged(this.value)" aria-label="Select Subject" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none cursor-pointer">
+            <!-- Populated dynamically with full subject names -->
+          </select>
+        </div>
+
+        <div>
+          <label for="filterChapterSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">3. Chapter / Unit</label>
+          <select id="filterChapterSelect" onchange="onPyqChapterChanged(this.value)" aria-label="Select Chapter" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none cursor-pointer">
+            <option value="all">All Chapters (Complete Syllabus)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filterYearSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">4. Examination Year</label>
+          <select id="filterYearSelect" onchange="onPyqYearChanged(this.value)" aria-label="Filter by Year" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none cursor-pointer">
+            <option value="all">All Years (2022–2024)</option>
+            <option value="2024">2024 Examination Papers</option>
+            <option value="2023">2023 Examination Papers</option>
+            <option value="2022">2022 Examination Papers</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Live Selection Context Summary Bar -->
+      <div class="bg-surface-container-low rounded-xl p-3.5 border border-outline-variant/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 text-on-surface">
+          <span class="material-symbols-outlined text-primary text-base">verified</span>
+          <span id="pyqSelectionSummaryText" class="font-medium">Selected: Engineering • Engineering Mathematics • All Chapters • All Years</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="toggleBookmarkedOnly()" id="btnBookmarkedOnly" class="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-sm">bookmark</span>
+            <span>Saved Only</span>
+          </button>
+          <span class="text-xs font-bold text-primary shrink-0" id="papersCountLabel">Showing Papers</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Interactive Exam Weightage & Marks Distribution Section -->
+    <div id="weightageSection" class="bg-surface-container-lowest rounded-2xl p-5 md:p-6 border border-outline-variant/30 ambient-shadow space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-container pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-xl">analytics</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base text-on-surface">Exam Weightage & Marks Distribution</h3>
+            <p class="text-xs text-on-surface-variant">Analytical breakdown of 2-mark, 5-mark, 10-mark questions and syllabus unit allocation</p>
+          </div>
+        </div>
+        <span class="text-[11px] font-bold text-primary bg-primary-fixed/40 px-3 py-1 rounded-full border border-primary/20 shrink-0 self-start sm:self-auto">
+          Based on Available Reference Papers
+        </span>
+      </div>
+
+      <!-- Question Marks Category Distribution (2M, 5M, 10M) -->
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+        <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/30 flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-bold text-outline uppercase text-[10px]">Total Paper Marks</span>
+            <span class="font-extrabold text-sm text-on-surface" id="statTotalMarks">80 M</span>
+          </div>
+          <p class="text-xs text-on-surface-variant font-medium mt-1" id="statTotalQuestions">18 Questions Across Paper</p>
+        </div>
+
+        <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-1.5">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-emerald-700 uppercase text-[10px]">2-Mark Conceptual</span>
+            <span class="font-extrabold text-sm text-emerald-800" id="stat2MPct">25%</span>
+          </div>
+          <div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+            <div id="bar2M" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
+          </div>
+          <p class="text-[11px] text-on-surface-variant" id="stat2MDetails">10 Questions • 20 Marks</p>
+        </div>
+
+        <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-1.5">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-secondary uppercase text-[10px]">5-Mark Analytical</span>
+            <span class="font-extrabold text-sm text-secondary" id="stat5MPct">25%</span>
+          </div>
+          <div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+            <div id="bar5M" class="bg-secondary h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
+          </div>
+          <p class="text-[11px] text-on-surface-variant" id="stat5MDetails">4 Questions • 20 Marks</p>
+        </div>
+
+        <div class="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-1.5">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-primary uppercase text-[10px]">10-Mark In-Depth</span>
+            <span class="font-extrabold text-sm text-primary" id="stat10MPct">50%</span>
+          </div>
+          <div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+            <div id="bar10M" class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 50%"></div>
+          </div>
+          <p class="text-[11px] text-on-surface-variant" id="stat10MDetails">4 Questions • 40 Marks</p>
+        </div>
+      </div>
+
+      <!-- Chapter-wise Weightage Allocation Bars -->
+      <div class="pt-2">
+        <span class="text-xs font-bold text-on-surface block mb-2.5">Chapter / Syllabus Unit Weightage Allocation</span>
+        <div class="space-y-2.5" id="chapterWeightageContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+        <p class="text-[11px] text-outline mt-2.5 italic">Notice: Chapter-wise analysis is calculated from mapped syllabus questions in available reference papers.</p>
+      </div>
+    </div>
+
+    <!-- 3. Layout Grid: Year-Grouped Papers (2 Cols) + Sidebar Frequently Repeated Topics (1 Col) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Year-Grouped Papers Area (2 Cols) -->
+      <div class="lg:col-span-2 space-y-6" id="papersGridContainer">
+        <!-- Dynamically populated with year-wise sections and cards -->
+      </div>
+
+      <!-- Sidebar: Frequently Asked Recurring Questions -->
+      <div class="lg:col-span-1">
+        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/40 ambient-shadow sticky top-20 space-y-4">
+          <div class="flex items-center justify-between border-b border-surface-container pb-3">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary">local_fire_department</span>
+              <h3 class="font-bold text-sm text-on-surface">Frequently Repeated Topics</h3>
+            </div>
+            <span class="text-[10px] font-bold text-tertiary bg-tertiary-fixed px-2 py-0.5 rounded-full">High Yield</span>
+          </div>
+
+          <p class="text-xs text-on-surface-variant">High-frequency syllabus questions recurring across recent semester exam papers:</p>
+
+          <div class="space-y-3" id="recurringQuestionsList">
+            <!-- Populated via JS -->
+          </div>
+
+          <div class="pt-2 border-t border-surface-container">
+            <a href="../resources_dashboard/code.html" class="w-full py-2.5 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-bold text-primary flex items-center justify-center gap-1 transition-colors">
+              <span>Open Study Resources & Notes</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Question Paper View Modal -->
+  <div id="paperModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-3xl w-full p-6 shadow-2xl border border-outline-variant/40 space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-surface-container pb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-primary px-2.5 py-0.5 rounded bg-primary-fixed uppercase tracking-wider" id="paperModalTag">University of Mumbai • Semester 4</span>
+            <span class="text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded" id="paperModalVerification">Sample Paper</span>
+          </div>
+          <h2 class="text-lg font-bold text-on-surface mt-1" id="paperModalTitle">Operating Systems — May 2024</h2>
+          <p class="text-xs text-on-surface-variant mt-0.5" id="paperModalMeta">Course Code: CSC401 • Time: 3 Hours • Max Marks: 80</p>
+        </div>
+        <button onclick="closePaperModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Exam Instructions -->
+      <div class="p-3 bg-surface-container-low rounded-xl border border-outline-variant/30 text-xs text-on-surface-variant">
+        <span class="font-bold text-on-surface block mb-1">General Instructions (Sample Reference Sheet):</span>
+        <ol class="list-decimal pl-4 space-y-0.5 text-[11px]">
+          <li>Question No. 1 is compulsory (20 Marks).</li>
+          <li>Attempt any THREE questions out of the remaining FIVE questions (20 Marks each).</li>
+          <li>Assume suitable data wherever necessary and state assumptions clearly.</li>
+          <li>Figures to the right indicate full marks.</li>
+        </ol>
+      </div>
+
+      <!-- Questions Content -->
+      <div class="space-y-4 text-xs" id="paperModalQuestionsContainer">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="pt-4 border-t border-surface-container flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <button onclick="downloadPaperPdf()" class="px-4 py-2 rounded-xl bg-primary text-white hover:opacity-90 text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs">
+            <span class="material-symbols-outlined text-base">download</span>
+            <span>Download Complete PYQ PDF</span>
+          </button>
+          <button onclick="printPaperSheet()" class="px-3.5 py-2 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-semibold text-on-surface flex items-center gap-1.5 transition-colors">
+            <span class="material-symbols-outlined text-base">print</span>
+            <span>Print Sheet</span>
+          </button>
+          <button onclick="reportActivePaper()" class="px-3 py-2 rounded-xl border border-outline-variant hover:bg-error-container/30 text-xs font-semibold text-on-surface-variant hover:text-error flex items-center gap-1 transition-colors" title="Report issue with this paper">
+            <span class="material-symbols-outlined text-sm">flag</span>
+            <span>Report</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="closePaperModal()" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface">
+            Close
+          </button>
+          <a id="btnPracticeFromPaper" href="../mcq_practice_exam/code.html" class="px-5 py-2 rounded-xl bg-secondary text-on-primary text-xs font-bold hover:opacity-90 flex items-center gap-1.5 transition-opacity shadow-xs">
+            <span>Practice MCQs</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BottomNavBar (Mobile Only) -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 bg-surface z-40 border-t border-surface-container shadow-lg">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../home_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">home</span>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../resources_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">menu_book</span>
+      <span class="text-[10px] mt-0.5">Resources</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-primary font-bold transition-all text-xs" href="../previous_year_papers/code.html">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">history_edu</span>
+      <span class="text-[10px] mt-0.5">PYQs</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();">
+      <span class="material-symbols-outlined text-xl">smart_toy</span>
+      <span class="text-[10px] mt-0.5">Study AI</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../user_profile_progress/code.html">
+      <span class="material-symbols-outlined text-xl">person</span>
+      <span class="text-[10px] mt-0.5">Profile</span>
+    </a>
+  </nav>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_chapters_data.js"></script>
+  <script src="../shared/eduprep_pyq_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_chatbot.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    let selectedPyqField = "engineering";
+    let selectedPyqSubject = "Engineering Mathematics";
+    let selectedPyqChapterId = "all";
+    let selectedPyqYear = "all";
+    let showBookmarkedOnly = false;
+    let activePaperId = null;
+    let currentLoadedPapers = [];
+
+    const fieldMetadata = {
+      engineering: { label: "Engineering", icon: "engineering" },
+      medical: { label: "Medical", icon: "medical_services" },
+      commerce: { label: "Commerce", icon: "monitoring" },
+      arts: { label: "Arts", icon: "palette" }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const state = EduPrep.getState();
+      const semBadge = document.getElementById("pyqSemBadge");
+      if (semBadge) {
+        semBadge.textContent = `Sem ${state.academic.semester || 4}`;
+      }
+
+      if (state.user && state.user.avatar) {
+        const avatar = document.getElementById("pyqAvatar");
+        if (avatar) avatar.src = state.user.avatar;
+      }
+
+      // Check URL parameters for pre-selected stream, subject, chapter, or year
+      const params = new URLSearchParams(window.location.search);
+      const streamParam = (params.get("stream") || params.get("field") || "").toLowerCase();
+      const subjectParam = params.get("subject");
+      const chapterParam = params.get("chapter");
+      const yearParam = params.get("year");
+
+      if (streamParam && fieldMetadata[streamParam]) {
+        selectedPyqField = streamParam;
+      } else if (state.academic && state.academic.stream && fieldMetadata[state.academic.stream.toLowerCase()]) {
+        selectedPyqField = state.academic.stream.toLowerCase();
+      }
+
+      // Initialize UI button states and subject list
+      selectPyqField(selectedPyqField, false);
+
+      if (subjectParam) {
+        const subSelect = document.getElementById("filterSubjectSelect");
+        if (subSelect) {
+          const options = Array.from(subSelect.options).map(o => o.value);
+          if (options.includes(subjectParam)) {
+            selectedPyqSubject = subjectParam;
+            subSelect.value = subjectParam;
+            populateChaptersForSubject(selectedPyqSubject);
+          }
+        }
+      }
+
+      if (chapterParam) {
+        const chSelect = document.getElementById("filterChapterSelect");
+        if (chSelect) {
+          const chOptions = Array.from(chSelect.options).map(o => o.value);
+          if (chOptions.includes(chapterParam)) {
+            selectedPyqChapterId = chapterParam;
+            chSelect.value = chapterParam;
+          }
+        }
+      }
+
+      if (yearParam && ["2024", "2023", "2022", "all"].includes(yearParam)) {
+        selectedPyqYear = yearParam;
+        const yrSelect = document.getElementById("filterYearSelect");
+        if (yrSelect) yrSelect.value = yearParam;
+      }
+
+      refreshPyqView();
+    });
+
+    function selectPyqField(field, shouldRefresh = true) {
+      if (!fieldMetadata[field]) field = "engineering";
+      selectedPyqField = field;
+
+      const buttons = {
+        engineering: document.getElementById("btnPyqFieldEng"),
+        medical: document.getElementById("btnPyqFieldMed"),
+        commerce: document.getElementById("btnPyqFieldCom"),
+        arts: document.getElementById("btnPyqFieldArts")
+      };
+
+      const activeClass = "p-3 rounded-xl border-2 border-primary bg-primary text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1";
+      const inactiveClass = "p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1";
+
+      Object.keys(buttons).forEach(k => {
+        if (buttons[k]) {
+          buttons[k].className = (k === field) ? activeClass : inactiveClass;
+        }
+      });
+
+      // Populate subjects for this field
+      populateSubjectsForField(field);
+
+      if (shouldRefresh) {
+        refreshPyqView();
+      }
+    }
+
+    function populateSubjectsForField(field) {
+      const pe = window.EduPrepPyqs || (EduPrep && EduPrep.pyqEngine);
+      let subjects = [];
+      if (pe && typeof pe.getSubjectsForField === "function") {
+        subjects = pe.getSubjectsForField(field);
+      } else if (EduPrep && EduPrep.STREAM_SUBJECTS && EduPrep.STREAM_SUBJECTS[field]) {
+        subjects = EduPrep.STREAM_SUBJECTS[field];
+      }
+
+      const select = document.getElementById("filterSubjectSelect");
+      if (!select) return;
+
+      select.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join("");
+
+      if (subjects.length > 0) {
+        selectedPyqSubject = subjects[0];
+        select.value = selectedPyqSubject;
+      }
+
+      // Populate chapters for newly selected subject
+      populateChaptersForSubject(selectedPyqSubject);
+    }
+
+    function populateChaptersForSubject(subjectName) {
+      const pe = window.EduPrepPyqs || (EduPrep && EduPrep.pyqEngine);
+      let chapters = [];
+      if (pe && typeof pe.getChaptersForSubject === "function") {
+        chapters = pe.getChaptersForSubject(subjectName);
+      } else if (window.EduPrepChapters && typeof window.EduPrepChapters.getChapters === "function") {
+        chapters = window.EduPrepChapters.getChapters(subjectName);
+      }
+
+      const select = document.getElementById("filterChapterSelect");
+      if (!select) return;
+
+      select.innerHTML = `<option value="all">All Chapters (Complete Syllabus)</option>` +
+        chapters.map((ch, idx) => `<option value="${ch.id}">Unit ${ch.chapterNum || idx + 1}: ${ch.title}</option>`).join("");
+
+      selectedPyqChapterId = "all";
+      select.value = "all";
+    }
+
+    function onPyqSubjectChanged(subjectName) {
+      selectedPyqSubject = subjectName;
+      populateChaptersForSubject(subjectName);
+      refreshPyqView();
+    }
+
+    function onPyqChapterChanged(chapterId) {
+      selectedPyqChapterId = chapterId;
+      refreshPyqView();
+    }
+
+    function onPyqYearChanged(year) {
+      selectedPyqYear = year;
+      refreshPyqView();
+    }
+
+    function toggleBookmarkedOnly() {
+      showBookmarkedOnly = !showBookmarkedOnly;
+      const btn = document.getElementById("btnBookmarkedOnly");
+      if (btn) {
+        if (showBookmarkedOnly) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-bold flex items-center gap-1 transition-colors";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container flex items-center gap-1 transition-colors";
+        }
+      }
+      renderPapers(currentLoadedPapers);
+    }
+
+    function changeSemesterFilter(sem) {
+      EduPrep.setSemester(sem);
+      const semBadge = document.getElementById("pyqSemBadge");
+      if (semBadge) semBadge.textContent = `Sem ${sem}`;
+      refreshPyqView();
+      EduPrep.showToast(`Switched PYQs archive context to Semester ${sem}`, "info");
+    }
+
+    function refreshPyqView() {
+      const pe = window.EduPrepPyqs || (EduPrep && EduPrep.pyqEngine);
+      if (!pe) return;
+
+      // Update Summary Text
+      const fieldMeta = fieldMetadata[selectedPyqField] || fieldMetadata.engineering;
+      const chSelect = document.getElementById("filterChapterSelect");
+      const chLabel = (chSelect && chSelect.selectedOptions && chSelect.selectedOptions[0])
+        ? chSelect.selectedOptions[0].textContent
+        : "All Chapters";
+      const yrLabel = selectedPyqYear === "all" ? "All Years (2022–2024)" : `${selectedPyqYear} Exam`;
+
+      const summaryEl = document.getElementById("pyqSelectionSummaryText");
+      if (summaryEl) {
+        summaryEl.textContent = `Selected: ${fieldMeta.label} • ${selectedPyqSubject} • ${chLabel} • ${yrLabel}`;
+      }
+
+      // Query papers
+      const papers = pe.getPapersForSubject(selectedPyqSubject, selectedPyqChapterId, selectedPyqYear);
+      currentLoadedPapers = papers;
+
+      // Render weightage
+      renderWeightage(papers);
+
+      // Render papers
+      renderPapers(papers);
+
+      // Render recurring topics
+      renderRecurring(selectedPyqSubject, papers);
+    }
+
+    function renderWeightage(papers) {
+      const pe = window.EduPrepPyqs || (EduPrep && EduPrep.pyqEngine);
+      if (!pe) return;
+
+      const weightage = pe.calculateWeightage(papers, selectedPyqChapterId);
+
+      // Total Marks & Questions
+      const marksEl = document.getElementById("statTotalMarks");
+      if (marksEl) marksEl.textContent = `${weightage.totalMarks} M`;
+
+      const qEl = document.getElementById("statTotalQuestions");
+      if (qEl) qEl.textContent = `${weightage.totalQuestions} Questions Analyzed`;
+
+      // 2M stats
+      const m2 = weightage.marksCategories.twoMarks;
+      const p2El = document.getElementById("stat2MPct");
+      if (p2El) p2El.textContent = `${m2.pct}%`;
+      const b2 = document.getElementById("bar2M");
+      if (b2) b2.style.width = `${Math.min(100, m2.pct)}%`;
+      const d2El = document.getElementById("stat2MDetails");
+      if (d2El) d2El.textContent = `${m2.count} Questions • ${m2.marks} Marks`;
+
+      // 5M stats
+      const m5 = weightage.marksCategories.fiveMarks;
+      const p5El = document.getElementById("stat5MPct");
+      if (p5El) p5El.textContent = `${m5.pct}%`;
+      const b5 = document.getElementById("bar5M");
+      if (b5) b5.style.width = `${Math.min(100, m5.pct)}%`;
+      const d5El = document.getElementById("stat5MDetails");
+      if (d5El) d5El.textContent = `${m5.count} Questions • ${m5.marks} Marks`;
+
+      // 10M stats
+      const m10 = weightage.marksCategories.tenMarks;
+      const p10El = document.getElementById("stat10MPct");
+      if (p10El) p10El.textContent = `${m10.pct}%`;
+      const b10 = document.getElementById("bar10M");
+      if (b10) b10.style.width = `${Math.min(100, m10.pct)}%`;
+      const d10El = document.getElementById("stat10MDetails");
+      if (d10El) d10El.textContent = `${m10.count} Questions • ${m10.marks} Marks`;
+
+      // Chapter weightage distribution
+      const chContainer = document.getElementById("chapterWeightageContainer");
+      if (!chContainer) return;
+
+      if (!weightage.chapterWeightage || weightage.chapterWeightage.length === 0) {
+        chContainer.innerHTML = `<p class="text-xs text-outline italic">No chapter distribution available for this filter.</p>`;
+        return;
+      }
+
+      chContainer.innerHTML = weightage.chapterWeightage.map(item => `
+        <div class="space-y-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-on-surface truncate max-w-[75%]" title="${item.chapterTitle}">${item.chapterTitle}</span>
+            <span class="font-bold text-primary shrink-0">${item.marks} M (${item.pct}%)</span>
+          </div>
+          <div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+            <div class="bg-primary h-2 rounded-full transition-all duration-300" style="width: ${Math.min(100, item.pct)}%"></div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderPapers(papers) {
+      const state = EduPrep.getState();
+      const savedBookmarks = new Set((state.progress && state.progress.bookmarkedPapers) || []);
+      const container = document.getElementById("papersGridContainer");
+      if (!container) return;
+
+      let list = (papers || []).filter(p => !showBookmarkedOnly || savedBookmarks.has(p.id));
+
+      const countEl = document.getElementById("papersCountLabel");
+      if (countEl) {
+        countEl.textContent = `Showing ${list.length} Paper${list.length === 1 ? '' : 's'}`;
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-surface-container-lowest rounded-2xl border border-outline-variant/30 ambient-shadow">
+            <span class="material-symbols-outlined text-4xl text-outline mb-2">find_in_page</span>
+            <p class="text-sm font-bold text-on-surface">No question papers match this filter</p>
+            <p class="text-xs text-on-surface-variant mt-1">Try resetting the chapter filter or switching examination years.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group papers by year: 2024, 2023, 2022
+      const years = ["2024", "2023", "2022"];
+      const grouped = {};
+      years.forEach(yr => { grouped[yr] = []; });
+      list.forEach(p => {
+        const yrStr = String(p.year);
+        if (!grouped[yrStr]) grouped[yrStr] = [];
+        grouped[yrStr].push(p);
+      });
+
+      const sectionsHtml = years.map(yr => {
+        const yrPapers = grouped[yr];
+        if (!yrPapers || yrPapers.length === 0) return "";
+
+        const cardsHtml = yrPapers.map(p => {
+          const isSaved = savedBookmarks.has(p.id);
+          const isVerified = p.verificationStatus === "verified";
+          return `
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 ambient-shadow hover:shadow-[0_10px_30px_rgba(99,102,241,0.08)] transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-3 gap-2">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="bg-primary-fixed text-primary px-2.5 py-0.5 rounded-full text-xs font-bold">${p.year} Exam</span>
+                    <span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full text-[11px] font-semibold">Sem ${p.semester || 4}</span>
+                    <span class="${isVerified ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'} px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">${isVerified ? 'Verified' : 'Sample Paper'}</span>
+                  </div>
+                  <button onclick="togglePaperBookmark('${p.id}')" class="text-on-surface-variant hover:text-tertiary transition-colors" title="Bookmark Paper">
+                    <span class="material-symbols-outlined text-xl">${isSaved ? 'bookmark' : 'bookmark_border'}</span>
+                  </button>
+                </div>
+                
+                <h4 class="font-bold text-sm text-on-surface mb-1">${p.subject} <span class="text-xs font-normal text-outline">(${p.subjectCode || p.code})</span></h4>
+                <p class="text-[11px] text-on-surface-variant mb-2">${p.university || 'State University'}</p>
+                
+                <div class="grid grid-cols-3 gap-1.5 py-2 px-2.5 bg-surface-container-low rounded-xl text-center text-[10px] font-semibold text-on-surface mb-3">
+                  <div>
+                    <span class="block text-outline">Sec A (2M)</span>
+                    <span class="font-bold text-primary">10 Qs</span>
+                  </div>
+                  <div>
+                    <span class="block text-outline">Sec B (5M)</span>
+                    <span class="font-bold text-secondary">4 Qs</span>
+                  </div>
+                  <div>
+                    <span class="block text-outline">Sec C (10M)</span>
+                    <span class="font-bold text-emerald-700">4 Qs</span>
+                  </div>
+                </div>
+
+                <p class="text-xs text-outline font-semibold mb-3">${p.session} • ${p.questionsCount || 18} Questions • ${p.maxMarks || 80} Marks • 3 Hours</p>
+              </div>
+
+              <div class="pt-3 border-t border-surface-container flex flex-wrap gap-2">
+                <button onclick="viewPaperModal('${p.id}')" class="flex-1 py-2 px-3 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-1 shadow-2xs">
+                  <span class="material-symbols-outlined text-sm">visibility</span>
+                  <span>View Full Paper</span>
+                </button>
+                <button onclick="downloadPaperPdf('${p.id}')" class="py-2 px-3 rounded-xl bg-primary-fixed text-primary hover:bg-primary-fixed-dim text-xs font-bold flex items-center justify-center gap-1 transition-colors" title="Download Complete PYQ PDF">
+                  <span class="material-symbols-outlined text-sm">download</span>
+                  <span class="hidden sm:inline">PDF</span>
+                </button>
+                <button onclick="printPaperSheet('${p.id}')" class="py-2 px-2.5 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-semibold text-on-surface flex items-center justify-center transition-colors" title="Open Printable Reference Sheet">
+                  <span class="material-symbols-outlined text-sm">print</span>
+                </button>
+                <a href="../mcq_practice_exam/code.html?subject=${encodeURIComponent(p.subject)}" class="py-2 px-2.5 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-semibold text-on-surface flex items-center justify-center transition-colors" title="Practice Solved MCQs">
+                  <span class="material-symbols-outlined text-sm">quiz</span>
+                </a>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-surface-container pb-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                <h3 class="font-extrabold text-base text-on-surface">${yr} Examination Papers</h3>
+                <span class="text-xs text-on-surface-variant font-medium">(${yrPapers.length} paper available)</span>
+              </div>
+              <span class="text-[11px] font-semibold text-outline">Standard 80 Marks Format</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${cardsHtml}
+            </div>
+          </div>
+        `;
+      }).filter(Boolean).join("");
+
+      container.innerHTML = sectionsHtml || `
+        <div class="p-8 text-center bg-surface-container-lowest rounded-2xl border border-outline-variant/30 ambient-shadow">
+          <p class="text-sm font-bold text-on-surface">No papers found for the selected year</p>
+        </div>
+      `;
+    }
+
+    function renderRecurring(subjectName, papers) {
+      const container = document.getElementById("recurringQuestionsList");
+      if (!container) return;
+
+      // Extract high-yield 10-mark questions from papers if available
+      let list = [];
+      if (papers && papers.length > 0) {
+        papers.forEach(p => {
+          (p.sections || []).forEach(sec => {
+            if (sec.marksPerQuestion === 10 || (sec.title && sec.title.includes("10 Marks"))) {
+              (sec.questions || []).forEach(q => {
+                list.push({
+                  subject: p.subject,
+                  freq: `High Yield • ${q.chapterTitle || 'Unit Core'}`,
+                  q: q.q,
+                  marks: "10 Marks"
+                });
+              });
+            }
+          });
+        });
+      }
+
+      if (list.length === 0) {
+        list = [
+          {
+            subject: subjectName,
+            freq: "High Yield • Unit 1",
+            q: `Explain core theoretical concepts, definitions, and foundational architectures of ${subjectName}.`,
+            marks: "10 Marks"
+          },
+          {
+            subject: subjectName,
+            freq: "High Yield • Unit 2",
+            q: `Differentiate between primary approaches and compare standard mechanisms in ${subjectName}.`,
+            marks: "10 Marks"
+          },
+          {
+            subject: subjectName,
+            freq: "High Yield • Unit 3",
+            q: `Derive the analytical formulation or step-by-step problem-solving algorithm for ${subjectName}.`,
+            marks: "10 Marks"
+          }
+        ];
+      }
+
+      // Display up to 4 high yield questions
+      const displayList = list.slice(0, 4);
+
+      container.innerHTML = displayList.map(rq => `
+        <div onclick="openRecurringPractice('${rq.subject}', '${encodeURIComponent(rq.q)}')" class="p-3 bg-surface-container-low rounded-xl hover:bg-primary-fixed/20 border border-outline-variant/30 transition-colors cursor-pointer group">
+          <div class="flex justify-between items-start mb-1.5">
+            <span class="bg-tertiary-fixed text-tertiary text-[10px] uppercase font-bold px-2 py-0.5 rounded">${rq.freq}</span>
+            <span class="text-[11px] font-bold text-primary">${rq.marks}</span>
+          </div>
+          <p class="text-xs text-on-surface group-hover:text-primary transition-colors line-clamp-2 leading-relaxed font-medium">${rq.q}</p>
+          <span class="text-[10px] text-outline mt-1 block">${rq.subject}</span>
+        </div>
+      `).join("");
+    }
+
+    function togglePaperBookmark(paperId) {
+      const isNowSaved = EduPrep.toggleBookmark("paper", paperId);
+      EduPrep.showToast(isNowSaved ? "Paper bookmarked to your study shelf!" : "Removed from saved papers", isNowSaved ? "success" : "info");
+      renderPapers(currentLoadedPapers);
+    }
+
+    function viewPaperModal(paperId) {
+      const paper = (currentLoadedPapers || []).find(p => p.id === paperId) ||
+                    (EduPrep.pyqPapers && EduPrep.pyqPapers.find(p => p.id === paperId)) ||
+                    (currentLoadedPapers && currentLoadedPapers[0]);
+      if (!paper) return;
+
+      activePaperId = paper.id;
+
+      document.getElementById("paperModalTitle").textContent = `${paper.subject} — ${paper.session} ${paper.year}`;
+      document.getElementById("paperModalTag").textContent = `${paper.university || 'State University'} • Semester ${paper.semester || 4}`;
+      document.getElementById("paperModalMeta").textContent = `Code: ${paper.subjectCode || paper.code} • Duration: ${paper.duration || '3 Hours'} • Max Marks: ${paper.maxMarks || 80}`;
+      document.getElementById("paperModalVerification").textContent = paper.verificationStatus === "verified" ? "Verified Paper" : "Sample Reference Paper";
+
+      const btnPractice = document.getElementById("btnPracticeFromPaper");
+      if (btnPractice) {
+        btnPractice.href = `../mcq_practice_exam/code.html?subject=${encodeURIComponent(paper.subject)}`;
+      }
+
+      const questionsContainer = document.getElementById("paperModalQuestionsContainer");
+      if (paper.sections && paper.sections.length > 0) {
+        questionsContainer.innerHTML = paper.sections.map(sec => `
+          <div class="border border-outline-variant/40 rounded-xl p-4 bg-surface-container-low/40 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 font-bold text-on-surface border-b border-outline-variant/20 pb-2">
+              <span class="text-xs sm:text-sm text-on-surface font-extrabold">${sec.title}</span>
+              <span class="text-xs font-bold text-primary bg-primary-fixed/50 px-2 py-0.5 rounded-md shrink-0">[${sec.totalMarks || 20} Marks]</span>
+            </div>
+            ${sec.instructions ? `<p class="text-[11px] text-outline italic">${sec.instructions}</p>` : ''}
+            <div class="space-y-2.5 pt-1">
+              ${(sec.questions || []).map(q => `
+                <div class="p-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/20 flex items-start gap-2.5">
+                  <span class="font-extrabold text-xs text-primary shrink-0">${q.qNo}</span>
+                  <div class="flex-1 text-xs text-on-surface">
+                    <p class="font-medium leading-relaxed">${q.q}</p>
+                    <div class="flex items-center gap-2 mt-1.5 text-[10px] text-outline">
+                      <span class="bg-surface-container px-2 py-0.5 rounded font-medium">${q.chapterTitle || 'Core Syllabus'}</span>
+                      <span class="font-bold text-primary">${q.marks} Marks</span>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join("");
+      } else {
+        questionsContainer.innerHTML = `
+          <div class="border border-outline-variant/40 rounded-xl p-4 bg-surface-container-low/40 space-y-2">
+            <div class="flex justify-between font-bold text-on-surface">
+              <span>Section A (20 Marks) — Compulsory Short Answer Questions</span>
+              <span class="text-primary">[20 Marks]</span>
+            </div>
+            <p class="text-xs text-on-surface">Questions are being prepared for this reference paper.</p>
+          </div>
+        `;
+      }
+
+      document.getElementById("paperModal").classList.remove("hidden");
+    }
+
+    function closePaperModal() {
+      document.getElementById("paperModal").classList.add("hidden");
+    }
+
+    function downloadPaperPdf(paperId) {
+      const pid = paperId || activePaperId;
+      const paper = (currentLoadedPapers || []).find(p => p.id === pid) ||
+                    (EduPrep.pyqPapers && EduPrep.pyqPapers.find(p => p.id === pid)) ||
+                    (currentLoadedPapers && currentLoadedPapers[0]);
+      if (!paper) {
+        EduPrep.showToast("No paper selected to download", "warning");
+        return;
+      }
+
+      const pe = window.EduPrepPyqs || (EduPrep && EduPrep.pyqEngine);
+      if (pe && typeof pe.downloadPdf === "function") {
+        pe.downloadPdf(paper);
+      } else if (EduPrep && typeof EduPrep.downloadPyqPdf === "function") {
+        EduPrep.downloadPyqPdf(paper);
+      } else {
+        EduPrep.openPrintablePaper(paper);
+      }
+    }
+
+    function printPaperSheet(paperId) {
+      const pid = paperId || activePaperId;
+      const paper = (currentLoadedPapers || []).find(p => p.id === pid) ||
+                    (EduPrep.pyqPapers && EduPrep.pyqPapers.find(p => p.id === pid)) ||
+                    (currentLoadedPapers && currentLoadedPapers[0]);
+      if (paper && EduPrep.openPrintablePaper) {
+        EduPrep.openPrintablePaper(paper);
+      } else {
+        EduPrep.showToast("Opening printable reference sheet...", "info");
+      }
+    }
+
+    function reportActivePaper() {
+      if (!activePaperId) return;
+      EduPrep.reportContent("paper", activePaperId, "Student reported question paper issue", "");
+      EduPrep.showToast("Paper flagged for review in Admin Content Studio.", "info");
+    }
+
+    function openRecurringPractice(subject, encodedQ) {
+      const q = decodeURIComponent(encodedQ);
+      const prompt = `Please provide a structured 10-mark exam answer with diagrams, steps, and key definitions for this past paper question in ${subject}: "${q}"`;
+      if (typeof window.EduPrepChatbot !== "undefined" && typeof window.EduPrepChatbot.open === "function") {
+        window.EduPrepChatbot.open({ prompt: prompt, mode: '10mark' });
+        return;
+      }
+      sessionStorage.setItem("eduprep_pending_query", q);
+      sessionStorage.setItem("eduvantage_pending_query", q);
+      EduPrep.navigateTo("home_dashboard?openAi=true&q=" + encodeURIComponent(q));
+    }
+  </script>
+</body>
+</html>

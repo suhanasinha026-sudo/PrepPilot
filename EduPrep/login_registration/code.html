@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — Student Login &amp; Registration</title>
+  <meta name="description" content="Sign in to your EduPrep account to access your personalized semester curriculum, question papers, timed practice tests, and AI study tutor."/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#4648d4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "on-primary": "#ffffff",
+            "secondary": "#0058be",
+            "tertiary": "#b10e6b",
+            "surface": "#f8f9fa",
+            "surface-container-low": "#f3f4f5",
+            "surface-container": "#edeeef",
+            "surface-container-high": "#e7e8e9",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#191c1d",
+            "on-surface-variant": "#464554",
+            "outline": "#767586",
+            "outline-variant": "#c7c4d7",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "Inter", "sans-serif"],
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+    .form-panel { transition: opacity 0.2s ease, transform 0.2s ease; }
+    .hidden-panel {
+      display: none !important;
+    }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="bg-surface text-on-surface min-h-screen flex flex-col justify-between antialiased selection:bg-primary-fixed selection:text-primary">
+
+  <!-- ==================================================================== -->
+  <!-- 1. PUBLIC AUTHENTICATION HEADER                                      -->
+  <!-- ==================================================================== -->
+  <header class="w-full bg-white border-b border-outline-variant/40 py-3.5 px-4 sm:px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2.5 group" title="Return to EduPrep Home">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-lg">school</span>
+        </div>
+        <div>
+          <span class="font-headline font-extrabold text-lg text-primary leading-none block">EduPrep</span>
+          <span class="text-[10px] font-semibold text-on-surface-variant tracking-wider uppercase block mt-0.5">Exam Prep Platform</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="text-xs font-semibold text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-base">home</span>
+          <span class="hidden sm:inline">Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================================================================== -->
+  <!-- 2. MAIN CENTERED AUTHENTICATION CARD                                 -->
+  <!-- ==================================================================== -->
+  <main class="flex-grow flex items-center justify-center px-4 py-8 sm:py-12 w-full">
+    <div class="w-full max-w-[460px] mx-auto bg-white rounded-2xl shadow-[0_8px_30px_rgba(25,28,29,0.06)] border border-outline-variant/40 p-6 sm:p-8 space-y-6">
+
+      <!-- Configuration Warning Banner (Displayed when Supabase is unconfigured) -->
+      <div id="configWarningBanner" class="hidden p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 text-xs font-medium space-y-1" role="alert">
+        <div class="flex items-center gap-2 font-bold text-amber-800">
+          <span class="material-symbols-outlined text-base">warning</span>
+          <span>Supabase Backend Not Configured</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-amber-800/90" id="configWarningDetail">
+          Please configure <code class="bg-amber-100 px-1 py-0.5 rounded text-amber-900">VITE_SUPABASE_URL</code> and <code class="bg-amber-100 px-1 py-0.5 rounded text-amber-900">VITE_SUPABASE_PUBLISHABLE_KEY</code> in <code class="bg-amber-100 px-1 py-0.5 rounded text-amber-900">.env.local</code> to authenticate students.
+        </p>
+      </div>
+
+      <!-- Header / Title -->
+      <div class="text-center space-y-1.5">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-primary-fixed text-primary flex items-center justify-center shadow-xs mb-2">
+          <span class="material-symbols-outlined text-2xl" id="headerIcon">lock</span>
+        </div>
+        <h1 class="font-headline font-extrabold text-2xl text-on-surface tracking-tight" id="authFormTitle">Welcome Back</h1>
+        <p class="text-xs sm:text-sm text-on-surface-variant" id="authFormSubtitle">Sign in to continue your exam preparation.</p>
+      </div>
+
+      <!-- Unified Inline Validation & Error Alert Banner -->
+      <div id="authInlineAlert" class="hidden p-3.5 rounded-xl border text-xs font-medium flex items-start gap-2.5" role="alert">
+        <span class="material-symbols-outlined text-base shrink-0 mt-0.5" id="authInlineIcon">error</span>
+        <span id="authInlineMessage" class="flex-1 leading-relaxed"></span>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- VIEW 1: SIGN IN FORM                                               -->
+      <!-- ================================================================== -->
+      <form id="login-form" class="form-panel space-y-4" novalidate onsubmit="handleLoginSubmit(event)">
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-on-surface" for="login-email">Email Address *</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">mail</span>
+            <input 
+              id="login-email" 
+              name="email"
+              type="email" 
+              autocomplete="email" 
+              required 
+              placeholder="student@college.edu" 
+              class="w-full h-11 pl-10 pr-3.5 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-semibold text-on-surface" for="login-password">Password *</label>
+            <button type="button" onclick="showSection('reset-form')" class="text-xs font-semibold text-primary hover:underline">
+              Forgot Password?
+            </button>
+          </div>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">key</span>
+            <input 
+              id="login-password" 
+              name="password"
+              type="password" 
+              autocomplete="current-password" 
+              required 
+              placeholder="Enter your password" 
+              class="w-full h-11 pl-10 pr-11 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
+            />
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('login-password', 'eyeIconLogin')" 
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-outline hover:text-on-surface transition-colors"
+              title="Toggle password visibility"
+              aria-label="Toggle password visibility"
+            >
+              <span class="material-symbols-outlined text-lg" id="eyeIconLogin">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button 
+          id="btnLoginSubmit" 
+          type="submit" 
+          class="w-full h-11 rounded-xl bg-primary hover:bg-primary-container text-white text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="loginBtnSpinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span id="loginBtnLabel">Sign In to EduPrep</span>
+        </button>
+
+        <div class="pt-2 text-center text-xs text-on-surface-variant">
+          <span>Don't have an account?</span>
+          <button type="button" onclick="showSection('register-form')" class="font-bold text-primary hover:underline ml-1">
+            Create Student Account
+          </button>
+        </div>
+      </form>
+
+      <!-- ================================================================== -->
+      <!-- VIEW 2: REGISTRATION FORM                                          -->
+      <!-- ================================================================== -->
+      <form id="register-form" class="form-panel hidden-panel space-y-3.5" novalidate onsubmit="handleRegisterSubmit(event)">
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-on-surface" for="reg-name">Full Name *</label>
+          <input 
+            id="reg-name" 
+            type="text" 
+            required 
+            placeholder="e.g. Aryan Sharma" 
+            class="w-full h-10 px-3.5 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+          />
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-on-surface" for="reg-email">College Email Address *</label>
+          <input 
+            id="reg-email" 
+            type="email" 
+            required 
+            placeholder="student@college.edu" 
+            class="w-full h-10 px-3.5 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-on-surface" for="reg-password">Password (min 8 chars) *</label>
+            <div class="relative">
+              <input 
+                id="reg-password" 
+                type="password" 
+                required 
+                placeholder="••••••••" 
+                class="w-full h-10 px-3.5 pr-10 rounded-xl border border-outline-variant bg-white text-xs text-on-surface focus:border-primary focus:outline-none"
+              />
+              <button type="button" onclick="togglePasswordVisibility('reg-password', 'eyeIconReg')" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-outline" aria-label="Toggle password visibility">
+                <span class="material-symbols-outlined text-base" id="eyeIconReg">visibility</span>
+              </button>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-on-surface" for="reg-password-confirm">Confirm Password *</label>
+            <div class="relative">
+              <input 
+                id="reg-password-confirm" 
+                type="password" 
+                required 
+                placeholder="••••••••" 
+                class="w-full h-10 px-3.5 pr-10 rounded-xl border border-outline-variant bg-white text-xs text-on-surface focus:border-primary focus:outline-none"
+              />
+              <button type="button" onclick="togglePasswordVisibility('reg-password-confirm', 'eyeIconRegConf')" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-outline" aria-label="Toggle confirm password visibility">
+                <span class="material-symbols-outlined text-base" id="eyeIconRegConf">visibility</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-on-surface" for="reg-uni">University *</label>
+            <select id="reg-uni" onchange="onUniversitySelectChange()" class="w-full h-10 px-2.5 rounded-xl border border-outline-variant text-xs bg-white text-on-surface focus:border-primary">
+              <option value="mu">Mumbai University (MU)</option>
+              <option value="sppu">SPPU Pune University</option>
+              <option value="dbatu">DBATU Lonere</option>
+              <option value="coep">COEP Tech University</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-on-surface" for="reg-college">College *</label>
+            <select id="reg-college" class="w-full h-10 px-2.5 rounded-xl border border-outline-variant text-xs bg-white text-on-surface focus:border-primary">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-on-surface" for="reg-branch">Branch *</label>
+            <select id="reg-branch" class="w-full h-10 px-2.5 rounded-xl border border-outline-variant text-xs bg-white text-on-surface focus:border-primary">
+              <option value="Computer Engineering">Computer Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="CSE (AI & ML)">CSE (AI & ML)</option>
+              <option value="Electronics & Telecom (EXTC)">Electronics & Telecom</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-on-surface" for="reg-sem">Semester *</label>
+            <select id="reg-sem" class="w-full h-10 px-2.5 rounded-xl border border-outline-variant text-xs bg-white font-bold text-primary focus:border-primary">
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4" selected>Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+        </div>
+
+        <button 
+          id="btnRegisterSubmit" 
+          type="submit" 
+          class="w-full h-11 rounded-xl bg-primary hover:bg-primary-container text-white text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="regBtnSpinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span id="regBtnLabel">Create Account &amp; Configure Syllabus</span>
+        </button>
+
+        <div class="pt-1 text-center text-xs text-on-surface-variant">
+          <span>Already have an account?</span>
+          <button type="button" onclick="showSection('login-form')" class="font-bold text-primary hover:underline ml-1">
+            Sign In
+          </button>
+        </div>
+      </form>
+
+      <!-- ================================================================== -->
+      <!-- VIEW 3: PASSWORD RECOVERY REQUEST FORM                              -->
+      <!-- ================================================================== -->
+      <form id="reset-form" class="form-panel hidden-panel space-y-4" novalidate onsubmit="handleResetSubmit(event)">
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-on-surface" for="reset-email">Registered Email Address *</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">mail</span>
+            <input 
+              id="reset-email" 
+              type="email" 
+              required 
+              placeholder="student@college.edu" 
+              class="w-full h-11 pl-10 pr-3.5 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <button 
+          id="btnResetSubmit" 
+          type="submit" 
+          class="w-full h-11 rounded-xl bg-primary hover:bg-primary-container text-white text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="resetBtnSpinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span id="resetBtnLabel">Send Password Recovery Instructions</span>
+        </button>
+
+        <div class="text-center pt-1">
+          <button type="button" onclick="showSection('login-form')" class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">
+            ← Back to Sign In
+          </button>
+        </div>
+      </form>
+
+      <!-- ================================================================== -->
+      <!-- VIEW 4: PASSWORD UPDATE FORM (From Supabase Recovery Link)          -->
+      <!-- ================================================================== -->
+      <form id="update-password-form" class="form-panel hidden-panel space-y-4" novalidate onsubmit="handleUpdatePasswordSubmit(event)">
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-on-surface" for="new-password">New Password (min 8 chars) *</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">key</span>
+            <input 
+              id="new-password" 
+              type="password" 
+              required 
+              placeholder="Enter new password" 
+              class="w-full h-11 pl-10 pr-11 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            />
+            <button type="button" onclick="togglePasswordVisibility('new-password', 'eyeIconNewPass')" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-outline hover:text-on-surface" aria-label="Toggle password visibility">
+              <span class="material-symbols-outlined text-lg" id="eyeIconNewPass">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-on-surface" for="new-password-confirm">Confirm New Password *</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">lock</span>
+            <input 
+              id="new-password-confirm" 
+              type="password" 
+              required 
+              placeholder="Confirm new password" 
+              class="w-full h-11 pl-10 pr-11 rounded-xl border border-outline-variant bg-white text-xs sm:text-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            />
+            <button type="button" onclick="togglePasswordVisibility('new-password-confirm', 'eyeIconNewPassConf')" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-outline hover:text-on-surface" aria-label="Toggle confirm password visibility">
+              <span class="material-symbols-outlined text-lg" id="eyeIconNewPassConf">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button 
+          id="btnUpdatePassSubmit" 
+          type="submit" 
+          class="w-full h-11 rounded-xl bg-primary hover:bg-primary-container text-white text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="updatePassSpinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span id="updatePassLabel">Update Password</span>
+        </button>
+
+        <div class="text-center pt-1">
+          <button type="button" onclick="showSection('login-form')" class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">
+            ← Back to Sign In
+          </button>
+        </div>
+      </form>
+
+      <!-- ================================================================== -->
+      <!-- VIEW 5: EMAIL VERIFICATION NOTICE PANEL                             -->
+      <!-- ================================================================== -->
+      <div id="email-verification-panel" class="form-panel hidden-panel text-center space-y-4 py-2">
+        <div class="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+          <span class="material-symbols-outlined text-3xl">mark_email_read</span>
+        </div>
+        <div class="space-y-1.5">
+          <h2 class="font-headline font-bold text-lg text-on-surface">Check Your Email</h2>
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            We have sent a verification link to <strong id="sentVerificationEmail" class="text-on-surface font-semibold">your email</strong>.
+          </p>
+          <p class="text-[11px] text-outline leading-relaxed">
+            Please click the confirmation link in the email to activate your student account and access EduPrep.
+          </p>
+        </div>
+        <div class="pt-2">
+          <button type="button" onclick="showSection('login-form')" class="w-full h-10 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-on-surface transition-colors">
+            Return to Sign In
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================================================================== -->
+  <!-- 3. MINIMAL AUTHENTICATION FOOTER                                     -->
+  <!-- ==================================================================== -->
+  <footer class="w-full py-4 px-6 border-t border-outline-variant/30 text-center text-xs text-on-surface-variant">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>© 2026 EduPrep Platform. Syllabus-Aligned Student Exam Preparation.</p>
+      <div class="flex items-center gap-4 text-xs font-medium">
+        <a href="../index.html" class="hover:text-primary">Home</a>
+        <a href="../resources_dashboard/code.html" class="hover:text-primary">Explore Resources</a>
+        <a href="../home_dashboard/code.html" class="hover:text-primary">Student Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts: Supabase UMD vendor bundle + client + services -->
+  <script src="../shared/vendor/supabase.js"></script>
+  <script>
+    if (!window.supabase) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');
+    }
+  </script>
+  <script src="../shared/env_config.js"></script>
+  <script src="../shared/supabase_client.js"></script>
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    let activeRecoverySession = false;
+
+    function clearInlineAlert() {
+      const box = document.getElementById("authInlineAlert");
+      if (box) box.classList.add("hidden");
+    }
+
+    function showInlineAlert(message, type = "error") {
+      const box = document.getElementById("authInlineAlert");
+      const icon = document.getElementById("authInlineIcon");
+      const text = document.getElementById("authInlineMessage");
+      if (!box) return;
+
+      box.classList.remove("hidden");
+      text.textContent = message;
+
+      if (type === "success") {
+        box.className = "p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-50 text-emerald-900 text-xs font-medium flex items-start gap-2.5";
+        icon.textContent = "check_circle";
+        icon.className = "material-symbols-outlined text-base text-emerald-600 shrink-0 mt-0.5";
+      } else if (type === "info") {
+        box.className = "p-3.5 rounded-xl border border-primary/30 bg-primary-fixed/30 text-primary text-xs font-medium flex items-start gap-2.5";
+        icon.textContent = "info";
+        icon.className = "material-symbols-outlined text-base text-primary shrink-0 mt-0.5";
+      } else {
+        box.className = "p-3.5 rounded-xl border border-error/40 bg-error-container/40 text-error text-xs font-medium flex items-start gap-2.5";
+        icon.textContent = "error";
+        icon.className = "material-symbols-outlined text-base text-error shrink-0 mt-0.5";
+      }
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input || !icon) return;
+      if (input.type === "password") {
+        input.type = "text";
+        icon.textContent = "visibility_off";
+      } else {
+        input.type = "password";
+        icon.textContent = "visibility";
+      }
+    }
+
+    function showSection(activeId) {
+      clearInlineAlert();
+      const sections = ["login-form", "register-form", "reset-form", "update-password-form", "email-verification-panel"];
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (id === activeId) el.classList.remove("hidden-panel");
+          else el.classList.add("hidden-panel");
+        }
+      });
+
+      const titleEl = document.getElementById("authFormTitle");
+      const subEl = document.getElementById("authFormSubtitle");
+      const iconEl = document.getElementById("headerIcon");
+
+      if (activeId === "register-form") {
+        titleEl.textContent = "Create Student Account";
+        subEl.textContent = "Join EduPrep to access your curriculum and exam tools.";
+        iconEl.textContent = "person_add";
+      } else if (activeId === "reset-form") {
+        titleEl.textContent = "Reset Password";
+        subEl.textContent = "Enter your email to receive recovery instructions.";
+        iconEl.textContent = "lock_reset";
+      } else if (activeId === "update-password-form") {
+        titleEl.textContent = "Set New Password";
+        subEl.textContent = "Choose a secure new password for your EduPrep account.";
+        iconEl.textContent = "password";
+      } else if (activeId === "email-verification-panel") {
+        titleEl.textContent = "Email Verification";
+        subEl.textContent = "Confirm your student email to activate your account.";
+        iconEl.textContent = "mark_email_read";
+      } else {
+        titleEl.textContent = "Welcome Back";
+        subEl.textContent = "Sign in to continue your exam preparation.";
+        iconEl.textContent = "lock";
+      }
+    }
+
+    function onUniversitySelectChange() {
+      const uniSelect = document.getElementById("reg-uni");
+      const colSelect = document.getElementById("reg-college");
+      if (!uniSelect || !colSelect) return;
+      const uniId = uniSelect.value;
+      if (typeof EduPrep !== "undefined" && typeof EduPrep.getColleges === "function") {
+        const colleges = EduPrep.getColleges(uniId, "all", "");
+        const list = colleges.length > 0 ? colleges : (EduPrep.colleges || []).slice(0, 6);
+        colSelect.innerHTML = list.map(c => `<option value="${c.id}">${c.name} (${c.abbreviation || c.short_name || ''})</option>`).join("");
+      }
+    }
+
+    // Validates that a redirection URL is internal to the application
+    function getSafeRedirectUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const returnUrl = params.get("returnUrl") || params.get("redirect") || "";
+      if (returnUrl && returnUrl.startsWith("/") && !returnUrl.startsWith("//") && !returnUrl.includes("://")) {
+        return returnUrl;
+      }
+      return "../home_dashboard/code.html";
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      clearInlineAlert();
+
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value;
+
+      // Validation
+      if (!email) {
+        showInlineAlert("Please enter your email address.", "error");
+        document.getElementById("login-email").focus();
+        return;
+      }
+      if (window.EduPrepServices && window.EduPrepServices.Validation) {
+        const emailCheck = window.EduPrepServices.Validation.validateEmail(email);
+        if (!emailCheck.valid) {
+          showInlineAlert(emailCheck.error, "error");
+          document.getElementById("login-email").focus();
+          return;
+        }
+      }
+      if (!password) {
+        showInlineAlert("Please enter your password.", "error");
+        document.getElementById("login-password").focus();
+        return;
+      }
+
+      // Supabase configuration verification
+      if (!window.EduPrepSupabase || !window.EduPrepSupabase.isConfigured()) {
+        const env = window.EduPrepSupabase ? window.EduPrepSupabase.getEnvConfig() : {};
+        showInlineAlert(
+          "Supabase backend is not connected (" + (env.missingConfigReason || "Missing credentials in .env.local") + "). Live login requires valid VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.",
+          "error"
+        );
+        return;
+      }
+
+      // UI Loading state
+      const btn = document.getElementById("btnLoginSubmit");
+      const spinner = document.getElementById("loginBtnSpinner");
+      const label = document.getElementById("loginBtnLabel");
+      btn.disabled = true;
+      spinner.classList.remove("hidden");
+      label.textContent = "Signing in...";
+
+      try {
+        const { data, error } = await window.EduPrepSupabase.auth.signInWithPassword(email, password);
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Sign In to EduPrep";
+
+        if (error) {
+          if (error.requiresConfirmation) {
+            document.getElementById("sentVerificationEmail").textContent = email;
+            showSection("email-verification-panel");
+            return;
+          }
+          showInlineAlert(error.message || "Invalid email or password.", "error");
+          return;
+        }
+
+        if (!data || !data.user) {
+          showInlineAlert("Authentication failed. No user record returned.", "error");
+          return;
+        }
+
+        const fullName = (data.user.user_metadata && data.user.user_metadata.full_name) || email.split("@")[0];
+        if (typeof EduPrep !== "undefined") {
+          EduPrep.updateProfile({
+            id: data.user.id,
+            name: fullName,
+            email: data.user.email || email,
+            authMode: "supabase"
+          });
+        }
+
+        showInlineAlert("Signed in successfully! Loading your student dashboard...", "success");
+        setTimeout(() => {
+          window.location.href = getSafeRedirectUrl();
+        }, 400);
+      } catch (err) {
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Sign In to EduPrep";
+        showInlineAlert("An unexpected error occurred during sign-in. Please try again.", "error");
+      }
+    }
+
+    async function handleRegisterSubmit(event) {
+      event.preventDefault();
+      clearInlineAlert();
+
+      const name = document.getElementById("reg-name").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const confirmPassword = document.getElementById("reg-password-confirm").value;
+      const semester = parseInt(document.getElementById("reg-sem").value, 10) || 4;
+      const branch = document.getElementById("reg-branch").value;
+      const uniId = document.getElementById("reg-uni").value;
+      const colId = document.getElementById("reg-college").value;
+
+      if (!name || name.length < 2) {
+        showInlineAlert("Please enter your full name (at least 2 characters).", "error");
+        document.getElementById("reg-name").focus();
+        return;
+      }
+      if (window.EduPrepServices && window.EduPrepServices.Validation) {
+        const emailCheck = window.EduPrepServices.Validation.validateEmail(email);
+        if (!emailCheck.valid) {
+          showInlineAlert(emailCheck.error, "error");
+          document.getElementById("reg-email").focus();
+          return;
+        }
+        const passCheck = window.EduPrepServices.Validation.validatePassword(password, 8);
+        if (!passCheck.valid) {
+          showInlineAlert(passCheck.error, "error");
+          document.getElementById("reg-password").focus();
+          return;
+        }
+      } else {
+        if (!email || !email.includes("@")) {
+          showInlineAlert("Please enter a valid email address.", "error");
+          document.getElementById("reg-email").focus();
+          return;
+        }
+        if (password.length < 8) {
+          showInlineAlert("Password must be at least 8 characters long.", "error");
+          document.getElementById("reg-password").focus();
+          return;
+        }
+      }
+
+      if (password !== confirmPassword) {
+        showInlineAlert("Passwords do not match. Please re-enter your password.", "error");
+        document.getElementById("reg-password-confirm").focus();
+        return;
+      }
+
+      if (!window.EduPrepSupabase || !window.EduPrepSupabase.isConfigured()) {
+        const env = window.EduPrepSupabase ? window.EduPrepSupabase.getEnvConfig() : {};
+        showInlineAlert(
+          "Supabase backend is not configured in .env.local (" + (env.missingConfigReason || "Missing credentials") + "). Cannot register real student accounts.",
+          "error"
+        );
+        return;
+      }
+
+      const btn = document.getElementById("btnRegisterSubmit");
+      const spinner = document.getElementById("regBtnSpinner");
+      const label = document.getElementById("regBtnLabel");
+      btn.disabled = true;
+      spinner.classList.remove("hidden");
+      label.textContent = "Creating account...";
+
+      try {
+        const { data, error } = await window.EduPrepSupabase.auth.signUp(email, password, name);
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Create Account & Configure Syllabus";
+
+        if (error) {
+          showInlineAlert(error.message || "Registration failed.", "error");
+          return;
+        }
+
+        // Check if email confirmation is required (Supabase returns user but session is null)
+        const hasActiveSession = Boolean(data && data.session);
+        const univObj = typeof EduPrep !== "undefined" && EduPrep.universities ? EduPrep.universities.find(u => u.id === uniId) : null;
+        const colObj = typeof EduPrep !== "undefined" && EduPrep.colleges ? EduPrep.colleges.find(c => c.id === colId) : null;
+
+        if (typeof EduPrep !== "undefined") {
+          EduPrep.updateProfile({
+            id: data && data.user ? data.user.id : null,
+            name,
+            email,
+            authMode: hasActiveSession ? "supabase" : "pending_verification"
+          });
+          EduPrep.updateAcademic({
+            semester,
+            branch,
+            branchName: branch,
+            universityId: uniId,
+            university: univObj ? univObj.name : "University of Mumbai",
+            collegeId: colId,
+            college: colObj ? colObj.name : "Vidyalankar Institute of Technology (VIT)"
+          });
+        }
+
+        if (!hasActiveSession) {
+          document.getElementById("sentVerificationEmail").textContent = email;
+          showSection("email-verification-panel");
+        } else {
+          showInlineAlert(`Account created for ${name}! Redirecting to dashboard...`, "success");
+          setTimeout(() => {
+            window.location.href = "../home_dashboard/code.html";
+          }, 500);
+        }
+      } catch (err) {
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Create Account & Configure Syllabus";
+        showInlineAlert("An unexpected error occurred during registration. Please try again.", "error");
+      }
+    }
+
+    async function handleResetSubmit(event) {
+      event.preventDefault();
+      clearInlineAlert();
+
+      const email = document.getElementById("reset-email").value.trim();
+      if (!email) {
+        showInlineAlert("Please enter your registered email address.", "error");
+        document.getElementById("reset-email").focus();
+        return;
+      }
+      if (window.EduPrepServices && window.EduPrepServices.Validation) {
+        const emailCheck = window.EduPrepServices.Validation.validateEmail(email);
+        if (!emailCheck.valid) {
+          showInlineAlert(emailCheck.error, "error");
+          document.getElementById("reset-email").focus();
+          return;
+        }
+      }
+
+      if (!window.EduPrepSupabase || !window.EduPrepSupabase.isConfigured()) {
+        const env = window.EduPrepSupabase ? window.EduPrepSupabase.getEnvConfig() : {};
+        showInlineAlert(
+          "Password recovery requires active Supabase configuration (" + (env.missingConfigReason || "Missing credentials in .env.local") + ").",
+          "error"
+        );
+        return;
+      }
+
+      const btn = document.getElementById("btnResetSubmit");
+      const spinner = document.getElementById("resetBtnSpinner");
+      const label = document.getElementById("resetBtnLabel");
+      btn.disabled = true;
+      spinner.classList.remove("hidden");
+      label.textContent = "Sending instructions...";
+
+      try {
+        const redirectUrl = `${window.location.origin}/update-password`;
+        const { error } = await window.EduPrepSupabase.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Send Password Recovery Instructions";
+
+        if (error) {
+          showInlineAlert(error.message, "error");
+          return;
+        }
+        showInlineAlert(`If an EduPrep account exists for ${email}, recovery instructions have been sent. Please check your inbox.`, "success");
+      } catch (err) {
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Send Password Recovery Instructions";
+        showInlineAlert("Failed to send password recovery instructions. Please try again later.", "error");
+      }
+    }
+
+    async function handleUpdatePasswordSubmit(event) {
+      event.preventDefault();
+      clearInlineAlert();
+
+      const newPassword = document.getElementById("new-password").value;
+      const confirmPassword = document.getElementById("new-password-confirm").value;
+
+      if (!newPassword || newPassword.length < 8) {
+        showInlineAlert("New password must be at least 8 characters long.", "error");
+        document.getElementById("new-password").focus();
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        showInlineAlert("Passwords do not match. Please re-enter your new password.", "error");
+        document.getElementById("new-password-confirm").focus();
+        return;
+      }
+
+      const btn = document.getElementById("btnUpdatePassSubmit");
+      const spinner = document.getElementById("updatePassSpinner");
+      const label = document.getElementById("updatePassLabel");
+      btn.disabled = true;
+      spinner.classList.remove("hidden");
+      label.textContent = "Updating password...";
+
+      try {
+        const { error } = await window.EduPrepSupabase.auth.updatePassword(newPassword);
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Update Password";
+
+        if (error) {
+          showInlineAlert(error.message || "Failed to update password. Recovery link may be expired.", "error");
+          return;
+        }
+
+        showInlineAlert("Password updated successfully! You can now sign in with your new password.", "success");
+        setTimeout(() => {
+          showSection("login-form");
+        }, 1200);
+      } catch (err) {
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        label.textContent = "Update Password";
+        showInlineAlert("An unexpected error occurred while updating your password.", "error");
+      }
+    }
+
+    // Inspect URL parameters and Supabase auth state on page load
+    document.addEventListener("DOMContentLoaded", async () => {
+      onUniversitySelectChange();
+
+      // Display warning banner if configuration is absent
+      if (window.EduPrepSupabase && !window.EduPrepSupabase.isConfigured()) {
+        const env = window.EduPrepSupabase.getEnvConfig();
+        const banner = document.getElementById("configWarningBanner");
+        const detail = document.getElementById("configWarningDetail");
+        if (banner) banner.classList.remove("hidden");
+        if (detail && env.missingConfigReason) {
+          detail.textContent = `Supabase credentials required: ${env.missingConfigReason} Configure in .env.local to enable live email/password authentication.`;
+        }
+      }
+
+      // Listen for Supabase Auth state events (such as PASSWORD_RECOVERY)
+      if (window.EduPrepSupabase && window.EduPrepSupabase.auth) {
+        window.EduPrepSupabase.auth.onAuthStateChange((event, session) => {
+          if (event === "PASSWORD_RECOVERY") {
+            activeRecoverySession = true;
+            showSection("update-password-form");
+            showInlineAlert("Password recovery session verified. Enter your new password below.", "info");
+          }
+        });
+      }
+
+      // Check URL path and query parameters
+      const path = (window.location.pathname || "").toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const hash = window.location.hash || "";
+
+      // Check if arriving from a password recovery link with hash parameters
+      if (path.includes("update-password") || path.includes("new-password") || params.get("mode") === "update-password" || hash.includes("type=recovery")) {
+        showSection("update-password-form");
+        // Verify if session exists for password update
+        if (window.EduPrepSupabase && window.EduPrepSupabase.auth) {
+          const { session } = await window.EduPrepSupabase.auth.getSession();
+          if (!session && !hash.includes("access_token")) {
+            showInlineAlert("No active password recovery session detected. If your recovery link expired, please request a new one.", "error");
+          }
+        }
+        return;
+      }
+
+      const mode = params.get("mode") || (
+        path.includes("register") || path.includes("signup")
+          ? "register"
+          : path.includes("forgot") || path.includes("reset")
+          ? "reset"
+          : "login"
+      );
+
+      if (mode === "register") {
+        showSection("register-form");
+      } else if (mode === "reset") {
+        showSection("reset-form");
+      } else {
+        showSection("login-form");
+      }
+    });
+  </script>
+</body>
+</html>

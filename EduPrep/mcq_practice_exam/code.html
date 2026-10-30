@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — MCQ Practice &amp; Timed Exam Simulator</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_chatbot.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    
+    .selected-correct {
+      background-color: #f0fdf4 !important;
+      border-color: #16a34a !important;
+      border-width: 2px !important;
+    }
+    .selected-correct .option-circle {
+      background-color: #16a34a !important;
+      border-color: #16a34a !important;
+      color: white !important;
+    }
+    
+    .selected-incorrect {
+      background-color: #fef2f2 !important;
+      border-color: #dc2626 !important;
+      border-width: 2px !important;
+    }
+    .selected-incorrect .option-circle {
+      background-color: #dc2626 !important;
+      border-color: #dc2626 !important;
+      color: white !important;
+    }
+
+    .selected-exam-choice {
+      background-color: #eef2ff !important;
+      border-color: #4648d4 !important;
+      border-width: 2px !important;
+    }
+    .selected-exam-choice .option-circle {
+      background-color: #4648d4 !important;
+      border-color: #4648d4 !important;
+      color: white !important;
+    }
+    
+    .highlight-answer {
+      background-color: #f0fdf4 !important;
+      border-color: #16a34a !important;
+      border-width: 2px !important;
+    }
+    .highlight-answer .option-circle {
+      background-color: #16a34a !important;
+      border-color: #16a34a !important;
+      color: white !important;
+    }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="bg-surface text-on-surface min-h-screen flex flex-col antialiased">
+  
+  <!-- Top Navigation Bar -->
+  <header class="w-full top-0 sticky bg-surface z-40 px-4 md:px-8 py-3 mx-auto flex flex-wrap justify-between items-center gap-3 max-w-5xl border-b border-surface-container shadow-sm">
+    <div class="flex items-center gap-3">
+      <button id="btnHeaderExit" onclick="handleHeaderExitClick()" class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" title="Back / Exit">
+        <span class="material-symbols-outlined text-lg" id="iconHeaderExit">arrow_back</span>
+      </button>
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-extrabold text-sm md:text-base text-primary" id="headerMainTitle">EduPrep Practice Tests</span>
+          <!-- Subject Switcher Dropdown (Only visible during active exam) -->
+          <div id="examSubjectSelectorWrap" class="hidden">
+            <span class="text-xs font-bold bg-surface-container border border-outline-variant/60 rounded-lg px-2 py-1 text-primary" id="examActiveSubjBadge">Operating Systems</span>
+          </div>
+        </div>
+        <p class="text-[11px] text-on-surface-variant hidden sm:block" id="examHeaderSubtitle">Configure your curriculum context and choose a chapter to begin</p>
+      </div>
+    </div>
+
+    <!-- Center: Progress Track (Visible only in active exam) -->
+    <div id="examProgressTrackWrap" class="flex-1 max-w-xs mx-2 hidden md:hidden">
+      <div class="flex justify-between items-center mb-1 text-[11px]">
+        <span class="font-semibold text-on-surface-variant uppercase tracking-wider" id="qProgressLabel">Question 1 of 15</span>
+        <span class="font-bold text-primary" id="qPercentLabel">7%</span>
+      </div>
+      <div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+        <div id="qProgressBar" class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300" style="width: 7%"></div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2" id="examHeaderControls">
+      <!-- Mode Switcher: Practice Mode vs Exam Mode (Hidden on selection screen) -->
+      <div id="examModeToggleGroup" class="hidden flex bg-surface-container p-0.5 rounded-xl border border-outline-variant/40 text-[11px] font-bold" role="group" aria-label="Quiz Mode">
+        <button id="btnModePractice" type="button" onclick="setSimulatorMode('practice')" class="px-2.5 py-1 rounded-lg bg-primary text-on-primary shadow-2xs transition-all" title="Instant answer feedback after each question">
+          Practice
+        </button>
+        <button id="btnModeExam" type="button" onclick="setSimulatorMode('exam')" class="px-2.5 py-1 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" title="Answers hidden until final exam submission">
+          Timed Exam
+        </button>
+      </div>
+
+      <!-- Timer Pill (Hidden on selection screen) -->
+      <div id="examTimerPill" class="hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant/50 text-xs font-bold text-on-surface">
+        <span class="material-symbols-outlined text-sm text-primary">timer</span>
+        <span id="examTimer">15:00</span>
+      </div>
+
+      <!-- Selection Mode Badge (Visible on selection screen) -->
+      <div id="selectionStatusBadge" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-primary text-xs font-bold">
+        <span class="material-symbols-outlined text-sm">tune</span>
+        <span>Selection Mode</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 1. PRE-EXAM SELECTION SCREEN (Visible by default, no auto-start) -->
+  <!-- ========================================================================= -->
+  <div id="practiceSelectionScreen" class="flex-1 w-full max-w-4xl mx-auto px-4 md:px-8 py-8 space-y-6">
+    <!-- Header Hero -->
+    <div class="bg-gradient-to-br from-primary/10 via-primary-fixed/30 to-surface-container-low rounded-3xl p-6 sm:p-8 border border-primary/20 shadow-sm">
+      <div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-2">
+        <span class="material-symbols-outlined text-base">quiz</span>
+        <span>Customizable MCQ Practice & Timed Benchmarks</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mb-2">
+        Practice Tests & Exam Simulator
+      </h1>
+      <p class="text-xs sm:text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+        Select your academic stream, subject, and chapter below to start. Practice mode gives immediate answer feedback and deep pedagogical explanations, while Timed Exam mode benchmarks your speed and accuracy.
+      </p>
+    </div>
+
+    <!-- Selection Controls Card -->
+    <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/30 ambient-shadow space-y-6">
+      
+      <!-- Step 1: Stream Selection -->
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">1. Academic Stream</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="streamButtonGroup">
+          <button type="button" onclick="selectPracticeStream('engineering')" id="btnStreamEng" class="p-3 rounded-xl border-2 border-primary bg-primary text-white font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">engineering</span>
+            <span>Engineering</span>
+          </button>
+          <button type="button" onclick="selectPracticeStream('medical')" id="btnStreamMed" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">medical_services</span>
+            <span>Medical</span>
+          </button>
+          <button type="button" onclick="selectPracticeStream('commerce')" id="btnStreamCom" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">monitoring</span>
+            <span>Commerce</span>
+          </button>
+          <button type="button" onclick="selectPracticeStream('arts')" id="btnStreamArts" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">palette</span>
+            <span>Arts</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Subject & Chapter Selection -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="practiceSubjectSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">2. Select Subject</label>
+          <select id="practiceSubjectSelect" onchange="onPracticeSubjectChanged(this.value)" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer">
+            <!-- Populated dynamically with full names -->
+          </select>
+        </div>
+        <div>
+          <label for="practiceChapterSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">3. Select Chapter / Unit</label>
+          <select id="practiceChapterSelect" onchange="onPracticeChapterChanged(this.value)" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer">
+            <!-- Populated dynamically with chapter titles -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 3: Test Mode & Question Count -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-surface-container">
+        <!-- Mode -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">4. Quiz Mode</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="cfgModePractice" onclick="setSelectionMode('practice')" class="p-3 rounded-xl border-2 border-primary bg-primary-fixed/30 text-left transition-all">
+              <div class="flex items-center gap-1.5 font-bold text-xs text-primary mb-0.5">
+                <span class="material-symbols-outlined text-base">lightbulb</span>
+                <span>Practice Mode</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant">Instant answer explanations</p>
+            </button>
+            <button type="button" id="cfgModeExam" onclick="setSelectionMode('exam')" class="p-3 rounded-xl border border-outline-variant bg-surface-container-lowest text-left hover:bg-surface-container transition-all">
+              <div class="flex items-center gap-1.5 font-bold text-xs text-on-surface mb-0.5">
+                <span class="material-symbols-outlined text-base">timer</span>
+                <span>Timed Exam</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant">Score revealed on submit</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Count -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">5. Question Count</label>
+          <div class="grid grid-cols-4 gap-2" id="questionCountPills">
+            <button type="button" onclick="setQuestionCount(5)" id="btnCount5" class="py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center">5 Qs</button>
+            <button type="button" onclick="setQuestionCount(10)" id="btnCount10" class="py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center">10 Qs</button>
+            <button type="button" onclick="setQuestionCount(15)" id="btnCount15" class="py-2.5 rounded-xl border-2 border-primary bg-primary text-white text-xs font-bold text-center">15 Qs</button>
+            <button type="button" onclick="setQuestionCount('all')" id="btnCountAll" class="py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center">All</button>
+          </div>
+          <p class="text-[11px] text-outline mt-1.5" id="availQuestionsNote">Available in question bank: 15 questions</p>
+        </div>
+      </div>
+
+      <!-- Live Selection Summary -->
+      <div class="bg-surface-container-low rounded-xl p-3.5 border border-outline-variant/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 text-on-surface">
+          <span class="material-symbols-outlined text-primary text-base">verified</span>
+          <span id="selectionSummaryText" class="font-medium">Selected: Engineering • Operating Systems • All Chapters • Practice Mode • 15 Questions</span>
+        </div>
+        <span class="text-[11px] font-bold text-primary shrink-0">Ready to start</span>
+      </div>
+
+      <!-- Explicit Start Test Button -->
+      <button id="btnStartPracticeTest" onclick="startSelectedTest()" class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-bold text-sm sm:text-base hover:opacity-90 active:scale-98 transition-all shadow-md flex items-center justify-center gap-2">
+        <span>Start Test</span>
+        <span class="material-symbols-outlined text-lg">play_arrow</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. ACTIVE EXAM SCREEN (Hidden until user clicks 'Start Test') -->
+  <!-- ========================================================================= -->
+  <div id="practiceExamScreen" class="hidden flex-1 flex flex-col">
+    <!-- Question Palette Ribbon -->
+    <div class="w-full bg-surface-container-lowest border-b border-surface-container py-2.5 px-4">
+      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+        <span class="text-xs font-bold text-outline uppercase tracking-wider hidden sm:inline">Palette:</span>
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 flex-1 justify-start sm:justify-center" id="paletteContainer">
+          <!-- Question pills -->
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="text-xs font-bold text-primary whitespace-nowrap" id="scorePreviewBadge">Score: 0/0</span>
+          <button onclick="finishExam()" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-700 transition-colors">
+            Submit Test
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Exam Content Canvas -->
+    <main class="flex-1 w-full max-w-3xl mx-auto px-4 md:px-6 py-6 flex flex-col justify-between">
+      <div>
+        <!-- Question Card Container -->
+        <div class="mb-6 bg-surface-container-lowest p-5 sm:p-6 rounded-2xl border border-outline-variant/30 ambient-shadow">
+          <div class="flex items-center justify-between gap-2 mb-3 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-fixed text-primary font-bold text-xs" id="qSubjectBadge">
+                <span class="material-symbols-outlined text-sm">memory</span>
+                <span id="qSubjectBadgeText">Operating Systems</span>
+              </span>
+              <span class="text-[11px] text-outline font-semibold px-2 py-0.5 rounded bg-surface-container" id="qTopicBadge">Unit 4 • Page Replacement</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-outline" id="qMarksBadge">+1.0 Marks / 0.0</span>
+              <button type="button" onclick="toggleQuestionBookmark()" id="btnBookmarkQuestion" class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition-colors" title="Bookmark Question">
+                <span class="material-symbols-outlined text-base" id="iconBookmarkQuestion">bookmark_border</span>
+              </button>
+              <button type="button" onclick="reportCurrentQuestion()" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition-colors" title="Report Question Issue">
+                <span class="material-symbols-outlined text-base">flag</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Prominent Question Statement -->
+          <h1 class="text-base sm:text-xl font-bold text-on-surface leading-snug break-words" id="qQuestionText">
+            Loading Question Statement...
+          </h1>
+        </div>
+
+        <!-- Options List (4 Options) -->
+        <div class="flex flex-col gap-3 mb-6" id="optionsContainer">
+          <!-- Dynamically rendered 4 options -->
+        </div>
+
+        <!-- Instant Feedback Drawer -->
+        <div id="feedbackDrawer" class="hidden rounded-2xl bg-surface-container-lowest shadow-md p-5 mb-6 border border-surface-container transition-all">
+          <div class="flex items-start gap-3.5">
+            <div id="feedbackIconContainer" class="w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined fill text-2xl" id="feedbackIcon">check_circle</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <h3 class="font-bold text-sm sm:text-base" id="feedbackTitle">Correct Answer!</h3>
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full" id="feedbackScorePill">+1.0 Marks</span>
+              </div>
+              <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-3" id="feedbackExplanation">
+                Explanation goes here...
+              </p>
+              <button onclick="askAiAboutCurrentQuestion()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary-fixed text-primary hover:bg-primary-fixed-dim transition-colors text-xs font-bold">
+                <span class="material-symbols-outlined text-sm">smart_toy</span>
+                <span>Ask Study AI to explain this concept</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation Footer Bar -->
+      <footer class="w-full pt-4 border-t border-surface-container flex justify-between items-center mt-6">
+        <button onclick="prevQuestion()" id="btnPrev" class="px-5 py-2.5 rounded-xl border border-outline-variant text-on-surface hover:bg-surface-container text-xs font-bold flex items-center gap-1.5 transition-colors disabled:opacity-40" disabled>
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span>Previous</span>
+        </button>
+
+        <button onclick="nextQuestion()" id="btnNext" class="px-6 py-2.5 rounded-xl bg-primary text-on-primary hover:opacity-90 active:scale-95 text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+          <span id="btnNextText">Next Question</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </button>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Exam Results Modal -->
+  <div id="resultsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-outline-variant/40 space-y-5 text-center max-h-[90vh] overflow-y-auto">
+      
+      <div class="w-16 h-16 rounded-full mx-auto bg-primary-fixed text-primary flex items-center justify-center shadow-md">
+        <span class="material-symbols-outlined text-3xl">emoji_events</span>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold text-primary bg-primary-fixed px-3 py-1 rounded-full uppercase tracking-wider" id="resModeBadge">Practice Session Completed</span>
+        <h2 class="text-2xl font-black text-on-surface mt-2" id="resultsGradeTitle">Outstanding Performance!</h2>
+        <p class="text-xs sm:text-sm text-on-surface-variant mt-1" id="resultsSubtitle">Semester 4 Technical Benchmark Exam</p>
+      </div>
+
+      <!-- Score Ring & Metrics -->
+      <div class="grid grid-cols-3 gap-3 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+        <div>
+          <span class="text-2xl font-black text-primary" id="resFinalScore">8/15</span>
+          <p class="text-[11px] font-semibold text-outline uppercase mt-0.5">Score</p>
+        </div>
+        <div>
+          <span class="text-2xl font-black text-emerald-600" id="resAccuracy">80%</span>
+          <p class="text-[11px] font-semibold text-outline uppercase mt-0.5">Accuracy</p>
+        </div>
+        <div>
+          <span class="text-2xl font-black text-on-surface" id="resTimeTaken">4:12</span>
+          <p class="text-[11px] font-semibold text-outline uppercase mt-0.5">Time Spent</p>
+        </div>
+      </div>
+
+      <!-- Detailed Breakdown: Correct, Incorrect, Unanswered -->
+      <div class="grid grid-cols-3 gap-2 text-xs">
+        <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold">
+          <span id="resCorrectCount">0</span> Correct
+        </div>
+        <div class="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-800 font-bold">
+          <span id="resIncorrectCount">0</span> Incorrect
+        </div>
+        <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 font-bold">
+          <span id="resUnansweredCount">0</span> Unanswered
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+        <button onclick="reviewSubmittedExam()" class="py-2.5 px-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-on-surface flex items-center justify-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-base">visibility</span>
+          <span>Review</span>
+        </button>
+        <button onclick="restartExam()" class="py-2.5 px-2 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-bold text-on-surface flex items-center justify-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-base">replay</span>
+          <span>Retry</span>
+        </button>
+        <button onclick="exitToSelection()" class="py-2.5 px-2 rounded-xl border border-primary/40 bg-primary-fixed/20 hover:bg-primary-fixed/40 text-xs font-bold text-primary flex items-center justify-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-base">tune</span>
+          <span>New Test</span>
+        </button>
+        <button onclick="saveAndGoHome()" class="py-2.5 px-2 rounded-xl bg-primary text-on-primary hover:opacity-90 text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all">
+          <span>Dashboard</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_chapters_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_chatbot.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    let activeScreen = 'selection'; // 'selection' | 'exam'
+    let selectedStream = 'engineering';
+    let selectedSubject = 'Operating Systems';
+    let selectedChapterId = 'all';
+    let selectedMode = 'practice'; // 'practice' | 'exam'
+    let selectedCount = 15;
+
+    let questions = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let isAnswered = {};
+    let simulatorMode = 'practice';
+    let isExamSubmitted = false;
+    let secondsLeft = 15 * 60;
+    let timerInterval = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initSelectionScreen();
+    });
+
+    function initSelectionScreen() {
+      const params = new URLSearchParams(window.location.search);
+      const streamParam = params.get('stream');
+      const subjParam = params.get('subject');
+      const chapterParam = params.get('chapter');
+      const modeParam = params.get('mode');
+
+      if (modeParam === 'exam' || modeParam === 'practice') {
+        selectedMode = modeParam;
+      }
+
+      if (streamParam && ['engineering', 'medical', 'commerce', 'arts'].includes(streamParam.toLowerCase())) {
+        selectedStream = streamParam.toLowerCase();
+      }
+
+      updateStreamButtonsUI();
+      populateSubjectDropdown();
+
+      if (subjParam) {
+        const select = document.getElementById("practiceSubjectSelect");
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value.toLowerCase().includes(subjParam.toLowerCase())) {
+            select.selectedIndex = i;
+            selectedSubject = select.options[i].value;
+            break;
+          }
+        }
+      }
+
+      populateChapterDropdown();
+
+      if (chapterParam) {
+        const chSelect = document.getElementById("practiceChapterSelect");
+        for (let i = 0; i < chSelect.options.length; i++) {
+          if (chSelect.options[i].value === chapterParam || chSelect.options[i].text.toLowerCase().includes(chapterParam.toLowerCase())) {
+            chSelect.selectedIndex = i;
+            selectedChapterId = chSelect.options[i].value;
+            break;
+          }
+        }
+      }
+
+      updateModeCardsUI();
+      updateQuestionCountUI();
+      updateSelectionSummary();
+    }
+
+    function selectPracticeStream(stream) {
+      selectedStream = stream;
+      updateStreamButtonsUI();
+      populateSubjectDropdown();
+      populateChapterDropdown();
+      updateSelectionSummary();
+    }
+
+    function updateStreamButtonsUI() {
+      const streams = [
+        { id: 'engineering', btnId: 'btnStreamEng' },
+        { id: 'medical', btnId: 'btnStreamMed' },
+        { id: 'commerce', btnId: 'btnStreamCom' },
+        { id: 'arts', btnId: 'btnStreamArts' }
+      ];
+      streams.forEach(s => {
+        const el = document.getElementById(s.btnId);
+        if (!el) return;
+        if (s.id === selectedStream) {
+          el.className = "p-3 rounded-xl border-2 border-primary bg-primary text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all";
+        } else {
+          el.className = "p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all";
+        }
+      });
+    }
+
+    function populateSubjectDropdown() {
+      const select = document.getElementById("practiceSubjectSelect");
+      if (!select) return;
+
+      const subjects = EduPrep.getStreamSubjects ? EduPrep.getStreamSubjects(selectedStream) : (EduPrep.STREAM_SUBJECTS[selectedStream] || []);
+      select.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+
+      if (subjects.length > 0) {
+        selectedSubject = subjects[0];
+        select.value = selectedSubject;
+      }
+    }
+
+    function onPracticeSubjectChanged(subj) {
+      selectedSubject = subj;
+      populateChapterDropdown();
+      updateSelectionSummary();
+    }
+
+    function populateChapterDropdown() {
+      const select = document.getElementById("practiceChapterSelect");
+      if (!select) return;
+
+      let chapters = [];
+      if (window.EduPrepChapters && window.EduPrepChapters.getChapters) {
+        chapters = window.EduPrepChapters.getChapters(selectedSubject);
+      }
+
+      let options = `<option value="all">All Chapters (Comprehensive Syllabus)</option>`;
+      if (chapters && chapters.length > 0) {
+        options += chapters.map(ch => `<option value="${ch.id}">Unit ${ch.chapterNum}: ${ch.title}</option>`).join('');
+      } else {
+        options += `<option value="core">Core Curriculum Topics</option>`;
+      }
+
+      select.innerHTML = options;
+      selectedChapterId = "all";
+      select.value = "all";
+    }
+
+    function onPracticeChapterChanged(chId) {
+      selectedChapterId = chId;
+      updateSelectionSummary();
+    }
+
+    function setSelectionMode(mode) {
+      selectedMode = mode;
+      updateModeCardsUI();
+      updateSelectionSummary();
+    }
+
+    function updateModeCardsUI() {
+      const pCard = document.getElementById("cfgModePractice");
+      const eCard = document.getElementById("cfgModeExam");
+      if (!pCard || !eCard) return;
+
+      if (selectedMode === "practice") {
+        pCard.className = "p-3 rounded-xl border-2 border-primary bg-primary-fixed/30 text-left transition-all";
+        eCard.className = "p-3 rounded-xl border border-outline-variant bg-surface-container-lowest text-left hover:bg-surface-container transition-all";
+      } else {
+        eCard.className = "p-3 rounded-xl border-2 border-primary bg-primary-fixed/30 text-left transition-all";
+        pCard.className = "p-3 rounded-xl border border-outline-variant bg-surface-container-lowest text-left hover:bg-surface-container transition-all";
+      }
+    }
+
+    function setQuestionCount(count) {
+      selectedCount = count;
+      updateQuestionCountUI();
+      updateSelectionSummary();
+    }
+
+    function updateQuestionCountUI() {
+      const pills = [
+        { val: 5, id: 'btnCount5' },
+        { val: 10, id: 'btnCount10' },
+        { val: 15, id: 'btnCount15' },
+        { val: 'all', id: 'btnCountAll' }
+      ];
+      pills.forEach(p => {
+        const el = document.getElementById(p.id);
+        if (!el) return;
+        if (p.val === selectedCount) {
+          el.className = "py-2.5 rounded-xl border-2 border-primary bg-primary text-white text-xs font-bold text-center";
+        } else {
+          el.className = "py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center";
+        }
+      });
+    }
+
+    function updateSelectionSummary() {
+      const streamName = selectedStream.charAt(0).toUpperCase() + selectedStream.slice(1);
+      const chSelect = document.getElementById("practiceChapterSelect");
+      const chapterLabel = chSelect && chSelect.options[chSelect.selectedIndex] ? chSelect.options[chSelect.selectedIndex].text : "All Chapters";
+      const modeLabel = selectedMode === 'exam' ? 'Timed Exam' : 'Practice';
+      const countLabel = selectedCount === 'all' ? 'All Available Qs' : `${selectedCount} Qs`;
+
+      const summaryEl = document.getElementById("selectionSummaryText");
+      if (summaryEl) {
+        summaryEl.textContent = `Selected: ${streamName} • ${selectedSubject} • ${chapterLabel} • ${modeLabel} Mode • ${countLabel}`;
+      }
+
+      // Compute available questions in bank
+      const pool = getQuestionsForSelection(selectedSubject, selectedChapterId);
+      const noteEl = document.getElementById("availQuestionsNote");
+      if (noteEl) {
+        noteEl.textContent = `Available in question bank: ${pool.length} verified questions`;
+      }
+    }
+
+    function getQuestionsForSelection(subj, chId) {
+      if (!subj) return [];
+      let pool = EduPrep.getMcqBank ? EduPrep.getMcqBank(subj, chId) : [];
+
+      // If specific chapter is chosen, filter by chapterId or topic
+      if (chId && chId !== 'all') {
+        const chFiltered = pool.filter(q => q.chapterId === chId);
+        if (chFiltered.length > 0) return chFiltered;
+
+        if (window.EduPrepChapters) {
+          const ch = window.EduPrepChapters.getChapterById(chId);
+          if (ch) {
+            const chWords = (ch.title || "").toLowerCase().split(/\s+/).filter(w => w.length > 3);
+            const topicFiltered = pool.filter(q => {
+              const text = ((q.topic || "") + " " + (q.q || "")).toLowerCase();
+              return chWords.some(w => text.includes(w));
+            });
+            if (topicFiltered.length > 0) return topicFiltered;
+          }
+        }
+      }
+
+      return pool;
+    }
+
+    function startSelectedTest() {
+      if (!selectedSubject) {
+        EduPrep.showToast("Please select a subject to continue", "error");
+        return;
+      }
+
+      let pool = getQuestionsForSelection(selectedSubject, selectedChapterId);
+      if (!pool || pool.length === 0) {
+        EduPrep.showToast("No verified questions available for " + selectedSubject + ". Please select another chapter or subject.", "error");
+        return;
+      }
+
+      let count = selectedCount === 'all' ? pool.length : parseInt(selectedCount, 10);
+      count = Math.min(count, pool.length);
+      questions = pool.slice(0, count);
+
+      simulatorMode = selectedMode;
+      activeScreen = 'exam';
+      if (window.EduPrepScrollBackground) window.EduPrepScrollBackground.setIntensity('minimal');
+      currentIndex = 0;
+      userAnswers = {};
+      isAnswered = {};
+      isExamSubmitted = false;
+      secondsLeft = questions.length * 60; // 1 min per question
+
+      // Switch screens
+      document.getElementById("practiceSelectionScreen").classList.add("hidden");
+      document.getElementById("practiceExamScreen").classList.remove("hidden");
+
+      // Update header
+      document.getElementById("headerMainTitle").textContent = "EduPrep MCQ Simulator";
+      document.getElementById("iconHeaderExit").textContent = "close";
+      document.getElementById("selectionStatusBadge").classList.add("hidden");
+      document.getElementById("examSubjectSelectorWrap").classList.remove("hidden");
+      document.getElementById("examActiveSubjBadge").textContent = selectedSubject;
+      document.getElementById("examProgressTrackWrap").classList.remove("hidden");
+      document.getElementById("examProgressTrackWrap").classList.add("md:block");
+      document.getElementById("examModeToggleGroup").classList.remove("hidden");
+      document.getElementById("examTimerPill").classList.remove("hidden");
+
+      const chSelect = document.getElementById("practiceChapterSelect");
+      const chapterLabel = chSelect && chSelect.options[chSelect.selectedIndex] ? chSelect.options[chSelect.selectedIndex].text : "All Chapters";
+      document.getElementById("examHeaderSubtitle").textContent = `${selectedSubject} • ${chapterLabel} (${questions.length} Questions)`;
+
+      updateModeButtonsUI();
+      renderPalette();
+      loadQuestion(0);
+
+      if (simulatorMode === 'exam') {
+        startTimer();
+      } else {
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById("examTimer").textContent = "Untimed";
+      }
+
+      EduPrep.showToast(`Starting ${simulatorMode === 'exam' ? 'Timed Exam' : 'Practice Test'} with ${questions.length} questions`, "info");
+    }
+
+    function handleHeaderExitClick() {
+      if (activeScreen === 'exam') {
+        confirmExitExam();
+      } else {
+        window.location.href = "../home_dashboard/code.html";
+      }
+    }
+
+    function confirmExitExam() {
+      if (!isExamSubmitted && Object.keys(userAnswers).length > 0) {
+        const conf = confirm("Exit current practice test and return to selection? Your unsaved progress will be cleared.");
+        if (!conf) return;
+      }
+      exitToSelection();
+    }
+
+    function exitToSelection() {
+      if (timerInterval) clearInterval(timerInterval);
+      activeScreen = 'selection';
+      if (window.EduPrepScrollBackground) window.EduPrepScrollBackground.setIntensity('subtle');
+
+      document.getElementById("resultsModal").classList.add("hidden");
+      document.getElementById("practiceExamScreen").classList.add("hidden");
+      document.getElementById("practiceSelectionScreen").classList.remove("hidden");
+
+      // Reset Header
+      document.getElementById("headerMainTitle").textContent = "EduPrep Practice Tests";
+      document.getElementById("iconHeaderExit").textContent = "arrow_back";
+      document.getElementById("selectionStatusBadge").classList.remove("hidden");
+      document.getElementById("examSubjectSelectorWrap").classList.add("hidden");
+      document.getElementById("examProgressTrackWrap").classList.add("hidden");
+      document.getElementById("examProgressTrackWrap").classList.remove("md:block");
+      document.getElementById("examModeToggleGroup").classList.add("hidden");
+      document.getElementById("examTimerPill").classList.add("hidden");
+      document.getElementById("examHeaderSubtitle").textContent = "Configure your curriculum context and choose a chapter to begin";
+
+      updateSelectionSummary();
+      EduPrep.showToast("Returned to test selection", "info");
+    }
+
+    function setSimulatorMode(mode) {
+      if (simulatorMode === mode) return;
+      simulatorMode = mode;
+      isExamSubmitted = false;
+      userAnswers = {};
+      isAnswered = {};
+      secondsLeft = questions.length * 60;
+      updateModeButtonsUI();
+      renderPalette();
+      loadQuestion(currentIndex);
+      if (mode === 'exam') {
+        startTimer();
+      } else {
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById("examTimer").textContent = "Untimed";
+      }
+      EduPrep.showToast(
+        mode === "exam"
+          ? "Timed Exam Mode: Explanations revealed upon submission."
+          : "Practice Mode: Instant answer explanations enabled.",
+        "info"
+      );
+    }
+
+    function updateModeButtonsUI() {
+      const btnP = document.getElementById("btnModePractice");
+      const btnE = document.getElementById("btnModeExam");
+      if (!btnP || !btnE) return;
+      if (simulatorMode === "practice") {
+        btnP.className = "px-2.5 py-1 rounded-lg bg-primary text-on-primary shadow-2xs transition-all";
+        btnE.className = "px-2.5 py-1 rounded-lg text-on-surface-variant hover:text-on-surface transition-all";
+      } else {
+        btnE.className = "px-2.5 py-1 rounded-lg bg-primary text-on-primary shadow-2xs transition-all";
+        btnP.className = "px-2.5 py-1 rounded-lg text-on-surface-variant hover:text-on-surface transition-all";
+      }
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      const timerEl = document.getElementById("examTimer");
+      timerInterval = setInterval(() => {
+        if (secondsLeft <= 0) {
+          clearInterval(timerInterval);
+          finishExam();
+          return;
+        }
+        secondsLeft--;
+        const mins = Math.floor(secondsLeft / 60);
+        const secs = secondsLeft % 60;
+        timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function renderPalette() {
+      const container = document.getElementById("paletteContainer");
+      const revealAnswers = simulatorMode === "practice" || isExamSubmitted;
+
+      container.innerHTML = questions.map((q, idx) => {
+        const isCurrent = idx === currentIndex;
+        const answered = isAnswered[q.id];
+        const userChoice = userAnswers[q.id];
+        const correctIdx = typeof q.answer === "number" ? q.answer : q.ans;
+        const isCorrect = userChoice !== undefined && userChoice === correctIdx;
+
+        let statusClass = "bg-surface-container text-on-surface-variant hover:bg-surface-container-high";
+        if (answered) {
+          if (revealAnswers) {
+            statusClass = isCorrect
+              ? "bg-emerald-100 text-emerald-800 border border-emerald-500 font-bold"
+              : "bg-red-100 text-red-800 border border-red-500 font-bold";
+          } else {
+            statusClass = "bg-primary-fixed text-primary border border-primary font-bold";
+          }
+        }
+        if (isCurrent) {
+          statusClass += " ring-2 ring-primary font-bold";
+        }
+
+        return `
+          <button onclick="jumpToQuestion(${idx})" class="w-7 h-7 rounded-lg flex items-center justify-center text-xs shrink-0 transition-all ${statusClass}">
+            ${idx + 1}
+          </button>
+        `;
+      }).join('');
+
+      let correctCount = 0;
+      let totalAnswered = 0;
+      questions.forEach(q => {
+        const correctIdx = typeof q.answer === "number" ? q.answer : q.ans;
+        if (userAnswers[q.id] !== undefined) {
+          totalAnswered++;
+          if (userAnswers[q.id] === correctIdx) correctCount++;
+        }
+      });
+
+      if (simulatorMode === "exam" && !isExamSubmitted) {
+        document.getElementById("scorePreviewBadge").textContent = `Answered: ${totalAnswered}/${questions.length}`;
+      } else {
+        document.getElementById("scorePreviewBadge").textContent = `Score: ${correctCount}/${totalAnswered}`;
+      }
+    }
+
+    function loadQuestion(idx) {
+      if (!questions || questions.length === 0) return;
+      currentIndex = idx;
+      const q = questions[idx];
+
+      if (!q || !q.q || !q.options || q.options.length < 4) {
+        document.getElementById("qQuestionText").textContent = "This question is temporarily unavailable.";
+        document.getElementById("optionsContainer").innerHTML = `<div class="p-4 text-xs text-outline">Question data is being updated.</div>`;
+        return;
+      }
+
+      const progressEl = document.getElementById("qProgressLabel");
+      const pctEl = document.getElementById("qPercentLabel");
+      const barEl = document.getElementById("qProgressBar");
+      const percent = Math.round(((idx + 1) / questions.length) * 100);
+      if (progressEl) progressEl.textContent = `Question ${idx + 1} of ${questions.length}`;
+      if (pctEl) pctEl.textContent = `${percent}%`;
+      if (barEl) barEl.style.width = `${percent}%`;
+
+      document.getElementById("qSubjectBadgeText").textContent = q.subject || selectedSubject;
+      document.getElementById("qTopicBadge").textContent = `${q.unit || 'Unit 1'} • ${q.topic || 'Core Concept'}`;
+      document.getElementById("qQuestionText").textContent = q.q;
+
+      // Update Bookmark icon state
+      const state = EduPrep.getState();
+      const isBookmarked = ((state.progress && state.progress.bookmarkedQuestions) || []).includes(q.id);
+      const bmIcon = document.getElementById("iconBookmarkQuestion");
+      if (bmIcon) {
+        bmIcon.textContent = isBookmarked ? "bookmark" : "bookmark_border";
+        bmIcon.className = isBookmarked ? "material-symbols-outlined fill text-base text-primary" : "material-symbols-outlined text-base";
+      }
+
+      document.getElementById("btnPrev").disabled = idx === 0;
+      if (idx === questions.length - 1) {
+        document.getElementById("btnNextText").textContent = isExamSubmitted ? "View Final Score" : "Finish & Submit Exam";
+      } else {
+        document.getElementById("btnNextText").textContent = "Next Question";
+      }
+
+      const optionsContainer = document.getElementById("optionsContainer");
+      const answered = isAnswered[q.id];
+      const userChoice = userAnswers[q.id];
+      const correctIdx = typeof q.answer === "number" ? q.answer : q.ans;
+      const optionLetters = ["A", "B", "C", "D"];
+      const revealAnswers = simulatorMode === "practice" ? answered : isExamSubmitted;
+
+      optionsContainer.innerHTML = q.options.map((opt, optIdx) => {
+        let optClass = "border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low hover:border-primary transition-all";
+        let isDisabled = false;
+
+        if (revealAnswers) {
+          isDisabled = true;
+          if (optIdx === correctIdx) {
+            optClass = "highlight-answer";
+          } else if (optIdx === userChoice && userChoice !== correctIdx) {
+            optClass = "selected-incorrect";
+          } else {
+            optClass = "border border-outline-variant/30 opacity-60 pointer-events-none";
+          }
+        } else if (simulatorMode === "exam" && answered && optIdx === userChoice) {
+          optClass = "selected-exam-choice";
+        }
+
+        return `
+          <button onclick="handleOptionSelect(${optIdx})" ${isDisabled ? 'disabled' : ''} class="w-full text-left p-4 rounded-xl flex items-center gap-3.5 relative overflow-hidden group ${optClass}">
+            <div class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center font-bold text-xs text-on-surface-variant option-circle shrink-0 group-hover:border-primary group-hover:text-primary">
+              ${optionLetters[optIdx]}
+            </div>
+            <span class="text-xs sm:text-sm font-medium text-on-surface leading-snug flex-1">${opt}</span>
+          </button>
+        `;
+      }).join('');
+
+      const feedbackDrawer = document.getElementById("feedbackDrawer");
+      if (revealAnswers && (answered || isExamSubmitted)) {
+        showFeedback(userChoice === correctIdx, q.explanation, userChoice === undefined);
+      } else {
+        feedbackDrawer.classList.add("hidden");
+      }
+
+      renderPalette();
+    }
+
+    function handleOptionSelect(optIdx) {
+      if (isExamSubmitted) return;
+      const q = questions[currentIndex];
+      userAnswers[q.id] = optIdx;
+      isAnswered[q.id] = true;
+
+      if (simulatorMode === "practice") {
+        const correctIdx = typeof q.answer === "number" ? q.answer : q.ans;
+        showFeedback(optIdx === correctIdx, q.explanation, false);
+      }
+      loadQuestion(currentIndex);
+    }
+
+    function showFeedback(isCorrect, explanation, isUnanswered) {
+      const drawer = document.getElementById("feedbackDrawer");
+      const iconContainer = document.getElementById("feedbackIconContainer");
+      const icon = document.getElementById("feedbackIcon");
+      const title = document.getElementById("feedbackTitle");
+      const pill = document.getElementById("feedbackScorePill");
+      const expl = document.getElementById("feedbackExplanation");
+
+      if (isUnanswered) {
+        iconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-amber-100 text-amber-700";
+        icon.textContent = "help";
+        title.textContent = "Unanswered Question";
+        title.className = "font-bold text-sm sm:text-base text-amber-800";
+        pill.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800";
+        pill.textContent = "0.0 Marks (Skipped)";
+      } else if (isCorrect) {
+        iconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 text-emerald-600";
+        icon.textContent = "check_circle";
+        title.textContent = "Correct Answer!";
+        title.className = "font-bold text-sm sm:text-base text-emerald-800";
+        pill.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+        pill.textContent = "+1.0 Marks";
+      } else {
+        iconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-red-100 text-red-600";
+        icon.textContent = "cancel";
+        title.textContent = "Incorrect Selection";
+        title.className = "font-bold text-sm sm:text-base text-red-800";
+        pill.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800";
+        pill.textContent = "0.0 Marks";
+      }
+
+      expl.textContent = explanation || "Concept explanation verified against university syllabus.";
+      drawer.classList.remove("hidden");
+    }
+
+    function toggleQuestionBookmark() {
+      const q = questions[currentIndex];
+      if (!q) return;
+      const saved = EduPrep.toggleBookmark("question", q.id);
+      EduPrep.showToast(saved ? "Question bookmarked for revision!" : "Removed question bookmark.", saved ? "success" : "info");
+      loadQuestion(currentIndex);
+    }
+
+    function reportCurrentQuestion() {
+      const q = questions[currentIndex];
+      if (!q) return;
+      EduPrep.reportContent("question", q.id, "Student flagged question/explanation in MCQ Simulator", q.q);
+      EduPrep.showToast("Question flagged for academic review in Admin Content Studio.", "info");
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        loadQuestion(currentIndex - 1);
+      }
+    }
+
+    function nextQuestion() {
+      if (currentIndex < questions.length - 1) {
+        loadQuestion(currentIndex + 1);
+      } else {
+        finishExam();
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      loadQuestion(idx);
+    }
+
+    function finishExam() {
+      clearInterval(timerInterval);
+      isExamSubmitted = true;
+
+      let evaluation;
+      if (window.EduPrepServices && window.EduPrepServices.QuizScoring) {
+        evaluation = window.EduPrepServices.QuizScoring.evaluateAttempt(questions, userAnswers, simulatorMode);
+      } else {
+        let correct = 0;
+        let answered = 0;
+        questions.forEach(q => {
+          const cIdx = typeof q.answer === "number" ? q.answer : q.ans;
+          if (userAnswers[q.id] !== undefined) {
+            answered++;
+            if (userAnswers[q.id] === cIdx) correct++;
+          }
+        });
+        evaluation = {
+          totalQuestions: questions.length,
+          answeredCount: answered,
+          unansweredCount: questions.length - answered,
+          correctCount: correct,
+          incorrectCount: answered - correct,
+          scorePercent: questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0
+        };
+      }
+
+      const totalTimeSecs = Math.max(1, (questions.length * 60) - secondsLeft);
+      const mins = Math.floor(totalTimeSecs / 60);
+      const secs = totalTimeSecs % 60;
+      const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+      const chSelect = document.getElementById("practiceChapterSelect");
+      const chapterLabel = chSelect && chSelect.options[chSelect.selectedIndex] ? chSelect.options[chSelect.selectedIndex].text : "All Chapters";
+
+      document.getElementById("resModeBadge").textContent =
+        simulatorMode === "exam" ? "Timed Exam Submitted" : "Practice Session Completed";
+      document.getElementById("resultsSubtitle").textContent = `${selectedSubject} • ${chapterLabel}`;
+      document.getElementById("resFinalScore").textContent = `${evaluation.correctCount}/${evaluation.totalQuestions}`;
+      document.getElementById("resAccuracy").textContent = `${evaluation.scorePercent}%`;
+      document.getElementById("resTimeTaken").textContent = timeStr;
+      document.getElementById("resCorrectCount").textContent = evaluation.correctCount;
+      document.getElementById("resIncorrectCount").textContent = evaluation.incorrectCount;
+      document.getElementById("resUnansweredCount").textContent = evaluation.unansweredCount;
+
+      if (evaluation.scorePercent >= 80) {
+        document.getElementById("resultsGradeTitle").textContent = "Outstanding Performance!";
+      } else if (evaluation.scorePercent >= 50) {
+        document.getElementById("resultsGradeTitle").textContent = "Solid Effort — Keep Practicing!";
+      } else {
+        document.getElementById("resultsGradeTitle").textContent = "Needs Further Topic Revision";
+      }
+
+      EduPrep.recordQuizResult(evaluation.correctCount, evaluation.totalQuestions, {
+        subject: selectedSubject,
+        chapter: chapterLabel,
+        mode: simulatorMode,
+        answered: evaluation.answeredCount,
+        unanswered: evaluation.unansweredCount,
+        durationSeconds: totalTimeSecs
+      });
+
+      loadQuestion(currentIndex);
+      document.getElementById("resultsModal").classList.remove("hidden");
+    }
+
+    function reviewSubmittedExam() {
+      document.getElementById("resultsModal").classList.add("hidden");
+      loadQuestion(0);
+    }
+
+    function restartExam() {
+      document.getElementById("resultsModal").classList.add("hidden");
+      userAnswers = {};
+      isAnswered = {};
+      isExamSubmitted = false;
+      secondsLeft = questions.length * 60;
+      if (simulatorMode === 'exam') startTimer();
+      renderPalette();
+      loadQuestion(0);
+      EduPrep.showToast("Test reset. Good luck!", "info");
+    }
+
+    function saveAndGoHome() {
+      EduPrep.navigateTo("home_dashboard");
+    }
+
+    function askAiAboutCurrentQuestion() {
+      const q = questions[currentIndex];
+      const correctIdx = typeof q.answer === "number" ? q.answer : q.ans;
+      const query = `Can you explain the detailed concept behind this question: "${q.q}" and why the correct answer is "${q.options[correctIdx]}"?`;
+      if (typeof window.EduPrepChatbot !== "undefined" && typeof window.EduPrepChatbot.open === "function") {
+        window.EduPrepChatbot.open({ prompt: query, mode: 'explain' });
+        return;
+      }
+      sessionStorage.setItem("eduprep_pending_query", query);
+      sessionStorage.setItem("eduvantage_pending_query", query);
+      EduPrep.navigateTo("home_dashboard?openAi=true&q=" + encodeURIComponent(query));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <title>EduPrep - Select Your College</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; min-height: max(884px, 100dvh); }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .hover-ambient-shadow:hover { box-shadow: 0 10px 30px rgba(70, 72, 212, 0.08); }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased">
+  <!-- Top Navigation -->
+  <header class="w-full bg-surface-container-lowest sticky top-0 z-40 shadow-sm px-4 md:px-8 py-3 flex items-center justify-between border-b border-surface-container">
+    <a href="../home_dashboard/code.html" aria-label="Go back to Dashboard" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors">
+      <span class="material-symbols-outlined text-on-surface" data-icon="arrow_back">arrow_back</span>
+    </a>
+    
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-on-surface-variant">Step 2 of 4</span>
+      <div class="flex gap-1 h-1.5 w-16">
+        <div class="h-full flex-1 bg-primary rounded-full"></div>
+        <div class="h-full flex-1 bg-primary rounded-full"></div>
+        <div class="h-full flex-1 bg-surface-variant rounded-full"></div>
+        <div class="h-full flex-1 bg-surface-variant rounded-full"></div>
+      </div>
+    </div>
+    
+    <button onclick="EduPrep.openInstitutionModal()" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+      <span class="material-symbols-outlined text-sm">handshake</span>
+      <span class="hidden sm:inline">Partner</span>
+    </button>
+  </header>
+
+  <main class="flex-1 w-full max-w-[680px] mx-auto px-4 md:px-0 pt-8 pb-32 flex flex-col">
+    <!-- Headers -->
+    <div class="mb-6 text-center md:text-left">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-primary text-xs font-bold mb-2">
+        <span class="material-symbols-outlined text-sm">domain</span>
+        <span>Maharashtra Engineering & Tech Institutes Directory</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-on-surface mb-1">Select Your College</h1>
+      <p class="text-sm text-on-surface-variant">Choose your affiliated or autonomous college to tailor semester papers, grading schemes & study material.</p>
+    </div>
+
+    <!-- Current Context -->
+    <div class="bg-surface-container-low rounded-xl p-4 mb-5 flex items-center justify-between border border-outline-variant/30">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+        </div>
+        <div>
+          <p class="text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">Active Parent University</p>
+          <p class="text-sm font-bold text-on-surface" id="parentUnivLabel">Mumbai University</p>
+        </div>
+      </div>
+      <button onclick="EduPrep.openInstitutionModal()" class="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
+        <span>Change</span>
+        <span class="material-symbols-outlined text-sm">edit</span>
+      </button>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button onclick="filterCollegesByCategory('all')" id="btnTabAll" class="px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary transition-colors">
+        All Colleges (<span id="totalCollegesCount">76</span>)
+      </button>
+      <button onclick="filterCollegesByCategory('Autonomous')" id="btnTabAuto" class="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+        Autonomous (39)
+      </button>
+      <button onclick="filterCollegesByCategory('Affiliated')" id="btnTabAffil" class="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+        Affiliated (37)
+      </button>
+      <button onclick="filterCollegesByCategory('mu')" id="btnTabMU" class="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+        Mumbai (MU)
+      </button>
+      <button onclick="filterCollegesByCategory('sppu')" id="btnTabSPPU" class="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+        Pune (SPPU)
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="relative mb-5">
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+      <input id="collegeSearchInput" oninput="renderCollegesList()" class="w-full h-12 pl-12 pr-4 rounded-xl border border-outline-variant/60 bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-medium text-on-surface placeholder:text-on-surface-variant/70 shadow-sm transition-all" placeholder="Search by college name, shortcode (VIT, DMCE, VJTI, SPIT...) or location..." type="text"/>
+    </div>
+
+    <!-- College List Container -->
+    <div class="flex flex-col gap-3" id="collegeListContainer">
+      <!-- Dynamically generated -->
+    </div>
+
+    <!-- Don't see college? -->
+    <div class="mt-8 text-center pb-8">
+      <p class="text-xs text-on-surface-variant mb-2">Can't find your college or autonomous department?</p>
+      <button onclick="EduPrep.openInstitutionModal()" class="text-xs font-bold text-primary hover:text-primary-container transition-colors py-2 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 inline-flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-sm">add_business</span>
+        <span>Request College Onboarding or Partnership</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- Sticky Footer Action -->
+  <div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/30 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] z-50">
+    <div class="max-w-[680px] mx-auto flex items-center justify-between gap-4">
+      <div class="hidden sm:block">
+        <span class="text-xs text-on-surface-variant font-medium">Selected Institute:</span>
+        <p class="text-xs font-bold text-primary truncate max-w-[280px]" id="selectedFooterLabel">Vidyalankar Institute of Technology</p>
+      </div>
+      <button onclick="confirmCollegeSelection()" class="h-12 px-8 flex-1 sm:flex-initial bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-sm rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
+        <span>Confirm & Continue</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script>
+    let activeCategory = 'all';
+    let currentSelectedColId = 'vit_wadala';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = EduPrep.getState();
+      currentSelectedColId = state.academic.collegeId || 'vit_wadala';
+      
+      const parentLabel = document.getElementById("parentUnivLabel");
+      if (parentLabel) {
+        parentLabel.textContent = state.academic.university || "Mumbai University";
+      }
+
+      document.getElementById("totalCollegesCount").textContent = `${EduPrep.colleges.length}`;
+      renderCollegesList();
+      updateFooterLabel();
+    });
+
+    function filterCollegesByCategory(cat) {
+      activeCategory = cat;
+      ['btnTabAll', 'btnTabAuto', 'btnTabAffil', 'btnTabMU', 'btnTabSPPU'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = "px-3 py-1.5 rounded-full text-xs font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors";
+      });
+      if (cat === 'all' && document.getElementById('btnTabAll')) document.getElementById('btnTabAll').className = "px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary transition-colors";
+      if (cat === 'Autonomous' && document.getElementById('btnTabAuto')) document.getElementById('btnTabAuto').className = "px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary transition-colors";
+      if (cat === 'Affiliated' && document.getElementById('btnTabAffil')) document.getElementById('btnTabAffil').className = "px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary transition-colors";
+      if (cat === 'mu' && document.getElementById('btnTabMU')) document.getElementById('btnTabMU').className = "px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary transition-colors";
+      if (cat === 'sppu' && document.getElementById('btnTabSPPU')) document.getElementById('btnTabSPPU').className = "px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary transition-colors";
+
+      renderCollegesList();
+    }
+
+    function renderCollegesList() {
+      const container = document.getElementById("collegeListContainer");
+      const query = (document.getElementById("collegeSearchInput").value || "").toLowerCase().trim();
+
+      let list = EduPrep.colleges.filter(c => {
+        const matchesQuery = c.name.toLowerCase().includes(query) || 
+                             c.location.toLowerCase().includes(query) || 
+                             c.city.toLowerCase().includes(query) || 
+                             (c.abbreviation && c.abbreviation.toLowerCase().includes(query)) ||
+                             c.code.includes(query);
+        let matchesCat = true;
+        if (activeCategory === 'Autonomous') {
+          matchesCat = c.isAutonomous;
+        } else if (activeCategory === 'Affiliated') {
+          matchesCat = !c.isAutonomous;
+        } else if (activeCategory === 'mu') {
+          matchesCat = c.universityId === 'mu';
+        } else if (activeCategory === 'sppu') {
+          matchesCat = c.universityId === 'sppu';
+        }
+        return matchesQuery && matchesCat;
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-surface-container-low rounded-xl border border-outline-variant/30">
+            <span class="material-symbols-outlined text-4xl text-outline mb-2">school</span>
+            <p class="text-sm font-semibold text-on-surface">No colleges matched "${query}"</p>
+            <p class="text-xs text-on-surface-variant mt-1">Try searching by locality (Mumbai, Pune, Navi Mumbai), shortcode (VIT, DMCE, VJTI, SPIT, PCCOE), or request to add your institute.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(c => {
+        const isSelected = c.id === currentSelectedColId;
+        const categoryLabel = c.category || (c.isAutonomous ? 'Autonomous Institution' : 'Affiliated College');
+        const badgeColor = c.isAutonomous ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant';
+
+        return `
+          <div onclick="selectCollege('${c.id}')" class="cursor-pointer group">
+            <div class="w-full bg-surface-container-lowest p-3.5 sm:p-4 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+              isSelected 
+                ? 'border-2 border-primary bg-primary-fixed/20 shadow-sm' 
+                : 'border-outline-variant/40 hover:border-primary/50 hover:bg-surface-container-low'
+            }">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-bold text-primary text-xs shrink-0 border border-outline-variant/30">
+                  ${c.abbreviation || c.name.slice(0, 3).toUpperCase()}
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="font-bold text-xs sm:text-sm text-on-surface truncate group-hover:text-primary transition-colors">${c.name}</h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${badgeColor}">
+                      ${c.isAutonomous ? 'Autonomous' : 'Affiliated'}
+                    </span>
+                  </div>
+                  <p class="text-[11px] text-on-surface-variant flex items-center gap-2 mt-0.5 truncate">
+                    <span class="flex items-center gap-0.5">
+                      <span class="material-symbols-outlined text-[13px]">location_on</span>
+                      <span>${c.location}</span>
+                    </span>
+                    <span>•</span>
+                    <span class="text-primary font-medium">${c.badge}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="w-6 h-6 rounded-full flex shrink-0 items-center justify-center transition-colors ${
+                isSelected ? 'bg-primary text-on-primary ring-2 ring-primary/20' : 'border-2 border-outline-variant'
+              }">
+                ${isSelected ? '<span class="material-symbols-outlined text-white text-[16px]">check</span>' : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectCollege(colId) {
+      currentSelectedColId = colId;
+      renderCollegesList();
+      updateFooterLabel();
+      const col = EduPrep.colleges.find(c => c.id === colId);
+      if (col) {
+        EduPrep.showToast(`Selected: ${col.name}`, "info");
+      }
+    }
+
+    function updateFooterLabel() {
+      const col = EduPrep.colleges.find(c => c.id === currentSelectedColId);
+      const label = document.getElementById("selectedFooterLabel");
+      if (label && col) {
+        label.textContent = `${col.name} (${col.isAutonomous ? 'Autonomous' : 'Affiliated'})`;
+      }
+    }
+
+    function confirmCollegeSelection() {
+      const col = EduPrep.colleges.find(c => c.id === currentSelectedColId);
+      if (col) {
+        EduPrep.updateAcademic({
+          college: col.name,
+          collegeId: col.id,
+          universityId: col.universityId
+        });
+        EduPrep.showToast(`College updated to ${col.name}!`, "success");
+      }
+      setTimeout(() => {
+        EduPrep.navigateTo("dashboard");
+      }, 500);
+    }
+  </script>
+</body>
+</html>

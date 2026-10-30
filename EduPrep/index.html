@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html class="light scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — Your Exam Preparation Companion</title>
+  <meta name="description" content="EduPrep is a syllabus-aligned student exam preparation platform offering structured study notes, previous year question papers (PYQs), timed MCQ practice tests, 3D revision flashcards, and an AI Study Tutor."/>
+  <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="shared/eduprep_chatbot.css"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#4648d4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "on-primary": "#ffffff",
+            "secondary": "#0058be",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary": "#b10e6b",
+            "tertiary-fixed": "#ffd9e4",
+            "surface": "#f8f9fa",
+            "surface-container-low": "#f3f4f5",
+            "surface-container": "#edeeef",
+            "surface-container-high": "#e7e8e9",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#191c1d",
+            "on-surface-variant": "#464554",
+            "outline": "#767586",
+            "outline-variant": "#c7c4d7",
+            "background": "#f8f9fa"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "Inter", "sans-serif"],
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, .font-headline { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+    .hero-gradient {
+      background: radial-gradient(circle at 15% 20%, rgba(70, 72, 212, 0.08) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 30%, rgba(177, 14, 107, 0.06) 0%, transparent 45%),
+                  linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 249, 250, 0.70) 100%);
+    }
+    .ambient-card {
+      box-shadow: 0 8px 30px rgba(25, 28, 29, 0.05);
+    }
+    .academic-streams-section {
+      position: relative;
+    }
+    .stream-card {
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stream-card:hover {
+      border-color: #4648d4;
+      background-color: #fafaff;
+      box-shadow: 0 10px 25px -5px rgba(70, 72, 212, 0.08), 0 8px 10px -6px rgba(70, 72, 212, 0.04);
+    }
+    :focus-visible {
+      outline: 2px solid #4648d4 !important;
+      outline-offset: 2px !important;
+    }
+    .academic-bg {
+      background-color: #f8f9fc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(70, 72, 212, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(177, 14, 107, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(70, 72, 212, 0.03) 0px, transparent 50%),
+        radial-gradient(#4648d4 0.6px, transparent 0.6px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+    }
+  </style>
+</head>
+<body id="home" data-bg-intensity="hero" class="bg-background text-on-surface min-h-screen flex flex-col w-full antialiased academic-bg selection:bg-primary-fixed selection:text-primary">
+
+  <!-- ==================================================================== -->
+  <!-- PUBLIC WEBSITE HEADER & NAVIGATION BAR                               -->
+  <!-- ==================================================================== -->
+  <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-outline-variant/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <!-- Brand Logo -->
+      <a href="#home" class="flex items-center gap-2.5 shrink-0 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-xl">school</span>
+        </div>
+        <div>
+          <span class="font-headline font-extrabold text-xl tracking-tight text-primary block leading-none">EduPrep</span>
+          <span class="text-[10px] font-semibold text-on-surface-variant tracking-wider uppercase block mt-0.5">Exam Prep Platform</span>
+        </div>
+      </a>
+
+      <!-- Public Desktop Navigation Links -->
+      <nav aria-label="Public Navigation" class="hidden md:flex items-center gap-1 lg:gap-2 text-sm font-semibold text-on-surface-variant">
+        <a href="#home" class="px-3.5 py-2 rounded-xl text-primary bg-primary-fixed/50 hover:bg-primary-fixed transition-colors">Home</a>
+        <a href="#features" class="px-3.5 py-2 rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors">Features</a>
+        <a href="resources_dashboard/code.html" class="px-3.5 py-2 rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors">Explore Resources</a>
+        <a href="#about" class="px-3.5 py-2 rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors">About</a>
+      </nav>
+
+      <!-- Right Auth & CTA Actions -->
+      <div class="hidden md:flex items-center gap-3 shrink-0">
+        <a href="home_dashboard/code.html" id="navGetStartedLink" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-sm font-bold shadow-sm hover:shadow transition-all flex items-center gap-1.5">
+          <span>Get Started</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button type="button" id="mobileMenuBtn" onclick="toggleMobileNav()" aria-label="Toggle Menu" class="md:hidden p-2 rounded-xl text-on-surface hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-2xl" id="mobileMenuIcon">menu</span>
+      </button>
+    </div>
+
+    <!-- Authenticated Student Workspace Quick-Bar (Always accessible for students) -->
+    <div class="bg-surface-container-low border-t border-outline-variant/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
+        <div class="flex items-center gap-1.5 text-xs font-bold text-primary shrink-0">
+          <span class="material-symbols-outlined text-base">workspace_premium</span>
+          <span>Student Workspace:</span>
+        </div>
+        <nav aria-label="Student Navigation" class="flex items-center gap-1 sm:gap-2 text-xs font-semibold text-on-surface-variant shrink-0">
+          <a href="home_dashboard/code.html" class="px-2.5 py-1 rounded-lg hover:bg-primary-fixed hover:text-primary transition-colors">Dashboard</a>
+          <a href="previous_year_papers/code.html" class="px-2.5 py-1 rounded-lg hover:bg-primary-fixed hover:text-primary transition-colors">Question Papers</a>
+          <a href="mcq_practice_exam/code.html" class="px-2.5 py-1 rounded-lg hover:bg-primary-fixed hover:text-primary transition-colors">Practice Tests</a>
+          <a href="revision_flashcards/code.html" class="px-2.5 py-1 rounded-lg hover:bg-primary-fixed hover:text-primary transition-colors">Flashcards</a>
+          <a href="academic_setup/code.html" class="px-2.5 py-1 rounded-lg hover:bg-primary-fixed hover:text-primary transition-colors">Study Planner</a>
+          <a href="user_profile_progress/code.html" class="px-2.5 py-1 rounded-lg hover:bg-primary-fixed hover:text-primary transition-colors">Profile</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Responsive Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="hidden md:hidden bg-white border-b border-outline-variant/50 px-4 pt-3 pb-5 space-y-4 shadow-lg">
+      <div class="space-y-1">
+        <p class="px-2 text-[11px] font-bold uppercase tracking-wider text-outline">Public Navigation</p>
+        <a href="#home" onclick="toggleMobileNav()" class="block px-3 py-2 rounded-xl text-sm font-bold text-primary bg-primary-fixed/40">Home</a>
+        <a href="#features" onclick="toggleMobileNav()" class="block px-3 py-2 rounded-xl text-sm font-semibold text-on-surface hover:bg-surface-container">Features</a>
+        <a href="resources_dashboard/code.html" class="block px-3 py-2 rounded-xl text-sm font-semibold text-on-surface hover:bg-surface-container">Explore Resources</a>
+        <a href="#about" onclick="toggleMobileNav()" class="block px-3 py-2 rounded-xl text-sm font-semibold text-on-surface hover:bg-surface-container">About</a>
+      </div>
+      <div class="space-y-1 border-t border-surface-container pt-3">
+        <p class="px-2 text-[11px] font-bold uppercase tracking-wider text-outline">Student Navigation</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs font-semibold">
+          <a href="home_dashboard/code.html" class="px-3 py-2 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-on-surface">Dashboard</a>
+          <a href="previous_year_papers/code.html" class="px-3 py-2 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-on-surface">Question Papers</a>
+          <a href="mcq_practice_exam/code.html" class="px-3 py-2 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-on-surface">Practice Tests</a>
+          <a href="revision_flashcards/code.html" class="px-3 py-2 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-on-surface">Flashcards</a>
+          <a href="academic_setup/code.html" class="px-3 py-2 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-on-surface">Study Planner</a>
+          <a href="user_profile_progress/code.html" class="px-3 py-2 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-on-surface">Profile</a>
+        </div>
+      </div>
+      <div class="pt-2">
+        <a href="home_dashboard/code.html" class="w-full py-2.5 text-center rounded-xl bg-primary text-white text-sm font-bold block">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================================================================== -->
+  <!-- MAIN WEBSITE CONTENT                                                 -->
+  <!-- ==================================================================== -->
+  <main class="flex-grow w-full">
+
+    <!-- 1. HERO SECTION -->
+    <section class="hero-gradient border-b border-outline-variant/30 py-12 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          
+          <!-- Left Column: Headline, Search, CTAs & Metrics -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-fixed text-primary text-xs font-bold tracking-wide">
+              <span class="material-symbols-outlined text-base">verified</span>
+              <span>Syllabus-Aligned University Exam Preparation</span>
+            </div>
+
+            <h1 class="font-headline text-3xl sm:text-5xl font-extrabold text-on-surface tracking-tight leading-[1.15]">
+              Master Your Semester Exams with <span class="text-primary">Structured Study Tools</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-on-surface-variant leading-relaxed max-w-2xl">
+              Access unit-wise syllabus breakdowns, solved previous year question papers (PYQs), timed MCQ practice tests, 3D revision flashcards, and an AI Study Tutor tailored to your university curriculum.
+            </p>
+
+            <!-- Homepage Universal Curriculum Search -->
+            <div class="relative w-full max-w-xl pt-1">
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+                  <span class="material-symbols-outlined text-primary">search</span>
+                </div>
+                <input id="homepageGlobalSearchInput" oninput="handleHomepageSearch(this.value)" onkeydown="handleHomepageSearchKeyDown(event)" class="w-full h-13 pl-12 pr-12 rounded-2xl bg-white border border-outline-variant/70 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all text-sm font-medium text-on-surface placeholder:text-on-surface-variant/70 ambient-card shadow-sm" placeholder="Search subjects (OS, Anatomy, Economics) or chapters (Matrices, Deadlocks)..." type="text" autocomplete="off" aria-label="Search Subjects and Chapters"/>
+                <button onclick="clearHomepageSearch()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-outline hover:text-primary transition-colors" title="Clear Search">
+                  <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+              </div>
+
+              <!-- Live Search Results Dropdown -->
+              <div id="homepageSearchResultsDropdown" class="hidden absolute top-15 left-0 right-0 bg-white border border-outline-variant/60 rounded-2xl shadow-xl z-50 overflow-hidden max-h-96 overflow-y-auto p-2" role="listbox" aria-label="Search Results">
+                <!-- populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Primary CTA Buttons -->
+            <div class="flex flex-wrap items-center gap-3.5 pt-2">
+              <a href="home_dashboard/code.html" class="px-6 py-3.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                <span>Get Started — Setup Your Syllabus</span>
+                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+              </a>
+              <a href="home_dashboard/code.html" class="px-5 py-3.5 rounded-xl bg-white hover:bg-surface-container border border-outline-variant/70 text-on-surface font-bold text-sm transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg text-primary">dashboard</span>
+                <span>Open Student Dashboard</span>
+              </a>
+              <a href="resources_dashboard/code.html" class="px-5 py-3.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-semibold text-sm transition-all">
+                Explore Resources
+              </a>
+            </div>
+
+            <!-- Key Capabilities & Visitor Activity Highlights -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-4 border-t border-outline-variant/40">
+              <div class="p-2.5 rounded-xl bg-white/80 border border-outline-variant/30 text-center sm:text-left">
+                <span class="font-headline font-extrabold text-base text-primary block">6 Units</span>
+                <span class="text-[11px] text-on-surface-variant">Per Subject Mapped</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/80 border border-outline-variant/30 text-center sm:text-left">
+                <span class="font-headline font-extrabold text-base text-secondary block">Solved PYQs</span>
+                <span class="text-[11px] text-on-surface-variant">With Marking Schemes</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/80 border border-outline-variant/30 text-center sm:text-left">
+                <span class="font-headline font-extrabold text-base text-tertiary block">3D Flashcards</span>
+                <span class="text-[11px] text-on-surface-variant">Active Recall Decks</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/80 border border-outline-variant/30 text-center sm:text-left">
+                <span class="font-headline font-extrabold text-base text-emerald-700 block">Timed MCQs</span>
+                <span class="text-[11px] text-on-surface-variant">Instant Explanations</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/80 border border-outline-variant/30 text-center sm:text-left col-span-2 sm:col-span-1">
+                <span id="visitorCountDisplay" class="font-headline font-extrabold text-base text-primary block">1,480</span>
+                <span class="text-[11px] text-on-surface-variant">Verified Site Visits</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (lg:col-span-5): Active Student Preparation Showcase Card -->
+          <div class="lg:col-span-5">
+            <div class="relative bg-white rounded-3xl p-6 sm:p-7 border border-outline-variant/50 shadow-xl space-y-5 ambient-card">
+              <!-- Showcase Header -->
+              <div class="flex items-center justify-between pb-4 border-b border-surface-container">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                    <span class="material-symbols-outlined text-2xl">auto_stories</span>
+                  </div>
+                  <div>
+                    <h3 class="font-headline font-bold text-base text-on-surface">Active Semester Prep</h3>
+                    <p class="text-xs text-on-surface-variant">Computer Eng • Sem 4 • Mumbai Univ</p>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                  Active Syllabus
+                </span>
+              </div>
+
+              <!-- Live Subject Progress Cards -->
+              <div class="space-y-3">
+                <a href="resources_dashboard/code.html?subject=Operating%20Systems&stream=engineering&sem=4" class="block p-3.5 rounded-2xl bg-surface-container-low hover:bg-primary-fixed/30 border border-outline-variant/30 transition-all group">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-base text-primary">memory</span>
+                      Operating Systems (CS401)
+                    </span>
+                    <span class="text-xs font-extrabold text-primary">85% Ready</span>
+                  </div>
+                  <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] text-on-surface-variant mt-2">
+                    <span>6 Units • 28 Solved PYQs</span>
+                    <span class="text-primary font-semibold flex items-center gap-0.5 group-hover:underline">Study Now <span class="material-symbols-outlined text-xs">arrow_forward</span></span>
+                  </div>
+                </a>
+
+                <a href="resources_dashboard/code.html?subject=Database%20Management%20Systems&stream=engineering&sem=4" class="block p-3.5 rounded-2xl bg-surface-container-low hover:bg-primary-fixed/30 border border-outline-variant/30 transition-all group">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-base text-secondary">database</span>
+                      Database Management Systems
+                    </span>
+                    <span class="text-xs font-extrabold text-secondary">72% Ready</span>
+                  </div>
+                  <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-secondary h-full rounded-full" style="width: 72%"></div>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] text-on-surface-variant mt-2">
+                    <span>6 Units • 42 Flashcards</span>
+                    <span class="text-secondary font-semibold flex items-center gap-0.5 group-hover:underline">Study Now <span class="material-symbols-outlined text-xs">arrow_forward</span></span>
+                  </div>
+                </a>
+              </div>
+
+              <!-- High Yield PYQ Spotlight -->
+              <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded">High Yield PYQ (10 Marks)</span>
+                  <span class="text-[11px] font-semibold text-amber-900">May 2024 Exam</span>
+                </div>
+                <p class="text-xs font-bold text-on-surface mt-1 line-clamp-2">
+                  "Explain Banker's Algorithm with safe sequence determination criteria and resource allocation graphs."
+                </p>
+                <div class="mt-2 flex items-center justify-between">
+                  <span class="text-[11px] text-on-surface-variant">Step-by-step model answer available</span>
+                  <a href="previous_year_papers/code.html?subject=Operating%20Systems" class="text-xs font-bold text-primary hover:underline flex items-center gap-0.5">
+                    View Solution <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Quick Study Tool Launchers -->
+              <div class="grid grid-cols-3 gap-2 pt-1 border-t border-surface-container">
+                <a href="mcq_practice_exam/code.html" class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-center transition-colors">
+                  <span class="material-symbols-outlined text-primary text-lg block mx-auto mb-0.5">timer</span>
+                  <span class="text-[11px] font-bold text-on-surface block">Mock Tests</span>
+                </a>
+                <a href="revision_flashcards/code.html" class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-center transition-colors">
+                  <span class="material-symbols-outlined text-tertiary text-lg block mx-auto mb-0.5">style</span>
+                  <span class="text-[11px] font-bold text-on-surface block">Flashcards</span>
+                </a>
+                <a href="previous_year_papers/code.html" class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-center transition-colors">
+                  <span class="material-symbols-outlined text-secondary text-lg block mx-auto mb-0.5">description</span>
+                  <span class="text-[11px] font-bold text-on-surface block">PYQ Papers</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 1B. ACADEMIC STREAMS SELECTION SECTION -->
+    <section id="academic-streams" class="academic-streams-section py-14 sm:py-16 bg-surface/75 border-b border-outline-variant/30 scroll-reveal">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Heading & Subtitle -->
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-primary bg-primary-fixed px-3 py-1 rounded-full">Academic Streams</span>
+          <h2 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface mt-3 tracking-tight">
+            Choose Your Academic Stream
+          </h2>
+          <p class="text-sm sm:text-base text-on-surface-variant mt-2 leading-relaxed">
+            Explore study resources tailored to your academic field.
+          </p>
+        </div>
+
+        <!-- Four Stream Selection Boxes (1 Row on Desktop, 2 on Tablet, 1 on Mobile) -->
+        <div id="streamBoxesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+          
+          <!-- Box 1: Engineering -->
+          <div id="streamCard-engineering" onclick="openStreamSubjects('engineering')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openStreamSubjects('engineering');}" class="stream-card group bg-white rounded-2xl p-6 border border-outline-variant/50 ambient-card flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" tabindex="0" role="button" aria-label="Engineering Academic Stream - Click to view 25 subjects">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-primary-fixed text-primary flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-primary/20">
+                  <span class="material-symbols-outlined text-2xl" aria-hidden="true">engineering</span>
+                </div>
+                <span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-primary-fixed/60 text-primary border border-primary/20">25 Subjects</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Engineering</h3>
+              <p class="text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Engineering degrees, technical subjects, and semester preparation.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-primary group-hover:gap-1.5 transition-all">
+              <span>Explore Stream</span>
+              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </div>
+
+          <!-- Box 2: Biology / Medical -->
+          <div id="streamCard-medical" onclick="openStreamSubjects('medical')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openStreamSubjects('medical');}" class="stream-card group bg-white rounded-2xl p-6 border border-outline-variant/50 ambient-card flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-500/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2" tabindex="0" role="button" aria-label="Biology / Medical Academic Stream - Click to view 15 subjects">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-emerald-100">
+                  <span class="material-symbols-outlined text-2xl" aria-hidden="true">medical_services</span>
+                </div>
+                <span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">15 Subjects</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-emerald-700 transition-colors">Biology / Medical</h3>
+              <p class="text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Medical studies, health sciences, and academic revision.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-emerald-700 group-hover:gap-1.5 transition-all">
+              <span>Explore Stream</span>
+              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </div>
+
+          <!-- Box 3: Arts -->
+          <div id="streamCard-arts" onclick="openStreamSubjects('arts')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openStreamSubjects('arts');}" class="stream-card group bg-white rounded-2xl p-6 border border-outline-variant/50 ambient-card flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-purple-500/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2" tabindex="0" role="button" aria-label="Arts Academic Stream - Click to view 15 subjects">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-purple-100">
+                  <span class="material-symbols-outlined text-2xl" aria-hidden="true">palette</span>
+                </div>
+                <span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200/60">15 Subjects</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-purple-700 transition-colors">Arts</h3>
+              <p class="text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Arts, humanities, languages, and creative studies.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-purple-700 group-hover:gap-1.5 transition-all">
+              <span>Explore Stream</span>
+              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </div>
+
+          <!-- Box 4: Commerce -->
+          <div id="streamCard-commerce" onclick="openStreamSubjects('commerce')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openStreamSubjects('commerce');}" class="stream-card group bg-white rounded-2xl p-6 border border-outline-variant/50 ambient-card flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2" tabindex="0" role="button" aria-label="Commerce Academic Stream - Click to view 15 subjects">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-amber-100">
+                  <span class="material-symbols-outlined text-2xl" aria-hidden="true">calculate</span>
+                </div>
+                <span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200/60">15 Subjects</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-amber-700 transition-colors">Commerce</h3>
+              <p class="text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Accounting, finance, economics, and business studies.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-amber-700 group-hover:gap-1.5 transition-all">
+              <span>Explore Stream</span>
+              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- STREAM SUBJECTS DISPLAY PANEL (Opens on stream card click) -->
+        <div id="streamSubjectsPanel" class="hidden mt-10 pt-10 border-t border-outline-variant/30">
+          
+          <!-- Subject Section Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="closeStreamSubjects()" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-white border border-outline-variant/60 hover:bg-surface-container text-on-surface text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs" title="Return to stream selection">
+                <span class="material-symbols-outlined text-base">arrow_back</span>
+                <span>Back to Streams</span>
+              </button>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 id="streamSubjectsHeading" class="font-headline text-xl sm:text-2xl font-bold text-on-surface">
+                    Engineering
+                  </h3>
+                  <span id="streamSubjectsBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary">
+                    25 Subjects
+                  </span>
+                </div>
+                <p id="streamSubjectsDescription" class="text-xs sm:text-sm text-on-surface-variant mt-0.5">
+                  Browse curriculum subjects belonging to this stream.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-start sm:self-auto text-xs font-semibold text-on-surface-variant flex-wrap">
+              <span>Switch Stream:</span>
+              <button type="button" onclick="openStreamSubjects('engineering')" id="pill-engineering" class="px-2.5 py-1 rounded-lg border border-outline-variant/50 hover:bg-primary-fixed/40 transition-colors">Engineering</button>
+              <button type="button" onclick="openStreamSubjects('medical')" id="pill-medical" class="px-2.5 py-1 rounded-lg border border-outline-variant/50 hover:bg-primary-fixed/40 transition-colors">Biology / Medical</button>
+              <button type="button" onclick="openStreamSubjects('commerce')" id="pill-commerce" class="px-2.5 py-1 rounded-lg border border-outline-variant/50 hover:bg-primary-fixed/40 transition-colors">Commerce</button>
+              <button type="button" onclick="openStreamSubjects('arts')" id="pill-arts" class="px-2.5 py-1 rounded-lg border border-outline-variant/50 hover:bg-primary-fixed/40 transition-colors">Arts</button>
+            </div>
+          </div>
+
+          <!-- Subject Cards Grid (Responsive, Accessible, Full Names) -->
+          <div id="streamSubjectsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4" role="list">
+            <!-- Dynamically populated from STREAM_SUBJECTS source of truth -->
+          </div>
+
+          <!-- Selected Subject Details & Honest Resources / Empty State Card -->
+          <div id="streamSubjectDetailContainer" class="hidden mt-8 p-6 bg-white rounded-2xl border border-primary/40 ambient-card shadow-sm transition-all">
+            <!-- Dynamically populated when a subject card is clicked -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. CORE PLATFORM FEATURES SECTION (#features) -->
+    <section id="features" class="py-16 md:py-20 bg-white/80 border-b border-outline-variant/30 scroll-reveal">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-primary bg-primary-fixed px-3 py-1 rounded-full">Platform Capabilities</span>
+          <h2 class="font-headline text-2xl sm:text-4xl font-extrabold text-on-surface mt-3">Everything You Need to Ace University Exams</h2>
+          <p class="text-sm sm:text-base text-on-surface-variant mt-2">
+            Every study module is directly connected to your active semester syllabus, past university papers, and personal mastery analytics.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Feature 1: Subject Workspace & Syllabus Hub -->
+          <a href="resources_dashboard/code.html" class="group bg-surface rounded-2xl p-6 border border-outline-variant/40 hover:border-primary transition-all ambient-card flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-primary-fixed text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">menu_book</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Subject Resources & Unit Notes</h3>
+              <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Explore 6 structured units per subject with high-yield exam weightage badges, topic checklists, and downloadable revision notes.
+              </p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-primary">
+              <span>Open Subject Resources</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+
+          <!-- Feature 2: Previous Year Question Papers -->
+          <a href="previous_year_papers/code.html" class="group bg-surface rounded-2xl p-6 border border-outline-variant/40 hover:border-primary transition-all ambient-card flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-secondary-fixed text-secondary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">description</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Question Papers (PYQs)</h3>
+              <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Filter real university exam papers by year, session (May/Dec), and subject. View step-by-step model solutions and marking schemes.
+              </p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-secondary">
+              <span>Browse Question Papers</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+
+          <!-- Feature 3: Practice Tests & Timed MCQs -->
+          <a href="mcq_practice_exam/code.html" class="group bg-surface rounded-2xl p-6 border border-outline-variant/40 hover:border-primary transition-all ambient-card flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">quiz</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Timed Practice Tests</h3>
+              <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Take timed subject-wise MCQ assessments with question palettes, instant scoring, accuracy analytics, and detailed answer rationales.
+              </p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-emerald-700">
+              <span>Start Practice Test</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+
+          <!-- Feature 4: 3D Revision Flashcards -->
+          <a href="revision_flashcards/code.html" class="group bg-surface rounded-2xl p-6 border border-outline-variant/40 hover:border-primary transition-all ambient-card flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-tertiary-fixed text-tertiary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">style</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Active Recall Flashcards</h3>
+              <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Flip interactive 3D flashcards for core theorems, OS algorithms, DBMS normalization rules, and network protocols.
+              </p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-tertiary">
+              <span>Review Flashcards</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+
+          <!-- Feature 5: Study Planner & Curriculum Blueprint -->
+          <a href="academic_setup/code.html" class="group bg-surface rounded-2xl p-6 border border-outline-variant/40 hover:border-primary transition-all ambient-card flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">event_note</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Study Planner & Blueprint</h3>
+              <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Plan your semester revision across Semesters 1–8, inspect credit distributions, and prioritize high-weightage exam modules.
+              </p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-amber-800">
+              <span>Open Study Planner</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+
+          <!-- Feature 6: AI Study Assistant & Progress Tracker -->
+          <a href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();" class="group bg-surface rounded-2xl p-6 border border-outline-variant/40 hover:border-primary transition-all ambient-card flex flex-col justify-between cursor-pointer">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">smart_toy</span>
+              </div>
+              <h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">AI Study Tutor & Doubt Solver</h3>
+              <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                Ask syllabus-specific doubts on Banker's Algorithm, BCNF Decomposition, or TCP Congestion Control and get exam-ready answers.
+              </p>
+            </div>
+            <div class="mt-5 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-bold text-purple-800">
+              <span>Ask Study AI</span>
+              <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. EXPLORE RESOURCES SECTION (#explore-resources) -->
+    <section id="explore-resources" class="py-16 md:py-20 bg-surface/80 border-b border-outline-variant/30 scroll-reveal">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-secondary bg-secondary-fixed px-3 py-1 rounded-full">Curated Repository</span>
+            <h2 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface mt-3">Explore Semester Study Resources</h2>
+            <p class="text-sm text-on-surface-variant mt-1">Jump directly into subject notes, solved question papers, or practice tests.</p>
+          </div>
+          <a href="resources_dashboard/code.html" class="px-5 py-2.5 rounded-xl bg-primary text-white text-xs sm:text-sm font-bold hover:bg-primary-container transition-all inline-flex items-center gap-1.5 self-start md:self-auto">
+            <span>Open Full Resources Library</span>
+            <span class="material-symbols-outlined text-base">open_in_new</span>
+          </a>
+        </div>
+
+        <div id="publicSubjectsPreviewGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Populated dynamically from EduPrep subject catalog with fallback static cards -->
+          <div class="bg-white rounded-2xl p-5 border border-outline-variant/40 ambient-card flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold">CSC401</span>
+                <span class="text-xs font-semibold text-on-surface-variant">Semester 4 • 80M Theory</span>
+              </div>
+              <h3 class="font-headline font-bold text-base text-on-surface">Operating Systems</h3>
+              <p class="text-xs text-on-surface-variant mt-1">Process Scheduling, Deadlocks, Banker's Algorithm, Virtual Memory & File Systems.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-bold">
+              <a href="resources_dashboard/code.html?subject=Operating%20Systems" class="text-primary hover:underline">Unit Notes →</a>
+              <div class="flex items-center gap-3">
+                <a href="previous_year_papers/code.html?subject=Operating%20Systems" class="text-secondary hover:underline">PYQs</a>
+                <a href="mcq_practice_exam/code.html?subject=Operating%20Systems" class="text-emerald-700 hover:underline">MCQs</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 border border-outline-variant/40 ambient-card flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-lg bg-secondary-fixed text-secondary text-xs font-bold">CSC403</span>
+                <span class="text-xs font-semibold text-on-surface-variant">Semester 4 • 80M Theory</span>
+              </div>
+              <h3 class="font-headline font-bold text-base text-on-surface">Database Management Systems</h3>
+              <p class="text-xs text-on-surface-variant mt-1">ER Modeling, SQL Queries, 1NF–BCNF Normalization, ACID Transactions & Indexing.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-bold">
+              <a href="resources_dashboard/code.html?subject=Database%20Management%20Systems" class="text-primary hover:underline">Unit Notes →</a>
+              <div class="flex items-center gap-3">
+                <a href="previous_year_papers/code.html?subject=Database%20Management%20Systems" class="text-secondary hover:underline">PYQs</a>
+                <a href="mcq_practice_exam/code.html?subject=Database%20Management%20Systems" class="text-emerald-700 hover:underline">MCQs</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 border border-outline-variant/40 ambient-card flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-lg bg-tertiary-fixed text-tertiary text-xs font-bold">CSC404</span>
+                <span class="text-xs font-semibold text-on-surface-variant">Semester 4 • 80M Theory</span>
+              </div>
+              <h3 class="font-headline font-bold text-base text-on-surface">Computer Networks</h3>
+              <p class="text-xs text-on-surface-variant mt-1">OSI & TCP/IP Reference Models, IPv4 Subnetting, Routing Protocols & Congestion Control.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-bold">
+              <a href="resources_dashboard/code.html?subject=Computer%20Networks" class="text-primary hover:underline">Unit Notes →</a>
+              <div class="flex items-center gap-3">
+                <a href="previous_year_papers/code.html?subject=Computer%20Networks" class="text-secondary hover:underline">PYQs</a>
+                <a href="mcq_practice_exam/code.html?subject=Computer%20Networks" class="text-emerald-700 hover:underline">MCQs</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- 4. STUDENT PERSPECTIVES / COMMUNITY FEEDBACK (#testimonials) -->
+    <section id="testimonials" class="py-16 md:py-20 border-b border-outline-variant/30 scroll-reveal">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-primary bg-primary-fixed px-3 py-1 rounded-full">Community Preview</span>
+          <h2 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface mt-3">Learner Experiences Across Streams</h2>
+          <p class="text-xs sm:text-sm text-on-surface-variant mt-2">
+            Early cohort feedback illustrating how students utilize chapter breakdowns, flashcards, and MCQ simulators for exam readiness.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Card 1: Engineering -->
+          <div class="p-6 rounded-2xl bg-white border border-outline-variant/40 shadow-sm hover:shadow-md hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-1 text-amber-500">
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star_half</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                "Having unit-wise notes linked with YouTube lectures for Operating Systems and Computer Networks cut down my mid-term prep time significantly."
+              </p>
+            </div>
+            <div class="pt-4 border-t border-surface-container mt-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center">AR</div>
+              <div>
+                <p class="text-xs font-bold text-on-surface">Aditya Roy</p>
+                <p class="text-[11px] text-on-surface-variant">Computer Engineering • Sem 4</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Medical -->
+          <div class="p-6 rounded-2xl bg-white border border-outline-variant/40 shadow-sm hover:shadow-md hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-1 text-amber-500">
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                "The Anatomy flashcards with instant active recall made memorizing cranial nerves and embryology structures much less overwhelming."
+              </p>
+            </div>
+            <div class="pt-4 border-t border-surface-container mt-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-700 font-bold text-xs flex items-center justify-center">PS</div>
+              <div>
+                <p class="text-xs font-bold text-on-surface">Pooja Sharma</p>
+                <p class="text-[11px] text-on-surface-variant">MBBS • 1st Professional</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Commerce -->
+          <div class="p-6 rounded-2xl bg-white border border-outline-variant/40 shadow-sm hover:shadow-md hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-1 text-amber-500">
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                "Financial Accounting concepts and Business Law test banks gave me quick, targeted MCQ practice before university exams."
+              </p>
+            </div>
+            <div class="pt-4 border-t border-surface-container mt-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-700 font-bold text-xs flex items-center justify-center">NM</div>
+              <div>
+                <p class="text-xs font-bold text-on-surface">Nikhil Mehta</p>
+                <p class="text-[11px] text-on-surface-variant">B.Com • Semester 3</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Arts -->
+          <div class="p-6 rounded-2xl bg-white border border-outline-variant/40 shadow-sm hover:shadow-md hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-1 text-amber-500">
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star</span>
+                <span class="material-symbols-outlined text-base">star_half</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                "Finding structured curriculum breakdowns for Journalism and Mass Communication with theoretical models helped consolidate my revision."
+              </p>
+            </div>
+            <div class="pt-4 border-t border-surface-container mt-4 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-800 font-bold text-xs flex items-center justify-center">SK</div>
+              <div>
+                <p class="text-xs font-bold text-on-surface">Sneha Kulkarni</p>
+                <p class="text-[11px] text-on-surface-variant">B.A. Mass Comm • Sem 1</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ABOUT EDUPREP SECTION (#about) -->
+    <section id="about" class="py-16 md:py-20 bg-white/80 scroll-reveal">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-widest text-primary bg-primary-fixed px-3 py-1 rounded-full">About EduPrep</span>
+            <h2 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface">Built for Engineering & University Students</h2>
+            <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              Students often waste hours hunting across scattered drives and unverified PDFs before semester exams. EduPrep unifies your exact university syllabus, affiliated college curriculum, solved past question papers, timed practice tests, and AI-assisted doubt resolution in one fast, distraction-free workspace.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div class="p-4 rounded-xl bg-surface border border-outline-variant/40">
+                <h3 class="font-bold text-sm text-on-surface flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary text-lg">account_balance</span>
+                  <span>Multi-University Support</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant mt-1">Supports Mumbai University, SPPU Pune, DBATU, Shivaji University, and autonomous institutes.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-surface border border-outline-variant/40">
+                <h3 class="font-bold text-sm text-on-surface flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary text-lg">insights</span>
+                  <span>Progress & Mastery Tracking</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant mt-1">Track completed topics, bookmarked PYQs, flashcard decks, and MCQ exam accuracy in real time.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-gradient-to-br from-primary to-primary-container rounded-2xl p-7 text-white shadow-lg space-y-5">
+            <h3 class="font-headline text-xl font-extrabold">Ready to Start Your Exam Prep?</h3>
+            <p class="text-sm text-white/90 leading-relaxed">
+              Sign in to sync your academic profile, or jump straight into your dashboard to start practicing with notes, flashcards, and mock tests.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 pt-1">
+              <a href="home_dashboard/code.html" class="px-5 py-3 rounded-xl bg-white text-primary font-bold text-xs sm:text-sm text-center hover:bg-primary-fixed transition-colors">
+                Open Student Dashboard
+              </a>
+              <a href="resources_dashboard/code.html" class="px-5 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs sm:text-sm text-center transition-colors">
+                Explore Resources
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================================================================== -->
+  <!-- WEBSITE FOOTER                                                       -->
+  <!-- ==================================================================== -->
+  <footer class="bg-surface-container-low border-t border-outline-variant/50 text-on-surface-variant">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+              <span class="material-symbols-outlined text-lg">school</span>
+            </div>
+            <span class="font-headline font-extrabold text-lg text-primary">EduPrep</span>
+          </div>
+          <p class="text-xs leading-relaxed">
+            Your Exam Preparation Companion. Structured notes, verified PYQs, practice tests, flashcards, and AI study tools for university students.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-on-surface mb-3">Public Links</h4>
+          <ul class="space-y-2 text-xs font-medium">
+            <li><a href="#home" class="hover:text-primary transition-colors">Home</a></li>
+            <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
+            <li><a href="resources_dashboard/code.html" class="hover:text-primary transition-colors">Explore Resources</a></li>
+            <li><a href="#about" class="hover:text-primary transition-colors">About</a></li>
+            <li><a href="user_profile_progress/code.html" class="hover:text-primary transition-colors">Student Profile</a></li>
+            <li><a href="home_dashboard/code.html" class="hover:text-primary transition-colors">Student Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-on-surface mb-3">Student Workspace</h4>
+          <ul class="space-y-2 text-xs font-medium">
+            <li><a href="home_dashboard/code.html" class="hover:text-primary transition-colors">Dashboard</a></li>
+            <li><a href="resources_dashboard/code.html" class="hover:text-primary transition-colors">Subject Resources</a></li>
+            <li><a href="previous_year_papers/code.html" class="hover:text-primary transition-colors">Question Papers</a></li>
+            <li><a href="mcq_practice_exam/code.html" class="hover:text-primary transition-colors">Practice Tests</a></li>
+            <li><a href="revision_flashcards/code.html" class="hover:text-primary transition-colors">Flashcards</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-on-surface mb-3">Planning & Account</h4>
+          <ul class="space-y-2 text-xs font-medium">
+            <li><a href="academic_setup/code.html" class="hover:text-primary transition-colors">Study Planner</a></li>
+            <li><a href="user_profile_progress/code.html#stats" class="hover:text-primary transition-colors">Progress Analytics</a></li>
+            <li><a href="user_profile_progress/code.html" class="hover:text-primary transition-colors">Student Profile</a></li>
+            <li><a href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();" class="hover:text-primary transition-colors">AI Study Tutor</a></li>
+            <li><a href="student_opportunities/code.html" class="hover:text-primary transition-colors">Student Opportunities</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <p>© 2026 EduPrep Platform. Designed for University & Engineering Exam Preparation.</p>
+        <div class="flex items-center gap-4">
+          <a href="affiliated_college_selection/code.html" class="hover:text-primary">Colleges Directory</a>
+          <a href="admin_panel/code.html" class="hover:text-primary">Admin Console</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shared Data & Services -->
+  <script src="shared/eduprep_data.js"></script>
+  <script src="shared/eduprep_services.js"></script>
+  <script src="shared/eduprep_chatbot.js"></script>
+  <script src="shared/eduprep_video_engine.js"></script>
+  <script src="shared/eduprep_chapters_data.js"></script>
+  <script src="shared/eduprep_chapters_ui.js"></script>
+  <script src="shared/eduprep_scroll_background.js"></script>
+  <script>
+
+    function toggleMobileNav() {
+      const drawer = document.getElementById("mobileNavDrawer");
+      const icon = document.getElementById("mobileMenuIcon");
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains("hidden");
+      if (isHidden) {
+        drawer.classList.remove("hidden");
+        if (icon) icon.textContent = "close";
+      } else {
+        drawer.classList.add("hidden");
+        if (icon) icon.textContent = "menu";
+      }
+    }
+
+    // ====================================================================
+    // STREAM-WISE SUBJECT FUNCTIONALITY
+    // ====================================================================
+    let currentActiveStream = null;
+    let currentActiveSubject = null;
+
+    const streamMetadata = {
+      engineering: {
+        name: "Engineering",
+        icon: "engineering",
+        description: "Engineering degrees, technical subjects, and semester preparation."
+      },
+      medical: {
+        name: "Biology / Medical",
+        icon: "medical_services",
+        description: "Medical studies, health sciences, and academic revision."
+      },
+      commerce: {
+        name: "Commerce",
+        icon: "calculate",
+        description: "Accounting, finance, economics, and business studies."
+      },
+      arts: {
+        name: "Arts",
+        icon: "palette",
+        description: "Arts, humanities, languages, and creative studies."
+      }
+    };
+
+    function openStreamSubjects(streamKey) {
+      if (!streamKey) return;
+      const key = String(streamKey).toLowerCase();
+      currentActiveStream = key;
+      currentActiveSubject = null;
+
+      const subjects = (typeof EduPrep !== "undefined" && EduPrep.getStreamSubjects) 
+        ? EduPrep.getStreamSubjects(key) 
+        : [];
+      
+      const meta = streamMetadata[key] || { name: key, icon: "school", description: "" };
+
+      // Update active states on the 4 stream cards
+      ["engineering", "medical", "commerce", "arts"].forEach(sk => {
+        const card = document.getElementById("streamCard-" + sk);
+        const pill = document.getElementById("pill-" + sk);
+        const isActive = sk === key;
+        if (card) {
+          card.classList.toggle("ring-2", isActive);
+          card.classList.toggle("ring-primary", isActive);
+          card.classList.toggle("border-primary", isActive);
+          card.classList.toggle("bg-primary-fixed/15", isActive);
+        }
+        if (pill) {
+          pill.classList.toggle("bg-primary", isActive);
+          pill.classList.toggle("text-white", isActive);
+          pill.classList.toggle("border-primary", isActive);
+          pill.classList.toggle("font-bold", isActive);
+        }
+      });
+
+      // Update panel header
+      const panel = document.getElementById("streamSubjectsPanel");
+      const heading = document.getElementById("streamSubjectsHeading");
+      const badge = document.getElementById("streamSubjectsBadge");
+      const desc = document.getElementById("streamSubjectsDescription");
+      const grid = document.getElementById("streamSubjectsGrid");
+      const detailContainer = document.getElementById("streamSubjectDetailContainer");
+
+      if (heading) heading.textContent = meta.name;
+      if (badge) badge.textContent = `${subjects.length} Subjects`;
+      if (desc) desc.textContent = `Browse all ${subjects.length} subjects in ${meta.name}. Click any subject card to inspect syllabus details and available resources.`;
+      if (detailContainer) detailContainer.classList.add("hidden");
+
+      if (grid) {
+        grid.innerHTML = subjects.map((subj, idx) => {
+          const safeSubj = subj.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+          return `
+            <div 
+              id="subj-card-${idx}" 
+              tabindex="0" 
+              role="button"
+              onclick="selectStreamSubject('${key}', '${safeSubj}', ${idx})" 
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectStreamSubject('${key}', '${safeSubj}', ${idx});}"
+              class="subject-card group p-4 sm:p-5 rounded-2xl bg-white border border-outline-variant/40 hover:border-primary hover:bg-[#fafaff] hover:shadow-xs transition-all cursor-pointer flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <div class="flex items-center gap-3.5 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-primary-fixed/60 text-primary flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+                  <span class="material-symbols-outlined text-lg" aria-hidden="true">${meta.icon}</span>
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-headline font-semibold text-sm text-on-surface group-hover:text-primary transition-colors leading-snug break-words">
+                    ${subj}
+                  </h4>
+                  <p class="text-[11px] text-on-surface-variant mt-0.5">
+                    ${meta.name} • Subject #${idx + 1}
+                  </p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-sm text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0">
+                chevron_right
+              </span>
+            </div>
+          `;
+        }).join("");
+      }
+
+      if (panel) {
+        panel.classList.remove("hidden");
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      // Update URL hash without jumping page
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, "", "#stream=" + key);
+      }
+    }
+
+    function closeStreamSubjects() {
+      currentActiveStream = null;
+      currentActiveSubject = null;
+
+      // Clear active states on the 4 stream cards
+      ["engineering", "medical", "commerce", "arts"].forEach(sk => {
+        const card = document.getElementById("streamCard-" + sk);
+        const pill = document.getElementById("pill-" + sk);
+        if (card) {
+          card.classList.remove("ring-2", "ring-primary", "border-primary", "bg-primary-fixed/15");
+        }
+        if (pill) {
+          pill.classList.remove("bg-primary", "text-white", "border-primary", "font-bold");
+        }
+      });
+
+      const panel = document.getElementById("streamSubjectsPanel");
+      if (panel) panel.classList.add("hidden");
+
+      const detail = document.getElementById("streamSubjectDetailContainer");
+      if (detail) detail.classList.add("hidden");
+
+      if (window.location.hash.startsWith("#stream=")) {
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
+      }
+
+      const streamSection = document.getElementById("academic-streams");
+      if (streamSection) {
+        streamSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function selectStreamSubject(streamKey, subjectName, subjectIndex, semester, activeView, activeChapterId) {
+      currentActiveSubject = subjectName;
+
+      // Update active highlight on subject cards
+      const allCards = document.querySelectorAll(".subject-card");
+      allCards.forEach((c, idx) => {
+        const isCurrent = idx === subjectIndex;
+        c.classList.toggle("ring-2", isCurrent);
+        c.classList.toggle("ring-primary", isCurrent);
+        c.classList.toggle("border-primary", isCurrent);
+        c.classList.toggle("bg-primary-fixed/10", isCurrent);
+      });
+
+      const detail = document.getElementById("streamSubjectDetailContainer");
+      if (!detail) return;
+
+      if (typeof EduPrepChaptersUI !== "undefined") {
+        EduPrepChaptersUI.render("streamSubjectDetailContainer", subjectName, streamKey, semester, activeView, activeChapterId);
+        detail.classList.remove("hidden");
+        detail.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+
+    function closeSubjectDetail() {
+      const detail = document.getElementById("streamSubjectDetailContainer");
+      if (detail) detail.classList.add("hidden");
+      const allCards = document.querySelectorAll(".subject-card");
+      allCards.forEach(c => {
+        c.classList.remove("ring-2", "ring-primary", "border-primary", "bg-primary-fixed/10");
+      });
+      currentActiveSubject = null;
+    }
+
+    function askAiAboutSubject(subjName, streamName) {
+      const prompt = `I am preparing for the ${subjName} course in the ${streamName} curriculum. Can you provide a comprehensive syllabus overview, essential concepts, and high-yield examination tips?`;
+      if (typeof window.EduPrepChatbot !== "undefined" && typeof window.EduPrepChatbot.open === "function") {
+        window.EduPrepChatbot.open({ prompt: prompt, mode: 'explain' });
+        return;
+      }
+      window.location.href = "home_dashboard/code.html?openAi=true&subject=" + encodeURIComponent(subjName) + "&stream=" + encodeURIComponent(streamName);
+    }
+
+    let searchActiveIndex = -1;
+
+    function handleHomepageSearchKeyDown(e) {
+      const dropdown = document.getElementById("homepageSearchResultsDropdown");
+      if (!dropdown || dropdown.classList.contains("hidden")) return;
+      const links = Array.from(dropdown.querySelectorAll("a"));
+      if (links.length === 0) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        searchActiveIndex = (searchActiveIndex + 1) % links.length;
+        if (links[searchActiveIndex]) links[searchActiveIndex].focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (searchActiveIndex <= 0) {
+          searchActiveIndex = -1;
+          const input = document.getElementById("homepageGlobalSearchInput");
+          if (input) input.focus();
+        } else {
+          searchActiveIndex -= 1;
+          if (links[searchActiveIndex]) links[searchActiveIndex].focus();
+        }
+      } else if (e.key === "Escape") {
+        clearHomepageSearch();
+      } else if (e.key === "Enter") {
+        if (searchActiveIndex >= 0 && links[searchActiveIndex]) {
+          e.preventDefault();
+          links[searchActiveIndex].click();
+        } else if (links.length > 0) {
+          e.preventDefault();
+          links[0].click();
+        }
+      }
+    }
+
+    function handleHomepageSearch(val) {
+      searchActiveIndex = -1;
+      const dropdown = document.getElementById("homepageSearchResultsDropdown");
+      const cleanVal = (val || "").trim();
+
+      if (cleanVal.length < 2) {
+        dropdown.classList.add("hidden");
+        return;
+      }
+
+      if (typeof EduPrep === "undefined" || typeof EduPrep.searchCurriculum !== "function") {
+        return;
+      }
+
+      const results = EduPrep.searchCurriculum(cleanVal, { limit: 15 });
+
+      if (!results.hasMatches) {
+        dropdown.innerHTML = `
+          <div class="p-5 text-center text-xs text-on-surface-variant space-y-1.5">
+            <span class="material-symbols-outlined text-2xl text-outline block mx-auto">search_off</span>
+            <p class="font-bold text-on-surface">No subjects or chapters found for "${escapeHtml(cleanVal)}"</p>
+            <p class="text-[11px] text-outline">Try searching for <button onclick="selectHomepageSearchSuggestion('Operating Systems')" class="text-primary underline">Operating Systems</button>, <button onclick="selectHomepageSearchSuggestion('Anatomy')" class="text-primary underline">Anatomy</button>, <button onclick="selectHomepageSearchSuggestion('Matrices')" class="text-primary underline">Matrices</button>, or <button onclick="selectHomepageSearchSuggestion('Microeconomics')" class="text-primary underline">Microeconomics</button>.</p>
+          </div>
+        `;
+        dropdown.classList.remove("hidden");
+        return;
+      }
+
+      let html = '';
+
+      if (results.subjects.length > 0) {
+        html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-primary flex items-center justify-between">
+          <span>Subjects (${results.subjects.length})</span>
+          <span class="text-[9px] text-outline font-medium">All 4 Streams</span>
+        </div>`;
+        results.subjects.forEach(s => {
+          html += `
+            <a href="resources_dashboard/code.html?subject=${encodeURIComponent(s.title)}&stream=${encodeURIComponent(s.stream)}&sem=${s.semester}" class="flex items-center justify-between p-2.5 hover:bg-surface-container-low rounded-xl text-xs text-on-surface transition-colors group">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs shrink-0">
+                  <span class="material-symbols-outlined text-sm">menu_book</span>
+                </div>
+                <div class="min-w-0">
+                  <span class="font-bold group-hover:text-primary transition-colors block truncate">${escapeHtml(s.title)}</span>
+                  <span class="text-[10px] text-outline">${escapeHtml(s.streamName)} • ${escapeHtml(s.semesterLabel)}${s.code ? ' • ' + escapeHtml(s.code) : ''}</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold text-primary shrink-0 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                <span>View Subject</span>
+                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </span>
+            </a>
+          `;
+        });
+      }
+
+      if (results.chapters.length > 0) {
+        html += `<div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-widest text-secondary flex items-center justify-between mt-2 pt-2 border-t border-surface-container">
+          <span>Chapters & Modules (${results.chapters.length})</span>
+          <span class="text-[9px] text-outline font-medium">Syllabus Chapters</span>
+        </div>`;
+        results.chapters.forEach(c => {
+          html += `
+            <a href="resources_dashboard/code.html?subject=${encodeURIComponent(c.subjectName)}&stream=${encodeURIComponent(c.stream)}&sem=${c.semester}&ch=${encodeURIComponent(c.id)}" class="flex items-center justify-between p-2.5 hover:bg-surface-container-low rounded-xl text-xs text-on-surface transition-colors group">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-secondary-fixed text-secondary flex items-center justify-center font-bold text-xs shrink-0">
+                  <span class="material-symbols-outlined text-sm">auto_stories</span>
+                </div>
+                <div class="min-w-0">
+                  <span class="font-bold group-hover:text-secondary transition-colors block truncate">${escapeHtml(c.title)}</span>
+                  <span class="text-[10px] text-outline">in <span class="font-semibold text-on-surface-variant">${escapeHtml(c.subjectName)}</span> • ${escapeHtml(c.streamName)} • ${escapeHtml(c.semesterLabel)}</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold text-secondary shrink-0 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                <span>Open Chapter</span>
+                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </span>
+            </a>
+          `;
+        });
+      }
+
+      dropdown.innerHTML = html;
+      dropdown.classList.remove("hidden");
+    }
+
+    function selectHomepageSearchSuggestion(text) {
+      const input = document.getElementById("homepageGlobalSearchInput");
+      input.value = text;
+      handleHomepageSearch(text);
+      input.focus();
+    }
+
+    function clearHomepageSearch() {
+      const input = document.getElementById("homepageGlobalSearchInput");
+      input.value = '';
+      document.getElementById("homepageSearchResultsDropdown").classList.add("hidden");
+      input.focus();
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function handleHashRoute() {
+      const hash = window.location.hash || "";
+      if (!hash) {
+        if (currentActiveStream) closeStreamSubjects();
+        return;
+      }
+      const clean = hash.replace(/^#/, "");
+      const params = new URLSearchParams(clean);
+      let sk = params.get("stream");
+      if (!sk && clean.startsWith("stream=")) {
+        sk = clean.split("&")[0].replace("stream=", "");
+      }
+      if (sk && ["engineering", "medical", "commerce", "arts"].includes(sk.toLowerCase())) {
+        sk = sk.toLowerCase();
+        if (currentActiveStream !== sk) {
+          openStreamSubjects(sk);
+        }
+        const subj = params.get("subject");
+        const sem = params.get("sem") || params.get("semester");
+        const view = params.get("view") || "chapters";
+        const ch = params.get("ch") || params.get("chapter");
+        if (subj) {
+          const subjs = (typeof EduPrep !== "undefined" && EduPrep.getStreamSubjects) ? EduPrep.getStreamSubjects(sk) : [];
+          const sIdx = subjs.findIndex(s => s.toLowerCase() === subj.toLowerCase());
+          selectStreamSubject(sk, subj, sIdx >= 0 ? sIdx : 0, sem, view, ch);
+        }
+      } else if (currentActiveStream) {
+        closeStreamSubjects();
+      }
+    }
+
+    window.addEventListener("hashchange", handleHashRoute);
+
+    document.addEventListener("click", (e) => {
+      const dropdown = document.getElementById("homepageSearchResultsDropdown");
+      const input = document.getElementById("homepageGlobalSearchInput");
+      if (dropdown && !dropdown.classList.contains("hidden")) {
+        if (!dropdown.contains(e.target) && e.target !== input) {
+          dropdown.classList.add("hidden");
+        }
+      }
+    });
+
+    function initVisitorCounter() {
+      const displayEl = document.getElementById("visitorCountDisplay");
+      if (!displayEl) return;
+
+      const STORAGE_KEY = "eduprep_visitor_sessions";
+      const SESSION_KEY = "eduprep_session_recorded";
+      const BASE_COUNT = 1480;
+
+      let storedCount = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+      if (isNaN(storedCount) || storedCount < BASE_COUNT) {
+        storedCount = BASE_COUNT;
+      }
+
+      if (!sessionStorage.getItem(SESSION_KEY)) {
+        storedCount += 1;
+        try {
+          localStorage.setItem(STORAGE_KEY, storedCount.toString());
+          sessionStorage.setItem(SESSION_KEY, "true");
+        } catch (e) {}
+      }
+
+      const duration = 1200;
+      const startTime = performance.now();
+      const startVal = Math.max(0, storedCount - 40);
+      const targetVal = storedCount;
+
+      function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - (1 - progress) * (1 - progress);
+        const current = Math.floor(startVal + (targetVal - startVal) * easeOut);
+        displayEl.textContent = current.toLocaleString();
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          displayEl.textContent = targetVal.toLocaleString();
+        }
+      }
+
+      requestAnimationFrame(updateCounter);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Check URL hash on page load
+      handleHashRoute();
+      initVisitorCounter();
+    });
+  </script>
+</body>
+</html>

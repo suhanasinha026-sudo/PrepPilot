@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>3D Revision Flashcards - EduPrep</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_chatbot.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    
+    .flashcard {
+      perspective: 1200px;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flashcard.is-flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 1.25rem;
+    }
+    .flashcard-back {
+      transform: rotateY(180deg);
+    }
+    .ambient-shadow { box-shadow: 0 10px 30px rgba(70, 72, 212, 0.08); }
+    @media (prefers-reduced-motion: reduce) {
+      .card-inner { transition: none !important; }
+    }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="bg-surface text-on-surface min-h-screen flex flex-col pb-24 md:pb-10 antialiased">
+  
+  <!-- Top Navigation -->
+  <header class="w-full top-0 sticky bg-surface z-40 px-4 md:px-8 py-3 mx-auto flex justify-between items-center max-w-5xl border-b border-surface-container shadow-sm">
+    <div class="flex items-center gap-3">
+      <button onclick="handleFlashHeaderExit()" id="btnFlashHeaderExit" class="p-2 rounded-full hover:bg-surface-container text-on-surface transition-colors" title="Back / Exit">
+        <span class="material-symbols-outlined text-xl" id="iconFlashHeaderExit">arrow_back</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-tertiary to-primary flex items-center justify-center text-on-primary shadow-md">
+          <span class="material-symbols-outlined text-xl">style</span>
+        </div>
+        <div>
+          <span class="font-extrabold text-lg md:text-xl tracking-tight text-primary">EduPrep</span>
+          <span class="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant" id="headerFlashSubjPill">3D Flashcards</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- Mode Toggle: Focus vs Grid (Visible only during active deck session) -->
+      <div id="flashModeToggleGroup" class="hidden inline-flex rounded-xl border border-outline-variant p-0.5 bg-surface-container-low text-xs">
+        <button onclick="setViewMode('focus')" id="btnViewFocus" class="px-3 py-1 rounded-lg bg-white text-primary font-bold shadow-xs transition-all">Single Focus</button>
+        <button onclick="setViewMode('grid')" id="btnViewGrid" class="px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-medium transition-all">All Cards Grid</button>
+      </div>
+
+      <!-- Selection Mode Badge (Visible on selection screen) -->
+      <div id="flashSelectionBadge" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-primary text-xs font-bold">
+        <span class="material-symbols-outlined text-sm">tune</span>
+        <span>Deck Setup</span>
+      </div>
+
+      <button onclick="EduPrep.openSemesterModal()" class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container text-xs font-bold text-primary hover:bg-primary-fixed/30 transition-all">
+        <span class="material-symbols-outlined text-sm">calendar_month</span>
+        <span id="flashSemBadge">Sem 4</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 1. PRE-SESSION FLASHCARD SELECTION SCREEN (Visible by default) -->
+  <!-- ========================================================================= -->
+  <div id="flashcardSelectionScreen" class="flex-1 w-full max-w-4xl mx-auto px-4 md:px-8 py-8 space-y-6">
+    <!-- Header Hero Banner -->
+    <div class="bg-gradient-to-br from-tertiary/10 via-primary-fixed/30 to-surface-container-low rounded-3xl p-6 sm:p-8 border border-tertiary/20 shadow-sm">
+      <div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-2">
+        <span class="material-symbols-outlined text-base">psychology</span>
+        <span>Active Recall & Spaced Revision</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mb-2">
+        3D Concept Flashcards
+      </h1>
+      <p class="text-xs sm:text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+        Select your academic stream, subject, and chapter below to start a focused 3D flashcard session. Practice active retrieval, flip cards to test definitions, and track your concept mastery.
+      </p>
+    </div>
+
+    <!-- Selection Controls Card -->
+    <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/30 ambient-shadow space-y-6">
+      
+      <!-- Step 1: Stream Selection -->
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">1. Academic Stream</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="flashStreamButtonGroup">
+          <button type="button" onclick="selectFlashStream('engineering')" id="btnFlashStreamEng" class="p-3 rounded-xl border-2 border-primary bg-primary text-white font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">engineering</span>
+            <span>Engineering</span>
+          </button>
+          <button type="button" onclick="selectFlashStream('medical')" id="btnFlashStreamMed" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">medical_services</span>
+            <span>Medical</span>
+          </button>
+          <button type="button" onclick="selectFlashStream('commerce')" id="btnFlashStreamCom" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">monitoring</span>
+            <span>Commerce</span>
+          </button>
+          <button type="button" onclick="selectFlashStream('arts')" id="btnFlashStreamArts" class="p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-base">palette</span>
+            <span>Arts</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Subject & Chapter Selection -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="flashSubjectSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">2. Select Subject</label>
+          <select id="flashSubjectSelect" onchange="onFlashSubjectChanged(this.value)" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer">
+            <!-- Populated dynamically with full names -->
+          </select>
+        </div>
+        <div>
+          <label for="flashChapterSelect" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1.5">3. Select Chapter / Unit</label>
+          <select id="flashChapterSelect" onchange="onFlashChapterChanged(this.value)" class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer">
+            <!-- Populated dynamically with chapter titles -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 3: Deck Size Selection -->
+      <div class="pt-2 border-t border-surface-container">
+        <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">4. Flashcard Deck Size</label>
+        <div class="grid grid-cols-4 gap-2" id="flashCardCountPills">
+          <button type="button" onclick="setFlashCount(5)" id="btnFlashCount5" class="py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center">5 Cards</button>
+          <button type="button" onclick="setFlashCount(10)" id="btnFlashCount10" class="py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center">10 Cards</button>
+          <button type="button" onclick="setFlashCount(15)" id="btnFlashCount15" class="py-2.5 rounded-xl border-2 border-primary bg-primary text-white text-xs font-bold text-center">15 Cards</button>
+          <button type="button" onclick="setFlashCount('all')" id="btnFlashCountAll" class="py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center">All Available</button>
+        </div>
+        <p class="text-[11px] text-outline mt-1.5" id="availFlashcardsNote">Available in concept deck: 15 cards</p>
+      </div>
+
+      <!-- Live Selection Summary -->
+      <div class="bg-surface-container-low rounded-xl p-3.5 border border-outline-variant/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 text-on-surface">
+          <span class="material-symbols-outlined text-primary text-base">verified</span>
+          <span id="flashSelectionSummaryText" class="font-medium">Selected: Engineering • Operating Systems • All Chapters • 15 Cards</span>
+        </div>
+        <span class="text-[11px] font-bold text-primary shrink-0">Ready to revise</span>
+      </div>
+
+      <!-- Explicit Start Flashcards Button -->
+      <button id="btnStartFlashcards" onclick="startSelectedFlashcards()" class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-bold text-sm sm:text-base hover:opacity-90 active:scale-98 transition-all shadow-md flex items-center justify-center gap-2">
+        <span>Start Flashcards</span>
+        <span class="material-symbols-outlined text-lg">play_arrow</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. ACTIVE FLASHCARD SESSION SCREEN (Hidden until user clicks 'Start Flashcards') -->
+  <!-- ========================================================================= -->
+  <main id="flashcardSessionScreen" class="hidden max-w-4xl mx-auto w-full px-4 md:px-8 py-6 space-y-6 flex-grow flex flex-col justify-between">
+    
+    <!-- Mastery Metrics Bar -->
+    <div class="bg-surface-container-lowest rounded-2xl p-4 md:p-5 border border-outline-variant/30 ambient-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-primary-fixed text-primary flex items-center justify-center text-xl shrink-0">
+          <span class="material-symbols-outlined">psychology</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="font-bold text-sm sm:text-base text-on-surface">Active Concept Mastery Tracker</h2>
+            <button onclick="exitToFlashSelection()" class="text-xs font-bold text-primary hover:underline flex items-center gap-0.5">
+              <span class="material-symbols-outlined text-xs">tune</span> Change Deck
+            </button>
+          </div>
+          <p class="text-xs text-on-surface-variant" id="masteryStatusText">0 of 0 Concepts Mastered (0%)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 w-full sm:w-64">
+        <div class="w-full bg-surface-container-high rounded-full h-2.5 overflow-hidden">
+          <div id="masteryProgressBar" class="bg-gradient-to-r from-primary to-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <span class="text-xs font-bold text-primary shrink-0" id="masteryPercentBadge">0%</span>
+      </div>
+    </div>
+
+    <!-- Single Focus View Container -->
+    <div id="focusViewContainer" class="w-full flex-grow flex flex-col items-center justify-center space-y-5">
+      
+      <!-- Top Card Metadata Row -->
+      <div class="w-full max-w-2xl flex items-center justify-between text-xs px-1">
+        <div class="flex items-center gap-2">
+          <span id="focusCardCounter" class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-bold text-xs">Card 1 of 15</span>
+          <span id="cardSubjBadge" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary font-bold text-[11px]">Engineering Mathematics</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="cardMasteryIndicator" class="font-semibold text-amber-700">Status: Review Pending</span>
+          <button onclick="shuffleDeck()" title="Shuffle Deck" class="p-1.5 rounded-lg border border-outline-variant hover:bg-surface-container text-on-surface transition-colors flex items-center">
+            <span class="material-symbols-outlined text-base">shuffle</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3D Interactive Flashcard Stage -->
+      <div id="activeFlashcard" class="flashcard ep-flashcard-stage w-full max-w-2xl h-[360px] sm:h-[400px] select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-3xl" onclick="flipActiveCard()" tabindex="0" onkeydown="handleCardKeyDown(event)" role="button" aria-label="Flashcard. Press Space to flip.">
+        <div class="flashcard-inner ep-flashcard-inner">
+          
+          <!-- Front Face (Question / Concept) -->
+          <div class="flashcard-front ep-flashcard-face bg-surface-container-lowest border-2 border-outline-variant/50 hover:border-primary/60 transition-colors p-6 sm:p-8 flex flex-col justify-between rounded-3xl shadow-xl relative overflow-hidden">
+            <!-- Decorative corner radial -->
+            <div class="absolute -top-12 -right-12 w-28 h-28 bg-primary/10 rounded-full blur-xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between w-full">
+              <span id="cardFrontTopic" class="text-xs font-bold text-primary uppercase tracking-wider bg-primary-fixed/40 px-3 py-1 rounded-full">Unit 1 • Concept</span>
+              <span class="text-xs font-semibold text-outline flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">touch_app</span> Tap to Flip
+              </span>
+            </div>
+
+            <div class="my-auto py-4 text-center px-2">
+              <span class="text-xs font-bold text-outline uppercase tracking-wider block mb-2">Question / Concept</span>
+              <p id="cardFrontQuestion" class="text-base sm:text-xl font-bold text-on-surface leading-snug sm:leading-relaxed">
+                Loading concept...
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between w-full pt-3 border-t border-surface-container text-xs text-outline">
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-base text-primary">3d_rotation</span> Click card or press <kbd class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-mono font-bold text-on-surface border border-outline-variant">Space</kbd>
+              </span>
+              <span class="font-bold text-primary flex items-center gap-0.5">
+                Reveal Answer <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Back Face (Answer / Explanation) -->
+          <div class="flashcard-back ep-flashcard-face ep-flashcard-back bg-gradient-to-br from-surface-container-lowest via-surface-container-low to-surface-container-lowest border-2 border-primary/40 p-6 sm:p-8 flex flex-col justify-between rounded-3xl shadow-2xl relative overflow-hidden">
+            <!-- Decorative corner accent -->
+            <div class="absolute -top-12 -right-12 w-28 h-28 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between w-full">
+              <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Verified Explanation & Key Points
+              </span>
+              <span class="text-xs font-semibold text-outline flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">flip</span> Flip Back
+              </span>
+            </div>
+
+            <div class="my-auto py-4 overflow-y-auto max-h-[220px] px-1 text-left">
+              <p id="cardBackAnswer" class="text-sm sm:text-base text-on-surface leading-relaxed whitespace-pre-line font-medium">
+                Loading answer...
+              </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 border-t border-surface-container text-xs">
+              <span id="cardExamRelevance" class="text-[11px] font-semibold text-primary bg-primary-fixed/50 px-2.5 py-1 rounded-lg">
+                High Exam Weightage Theory
+              </span>
+              <span class="text-[11px] text-outline flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">verified</span> Syllabus Aligned
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Controls & Navigation Toolbar -->
+      <div class="w-full max-w-2xl space-y-3">
+        <!-- Deck Progress Bar -->
+        <div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+          <div id="deckProgressBar" class="bg-primary h-1.5 rounded-full transition-all duration-300" style="width: 7%"></div>
+        </div>
+
+        <div class="flex items-center justify-between gap-2">
+          <!-- Previous Button -->
+          <button id="btnPrevCard" onclick="prevCard()" class="px-4 py-2.5 rounded-xl border border-outline-variant hover:bg-surface-container disabled:opacity-40 disabled:pointer-events-none text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1 transition-all">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            <span class="hidden sm:inline">Previous</span>
+          </button>
+
+          <!-- Mastery Actions -->
+          <div class="flex items-center gap-2">
+            <button onclick="markCardMastered(false)" class="px-3 sm:px-4 py-2.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all shadow-xs" title="Flag this card for another review cycle">
+              <span class="material-symbols-outlined text-base text-amber-600">replay</span>
+              <span>Needs Review</span>
+            </button>
+            <button onclick="markCardMastered(true)" class="px-3 sm:px-4 py-2.5 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all shadow-xs" title="Mark card as learned and mastered">
+              <span class="material-symbols-outlined text-base text-emerald-600">check_circle</span>
+              <span>Mastered</span>
+            </button>
+          </div>
+
+          <!-- Next Button -->
+          <button id="btnNextCard" onclick="nextCard()" class="px-4 py-2.5 rounded-xl bg-primary text-on-primary hover:opacity-90 active:scale-98 text-xs sm:text-sm font-bold flex items-center gap-1 transition-all shadow-sm">
+            <span class="hidden sm:inline">Next</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </button>
+        </div>
+
+        <!-- AI Tutor Helper button -->
+        <div class="text-center pt-1">
+          <button onclick="askAiAboutCard()" class="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">smart_toy</span>
+            <span>Ask AI Tutor to explain this concept deeper</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- All Cards Grid Container -->
+    <div id="gridViewContainer" class="hidden w-full flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Rendered dynamically -->
+    </div>
+
+  </main>
+
+  <!-- Deck Completion Modal -->
+  <div id="flashCompletionModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-outline-variant/40 space-y-5 text-center">
+      <div class="w-16 h-16 rounded-full mx-auto bg-primary-fixed text-primary flex items-center justify-center shadow-md">
+        <span class="material-symbols-outlined text-3xl">emoji_events</span>
+      </div>
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-on-surface">Deck Revision Complete!</h2>
+        <p class="text-xs sm:text-sm text-on-surface-variant mt-1" id="flashCompletionSubjMeta">Operating Systems • All Chapters</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 text-xs">
+        <div>
+          <span class="text-2xl font-black text-emerald-600" id="compMasteredCount">0</span>
+          <p class="text-[11px] font-semibold text-outline uppercase mt-0.5">Mastered</p>
+        </div>
+        <div>
+          <span class="text-2xl font-black text-amber-600" id="compReviewCount">0</span>
+          <p class="text-[11px] font-semibold text-outline uppercase mt-0.5">Needs Review</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
+        <button onclick="restartFlashcardsDeck()" class="py-2.5 px-3 rounded-xl border border-outline-variant hover:bg-surface-container text-xs font-bold text-on-surface flex items-center justify-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-base">replay</span>
+          <span>Restart</span>
+        </button>
+        <button onclick="exitToFlashSelection()" class="py-2.5 px-3 rounded-xl bg-primary-fixed text-primary hover:bg-primary-fixed-dim text-xs font-bold flex items-center justify-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-base">tune</span>
+          <span>New Deck</span>
+        </button>
+        <button onclick="window.location.href='../home_dashboard/code.html'" class="py-2.5 px-3 rounded-xl bg-primary text-on-primary hover:opacity-90 text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all">
+          <span>Dashboard</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BottomNavBar (Mobile Only) -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 bg-surface z-40 border-t border-surface-container shadow-lg">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../home_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">home</span>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../resources_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">menu_book</span>
+      <span class="text-[10px] mt-0.5">Resources</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-primary font-bold transition-all text-xs" href="../revision_flashcards/code.html">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">style</span>
+      <span class="text-[10px] mt-0.5">Flashcards</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();">
+      <span class="material-symbols-outlined text-xl">smart_toy</span>
+      <span class="text-[10px] mt-0.5">Study AI</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../previous_year_papers/code.html">
+      <span class="material-symbols-outlined text-xl">description</span>
+      <span class="text-[10px] mt-0.5">Papers</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../user_profile_progress/code.html">
+      <span class="material-symbols-outlined text-xl">person</span>
+      <span class="text-[10px] mt-0.5">Profile</span>
+    </a>
+  </nav>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_chapters_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_chatbot.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    let activeFlashScreen = 'selection'; // 'selection' | 'session'
+    let selectedFlashStream = 'engineering';
+    let selectedFlashSubject = 'Operating Systems';
+    let selectedFlashChapterId = 'all';
+    let selectedFlashCount = 15;
+
+    let allFlashcards = [];
+    let filteredList = [];
+    let currentFocusIndex = 0;
+    let currentViewMode = 'focus';
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initFlashSelectionScreen();
+
+      // Global keyboard listeners for cards
+      document.addEventListener("keydown", (e) => {
+        if (activeFlashScreen !== 'session') return;
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+        if (e.code === 'Space' || e.code === 'Enter') {
+          e.preventDefault();
+          flipActiveCard();
+        } else if (e.code === 'ArrowRight') {
+          nextCard();
+        } else if (e.code === 'ArrowLeft') {
+          prevCard();
+        }
+      });
+    });
+
+    function initFlashSelectionScreen() {
+      allFlashcards = EduPrep.getFlashcards ? EduPrep.getFlashcards() : [];
+      const state = EduPrep.getState();
+      document.getElementById("flashSemBadge").textContent = `Sem ${state.academic.semester || 4}`;
+
+      const params = new URLSearchParams(window.location.search);
+      const streamParam = params.get('stream');
+      const subjParam = params.get('subject');
+      const chapterParam = params.get('chapter');
+
+      if (streamParam && ['engineering', 'medical', 'commerce', 'arts'].includes(streamParam.toLowerCase())) {
+        selectedFlashStream = streamParam.toLowerCase();
+      }
+
+      updateFlashStreamButtonsUI();
+      populateFlashSubjectDropdown();
+
+      if (subjParam) {
+        const select = document.getElementById("flashSubjectSelect");
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value.toLowerCase().includes(subjParam.toLowerCase())) {
+            select.selectedIndex = i;
+            selectedFlashSubject = select.options[i].value;
+            break;
+          }
+        }
+      }
+
+      populateFlashChapterDropdown();
+
+      if (chapterParam) {
+        const chSelect = document.getElementById("flashChapterSelect");
+        for (let i = 0; i < chSelect.options.length; i++) {
+          if (chSelect.options[i].value === chapterParam || chSelect.options[i].text.toLowerCase().includes(chapterParam.toLowerCase())) {
+            chSelect.selectedIndex = i;
+            selectedFlashChapterId = chSelect.options[i].value;
+            break;
+          }
+        }
+      }
+
+      updateFlashCountUI();
+      updateFlashSelectionSummary();
+    }
+
+    function selectFlashStream(stream) {
+      selectedFlashStream = stream;
+      updateFlashStreamButtonsUI();
+      populateFlashSubjectDropdown();
+      populateFlashChapterDropdown();
+      updateFlashSelectionSummary();
+    }
+
+    function updateFlashStreamButtonsUI() {
+      const streams = [
+        { id: 'engineering', btnId: 'btnFlashStreamEng' },
+        { id: 'medical', btnId: 'btnFlashStreamMed' },
+        { id: 'commerce', btnId: 'btnFlashStreamCom' },
+        { id: 'arts', btnId: 'btnFlashStreamArts' }
+      ];
+      streams.forEach(s => {
+        const el = document.getElementById(s.btnId);
+        if (!el) return;
+        if (s.id === selectedFlashStream) {
+          el.className = "p-3 rounded-xl border-2 border-primary bg-primary text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all";
+        } else {
+          el.className = "p-3 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs flex items-center justify-center gap-2 transition-all";
+        }
+      });
+    }
+
+    function populateFlashSubjectDropdown() {
+      const select = document.getElementById("flashSubjectSelect");
+      if (!select) return;
+
+      const subjects = EduPrep.getStreamSubjects ? EduPrep.getStreamSubjects(selectedFlashStream) : (EduPrep.STREAM_SUBJECTS[selectedFlashStream] || []);
+      select.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+
+      if (subjects.length > 0) {
+        selectedFlashSubject = subjects[0];
+        select.value = selectedFlashSubject;
+      }
+    }
+
+    function onFlashSubjectChanged(subj) {
+      selectedFlashSubject = subj;
+      populateFlashChapterDropdown();
+      updateFlashSelectionSummary();
+    }
+
+    function populateFlashChapterDropdown() {
+      const select = document.getElementById("flashChapterSelect");
+      if (!select) return;
+
+      let chapters = [];
+      const engine = (typeof EduPrep !== "undefined" && EduPrep.chaptersEngine) ||
+                     (typeof window !== "undefined" && window.EduPrepChapters) ||
+                     (typeof window !== "undefined" && window.ChaptersEngine) ||
+                     (typeof ChaptersEngine !== "undefined" ? ChaptersEngine : null);
+
+      if (engine && typeof engine.getChapters === "function") {
+        chapters = engine.getChapters(selectedFlashSubject);
+      } else if (typeof EduPrep !== "undefined" && typeof EduPrep.getChapters === "function") {
+        chapters = EduPrep.getChapters(selectedFlashSubject);
+      }
+
+      let options = `<option value="all">All Chapters (Complete Subject Deck)</option>`;
+      if (chapters && chapters.length > 0) {
+        options += chapters.map((ch, idx) => `<option value="${ch.id}">Unit ${ch.chapterNum || (idx + 1)}: ${ch.title}</option>`).join('');
+      } else {
+        options += `<option value="core">Core Subject Concepts</option>`;
+      }
+
+      select.innerHTML = options;
+      selectedFlashChapterId = "all";
+      select.value = "all";
+    }
+
+    function onFlashChapterChanged(chId) {
+      selectedFlashChapterId = chId;
+      updateFlashSelectionSummary();
+    }
+
+    function setFlashCount(count) {
+      selectedFlashCount = count;
+      updateFlashCountUI();
+      updateFlashSelectionSummary();
+    }
+
+    function updateFlashCountUI() {
+      const pills = [
+        { val: 5, id: 'btnFlashCount5' },
+        { val: 10, id: 'btnFlashCount10' },
+        { val: 15, id: 'btnFlashCount15' },
+        { val: 'all', id: 'btnFlashCountAll' }
+      ];
+      pills.forEach(p => {
+        const el = document.getElementById(p.id);
+        if (!el) return;
+        if (p.val === selectedFlashCount) {
+          el.className = "py-2.5 rounded-xl border-2 border-primary bg-primary text-white text-xs font-bold text-center";
+        } else {
+          el.className = "py-2.5 rounded-xl border border-outline-variant text-xs font-bold hover:bg-surface-container transition-all text-center";
+        }
+      });
+    }
+
+    function updateFlashSelectionSummary() {
+      const streamName = selectedFlashStream.charAt(0).toUpperCase() + selectedFlashStream.slice(1);
+      const chSelect = document.getElementById("flashChapterSelect");
+      const chapterLabel = chSelect && chSelect.options[chSelect.selectedIndex] ? chSelect.options[chSelect.selectedIndex].text : "All Chapters";
+      const countLabel = selectedFlashCount === 'all' ? 'All Available Cards' : `${selectedFlashCount} Cards`;
+
+      const summaryEl = document.getElementById("flashSelectionSummaryText");
+      if (summaryEl) {
+        summaryEl.textContent = `Selected: ${streamName} • ${selectedFlashSubject} • ${chapterLabel} • ${countLabel}`;
+      }
+
+      const pool = getCardsForSelection(selectedFlashSubject, selectedFlashChapterId);
+      const noteEl = document.getElementById("availFlashcardsNote");
+      if (noteEl) {
+        noteEl.textContent = `Available in concept deck: ${pool.length} verified revision cards`;
+      }
+    }
+
+    function getCardsForSelection(subj, chId) {
+      if (!subj) return [];
+      let pool = EduPrep.getFlashcards ? EduPrep.getFlashcards(subj, chId) : [];
+
+      // If specific chapter is selected, filter by chapterId or topic
+      if (chId && chId !== 'all') {
+        const chFiltered = pool.filter(f => f.chapterId === chId);
+        if (chFiltered.length > 0) return chFiltered;
+
+        const engine = (typeof EduPrep !== "undefined" && EduPrep.chaptersEngine) ||
+                       (typeof window !== "undefined" && window.EduPrepChapters) ||
+                       (typeof window !== "undefined" && window.ChaptersEngine) ||
+                       (typeof ChaptersEngine !== "undefined" ? ChaptersEngine : null);
+
+        if (engine && typeof engine.getSubjectFlashcards === "function") {
+          const generated = engine.getSubjectFlashcards(subj, chId);
+          if (generated && generated.length > 0) return generated;
+        }
+
+        if (engine && typeof engine.getChapterById === "function") {
+          const ch = engine.getChapterById(chId);
+          if (ch) {
+            const chWords = (ch.title || "").toLowerCase().split(/\s+/).filter(w => w.length > 3);
+            const topicFiltered = pool.filter(f => {
+              const text = ((f.topic || "") + " " + (f.q || "")).toLowerCase();
+              return chWords.some(w => text.includes(w));
+            });
+            if (topicFiltered.length > 0) return topicFiltered;
+          }
+        }
+      }
+
+      return pool;
+    }
+
+    function startSelectedFlashcards() {
+      let pool = getCardsForSelection(selectedFlashSubject, selectedFlashChapterId);
+      if (!pool || pool.length === 0) {
+        EduPrep.showToast("No flashcards available for " + selectedFlashSubject + ". Please select another chapter or subject.", "error");
+        return;
+      }
+
+      let count = selectedFlashCount === 'all' ? pool.length : parseInt(selectedFlashCount, 10);
+      count = Math.min(count, pool.length);
+      filteredList = pool.slice(0, count);
+
+      activeFlashScreen = 'session';
+      if (window.EduPrepScrollBackground) window.EduPrepScrollBackground.setIntensity('minimal');
+      currentFocusIndex = 0;
+      currentViewMode = 'focus';
+
+      // Switch screens
+      document.getElementById("flashcardSelectionScreen").classList.add("hidden");
+      document.getElementById("flashcardSessionScreen").classList.remove("hidden");
+
+      // Update header
+      document.getElementById("iconFlashHeaderExit").textContent = "close";
+      document.getElementById("flashSelectionBadge").classList.add("hidden");
+      document.getElementById("flashModeToggleGroup").classList.remove("hidden");
+      document.getElementById("headerFlashSubjPill").textContent = selectedFlashSubject;
+
+      updateMasteryUI();
+      renderFocusCard();
+      EduPrep.showToast(`Started revision deck: ${filteredList.length} cards loaded`, "info");
+    }
+
+    function handleFlashHeaderExit() {
+      if (activeFlashScreen === 'session') {
+        confirmExitFlashcards();
+      } else {
+        window.location.href = "../home_dashboard/code.html";
+      }
+    }
+
+    function confirmExitFlashcards() {
+      const conf = confirm("Exit current flashcard deck and return to deck selection?");
+      if (!conf) return;
+      exitToFlashSelection();
+    }
+
+    function exitToFlashSelection() {
+      activeFlashScreen = 'selection';
+      if (window.EduPrepScrollBackground) window.EduPrepScrollBackground.setIntensity('subtle');
+
+      document.getElementById("flashCompletionModal").classList.add("hidden");
+      document.getElementById("flashcardSessionScreen").classList.add("hidden");
+      document.getElementById("flashcardSelectionScreen").classList.remove("hidden");
+
+      // Reset Header
+      document.getElementById("iconFlashHeaderExit").textContent = "arrow_back";
+      document.getElementById("flashSelectionBadge").classList.remove("hidden");
+      document.getElementById("flashModeToggleGroup").classList.add("hidden");
+      document.getElementById("headerFlashSubjPill").textContent = "3D Flashcards";
+
+      updateFlashSelectionSummary();
+      EduPrep.showToast("Returned to deck setup", "info");
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      const btnFocus = document.getElementById("btnViewFocus");
+      const btnGrid = document.getElementById("btnViewGrid");
+      const focusCont = document.getElementById("focusViewContainer");
+      const gridCont = document.getElementById("gridViewContainer");
+
+      if (mode === 'focus') {
+        btnFocus.className = "px-3 py-1 rounded-lg bg-white text-primary font-bold shadow-xs transition-all";
+        btnGrid.className = "px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-medium transition-all";
+        focusCont.classList.remove("hidden");
+        gridCont.classList.add("hidden");
+        renderFocusCard();
+      } else {
+        btnGrid.className = "px-3 py-1 rounded-lg bg-white text-primary font-bold shadow-xs transition-all";
+        btnFocus.className = "px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-medium transition-all";
+        focusCont.classList.add("hidden");
+        gridCont.classList.remove("hidden");
+        renderGridCards();
+      }
+    }
+
+    function flipActiveCard() {
+      const card = document.getElementById("activeFlashcard");
+      if (card) card.classList.toggle("is-flipped");
+    }
+
+    function handleCardKeyDown(e) {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        flipActiveCard();
+      }
+    }
+
+    function renderFocusCard() {
+      if (filteredList.length === 0) return;
+      const cardEl = document.getElementById("activeFlashcard");
+      if (cardEl) cardEl.classList.remove("is-flipped");
+
+      const item = filteredList[currentFocusIndex];
+      const state = EduPrep.getState();
+      const isMastered = (state.progress && state.progress.masteredFlashcards || []).includes(item.id);
+
+      const counterEl = document.getElementById("focusCardCounter");
+      if (counterEl) counterEl.textContent = `Card ${currentFocusIndex + 1} of ${filteredList.length}`;
+
+      const subjBadge = document.getElementById("cardSubjBadge");
+      if (subjBadge) subjBadge.textContent = item.subject || selectedFlashSubject;
+
+      const qEl = document.getElementById("cardFrontQuestion");
+      if (qEl) qEl.textContent = item.q;
+
+      const topicEl = document.getElementById("cardFrontTopic");
+      if (topicEl) topicEl.textContent = `${item.unit || 'Unit 1'} • ${item.topic || 'Concept'}`;
+
+      const aEl = document.getElementById("cardBackAnswer");
+      if (aEl) aEl.textContent = item.a;
+
+      const relEl = document.getElementById("cardExamRelevance");
+      if (relEl) relEl.textContent = item.examRelevance || `Difficulty: ${item.difficulty || 'Medium'}`;
+
+      // Navigation Buttons state
+      const prevBtn = document.getElementById("btnPrevCard");
+      if (prevBtn) prevBtn.disabled = currentFocusIndex === 0;
+
+      const nextBtn = document.getElementById("btnNextCard");
+      if (nextBtn) {
+        if (currentFocusIndex === filteredList.length - 1) {
+          nextBtn.innerHTML = `<span class="hidden sm:inline">Finish Deck</span> <span class="material-symbols-outlined text-base">done_all</span>`;
+        } else {
+          nextBtn.innerHTML = `<span class="hidden sm:inline">Next</span> <span class="material-symbols-outlined text-base">arrow_forward</span>`;
+        }
+      }
+
+      const pct = Math.round(((currentFocusIndex + 1) / filteredList.length) * 100);
+      const deckProgress = document.getElementById("deckProgressBar");
+      if (deckProgress) deckProgress.style.width = `${pct}%`;
+
+      const indicator = document.getElementById("cardMasteryIndicator");
+      if (indicator) {
+        if (isMastered) {
+          indicator.textContent = "Status: ✓ Mastered";
+          indicator.className = "font-bold text-emerald-600";
+        } else {
+          indicator.textContent = "Status: Review Pending";
+          indicator.className = "font-semibold text-amber-700";
+        }
+      }
+    }
+
+    function nextCard() {
+      if (currentFocusIndex < filteredList.length - 1) {
+        currentFocusIndex++;
+        renderFocusCard();
+      } else {
+        showDeckCompletionModal();
+      }
+    }
+
+    function prevCard() {
+      if (currentFocusIndex > 0) {
+        currentFocusIndex--;
+        renderFocusCard();
+      }
+    }
+
+    function showDeckCompletionModal() {
+      const state = EduPrep.getState();
+      const masteredList = (state.progress && state.progress.masteredFlashcards) || [];
+      let masteredCount = 0;
+      filteredList.forEach(c => {
+        if (masteredList.includes(c.id)) masteredCount++;
+      });
+      const reviewCount = filteredList.length - masteredCount;
+
+      const chSelect = document.getElementById("flashChapterSelect");
+      const chapterLabel = chSelect && chSelect.options[chSelect.selectedIndex] ? chSelect.options[chSelect.selectedIndex].text : "All Chapters";
+
+      document.getElementById("flashCompletionSubjMeta").textContent = `${selectedFlashSubject} • ${chapterLabel} (${filteredList.length} Cards)`;
+      document.getElementById("compMasteredCount").textContent = masteredCount;
+      document.getElementById("compReviewCount").textContent = reviewCount;
+      document.getElementById("flashCompletionModal").classList.remove("hidden");
+    }
+
+    function restartFlashcardsDeck() {
+      document.getElementById("flashCompletionModal").classList.add("hidden");
+      currentFocusIndex = 0;
+      renderFocusCard();
+      EduPrep.showToast("Deck restarted. Good luck!", "info");
+    }
+
+    function shuffleDeck() {
+      for (let i = filteredList.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filteredList[i], filteredList[j]] = [filteredList[j], filteredList[i]];
+      }
+      currentFocusIndex = 0;
+      renderFocusCard();
+      EduPrep.showToast("Deck randomized successfully!", "info");
+    }
+
+    function shuffleCards() {
+      shuffleDeck();
+    }
+
+    function markCardMastered(isMastered) {
+      if (filteredList.length === 0) return;
+      const item = filteredList[currentFocusIndex];
+      if (isMastered) {
+        EduPrep.toggleFlashcardMastered(item.id);
+        EduPrep.showToast(`Mastered: "${item.q.slice(0, 30)}..."`, "success");
+      } else {
+        EduPrep.toggleFlashcardReview(item.id);
+        EduPrep.showToast(`Marked for Future Review!`, "info");
+      }
+      updateMasteryUI();
+      renderFocusCard();
+    }
+
+    function updateMasteryUI() {
+      const state = EduPrep.getState();
+      const masteredList = (state.progress && state.progress.masteredFlashcards) || [];
+      const masteredCount = masteredList.length;
+      const total = filteredList.length > 0 ? filteredList.length : allFlashcards.length;
+      const pct = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
+
+      document.getElementById("masteryStatusText").textContent = `${masteredCount} of ${total} Concepts Mastered in this Deck (${pct}%)`;
+      document.getElementById("masteryProgressBar").style.width = `${pct}%`;
+      document.getElementById("masteryPercentBadge").textContent = `${pct}%`;
+    }
+
+    function renderGridCards() {
+      const container = document.getElementById("gridViewContainer");
+      const state = EduPrep.getState();
+      const masteredList = (state.progress && state.progress.masteredFlashcards) || [];
+
+      container.innerHTML = filteredList.map((item, idx) => {
+        const isMastered = masteredList.includes(item.id);
+        return `
+          <div class="flashcard h-64 cursor-pointer ambient-shadow rounded-2xl relative group" onclick="openCardInFocus(${idx})">
+            <div class="flashcard-inner">
+              <div class="flashcard-front bg-surface-container-lowest border border-outline-variant/40 p-5 flex flex-col justify-between items-center text-center rounded-2xl shadow-sm hover:border-primary transition-colors">
+                <div class="w-full flex justify-between items-center text-[10px]">
+                  <span class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-bold">#${idx + 1} • ${item.subject || selectedFlashSubject}</span>
+                  <span class="${isMastered ? 'text-emerald-600 font-bold' : 'text-outline'}">${isMastered ? '✓ Mastered' : 'Needs Review'}</span>
+                </div>
+                <p class="font-bold text-xs sm:text-sm text-on-surface px-1 leading-snug line-clamp-3">${item.q}</p>
+                <div class="w-full flex justify-between items-center text-[10px] text-outline pt-2 border-t border-surface-container">
+                  <span>${item.unit || ''}</span>
+                  <span class="text-primary font-bold group-hover:underline">Open Focus →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openCardInFocus(idx) {
+      currentFocusIndex = idx;
+      setViewMode('focus');
+    }
+
+    function askAiAboutCard() {
+      if (filteredList.length === 0) return;
+      const item = filteredList[currentFocusIndex];
+      const prompt = `Can you explain the key exam details, diagrams, and numerical application of: "${item.q}"?`;
+      if (typeof window.EduPrepChatbot !== "undefined" && typeof window.EduPrepChatbot.open === "function") {
+        window.EduPrepChatbot.open({ prompt: prompt, mode: 'explain' });
+        return;
+      }
+      sessionStorage.setItem("eduvantage_pending_query", prompt);
+      EduPrep.navigateTo("home_dashboard?openAi=true&q=" + encodeURIComponent(prompt));
+    }
+  </script>
+</body>
+</html>

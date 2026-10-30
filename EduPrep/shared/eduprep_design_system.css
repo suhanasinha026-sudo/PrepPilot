@@ -1,0 +1,634 @@
+/**
+ * EduPrep Unified Design System
+ * "Modern Academic Intelligence" — Visual Identity & Component Layer
+ * Version: 2.0.0
+ * 
+ * Provides tokens, glassmorphism surfaces, elevated cards, stream palettes,
+ * accessible focus states, interactive controls, and responsive utilities.
+ */
+
+:root {
+  /* ==========================================================================
+     1. COLOR PALETTE TOKENS
+     ========================================================================== */
+  /* Primary Brand (Academic Indigo) */
+  --ep-primary: #4648d4;
+  --ep-primary-hover: #3739b8;
+  --ep-primary-active: #2b2c9a;
+  --ep-primary-light: #eceeff;
+  --ep-primary-muted: rgba(70, 72, 212, 0.08);
+  --ep-primary-border: rgba(70, 72, 212, 0.22);
+  --ep-primary-gradient: linear-gradient(135deg, #4648d4 0%, #6366f1 100%);
+  --ep-primary-glow: 0 8px 24px -4px rgba(70, 72, 212, 0.35);
+
+  /* Academic Stream Tokens */
+  --ep-stream-eng: #4648d4;
+  --ep-stream-eng-bg: #eef2ff;
+  --ep-stream-eng-border: #c7d2fe;
+  
+  --ep-stream-med: #0d9488;
+  --ep-stream-med-bg: #f0fdfa;
+  --ep-stream-med-border: #99f6e4;
+  
+  --ep-stream-com: #0284c7;
+  --ep-stream-com-bg: #f0f9ff;
+  --ep-stream-com-border: #bae6fd;
+  
+  --ep-stream-art: #9333ea;
+  --ep-stream-art-bg: #faf5ff;
+  --ep-stream-art-border: #e9d5ff;
+
+  /* Surfaces & Neutrals */
+  --ep-surface-base: #ffffff;
+  --ep-surface-subtle: #f8fafc;
+  --ep-surface-alt: #f1f5f9;
+  --ep-surface-dark: #0f172a;
+  
+  --ep-border-subtle: rgba(15, 23, 42, 0.07);
+  --ep-border-medium: rgba(15, 23, 42, 0.12);
+  --ep-border-focus: #4648d4;
+
+  /* Typography Colors */
+  --ep-text-title: #0f172a;
+  --ep-text-body: #334155;
+  --ep-text-muted: #64748b;
+  --ep-text-faint: #94a3b8;
+  --ep-text-inverse: #ffffff;
+
+  /* Status Colors */
+  --ep-success: #10b981;
+  --ep-success-bg: #ecfdf5;
+  --ep-success-border: #a7f3d0;
+  
+  --ep-warning: #f59e0b;
+  --ep-warning-bg: #fffbeb;
+  --ep-warning-border: #fde68a;
+  
+  --ep-error: #ef4444;
+  --ep-error-bg: #fef2f2;
+  --ep-error-border: #fecaca;
+  
+  --ep-info: #0284c7;
+  --ep-info-bg: #f0f9ff;
+  --ep-info-border: #bae6fd;
+
+  /* ==========================================================================
+     2. ELEVATION, RADII & SHADOWS
+     ========================================================================== */
+  --ep-radius-xs: 6px;
+  --ep-radius-sm: 8px;
+  --ep-radius-md: 12px;
+  --ep-radius-lg: 16px;
+  --ep-radius-xl: 20px;
+  --ep-radius-2xl: 24px;
+  --ep-radius-full: 9999px;
+
+  --ep-shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.05);
+  --ep-shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --ep-shadow-card-hover: 0 14px 30px -4px rgba(70, 72, 212, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+  --ep-shadow-elevated: 0 20px 40px -10px rgba(15, 23, 42, 0.1), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+  --ep-shadow-modal: 0 25px 60px -15px rgba(15, 23, 42, 0.25);
+
+  /* Transitions */
+  --ep-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ep-transition-normal: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ep-transition-smooth: 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   3. GLOBAL FOUNDATION & ACCESSIBILITY
+   ========================================================================== */
+body {
+  color: var(--ep-text-body);
+  background-color: var(--ep-surface-subtle);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessible focus ring across all clickable and focusable elements */
+:focus-visible {
+  outline: 2px solid var(--ep-primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(70, 72, 212, 0.18) !important;
+}
+
+/* Subtle sleek scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: var(--ep-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Selection */
+::selection {
+  background: var(--ep-primary-light);
+  color: var(--ep-primary);
+}
+
+/* ==========================================================================
+   4. CARD & CONTAINER COMPONENT STYLES
+   ========================================================================== */
+.ep-card {
+  background: var(--ep-surface-base);
+  border: 1px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-xl);
+  box-shadow: var(--ep-shadow-card);
+  transition: transform var(--ep-transition-normal), box-shadow var(--ep-transition-normal), border-color var(--ep-transition-normal);
+}
+
+.ep-card-interactive {
+  cursor: pointer;
+}
+.ep-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--ep-primary-border);
+  box-shadow: var(--ep-shadow-card-hover);
+}
+
+.ep-glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--ep-shadow-card);
+  border-radius: var(--ep-radius-xl);
+}
+
+.ep-subtle-glow {
+  position: relative;
+}
+.ep-subtle-glow::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(70, 72, 212, 0.12), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--ep-transition-normal);
+}
+.ep-subtle-glow:hover::after {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   5. BUTTON HIERARCHY
+   ========================================================================== */
+.ep-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--ep-radius-lg);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--ep-transition-fast);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ep-btn:disabled,
+.ep-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary Button */
+.ep-btn-primary {
+  background: var(--ep-primary-gradient);
+  color: #ffffff;
+  box-shadow: 0 2px 8px -1px rgba(70, 72, 212, 0.35);
+}
+.ep-btn-primary:hover {
+  background: linear-gradient(135deg, #3c3eb8 0%, #4f46e5 100%);
+  box-shadow: 0 6px 18px -2px rgba(70, 72, 212, 0.45);
+  transform: translateY(-1px);
+}
+.ep-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(70, 72, 212, 0.25);
+}
+
+/* Secondary Button */
+.ep-btn-secondary {
+  background: #ffffff;
+  color: var(--ep-text-title);
+  border-color: var(--ep-border-medium);
+  box-shadow: var(--ep-shadow-subtle);
+}
+.ep-btn-secondary:hover {
+  background: var(--ep-surface-subtle);
+  border-color: rgba(15, 23, 42, 0.2);
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+/* Ghost Button */
+.ep-btn-ghost {
+  background: transparent;
+  color: var(--ep-text-body);
+}
+.ep-btn-ghost:hover {
+  background: var(--ep-surface-alt);
+  color: var(--ep-text-title);
+}
+
+/* Accent Outline Button */
+.ep-btn-outline-primary {
+  background: transparent;
+  color: var(--ep-primary);
+  border-color: var(--ep-primary-border);
+}
+.ep-btn-outline-primary:hover {
+  background: var(--ep-primary-light);
+  border-color: var(--ep-primary);
+}
+
+/* Small / Large modifiers */
+.ep-btn-sm {
+  padding: 0.375rem 0.875rem;
+  font-size: 0.8125rem;
+  border-radius: var(--ep-radius-md);
+}
+.ep-btn-lg {
+  padding: 0.875rem 1.75rem;
+  font-size: 1rem;
+  border-radius: var(--ep-radius-xl);
+}
+
+/* ==========================================================================
+   6. BADGES & PILLS
+   ========================================================================== */
+.ep-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--ep-radius-full);
+  line-height: 1;
+}
+
+.ep-badge-primary {
+  background: var(--ep-primary-light);
+  color: var(--ep-primary);
+  border: 1px solid var(--ep-primary-border);
+}
+
+.ep-badge-success {
+  background: var(--ep-success-bg);
+  color: #047857;
+  border: 1px solid var(--ep-success-border);
+}
+
+.ep-badge-warning {
+  background: var(--ep-warning-bg);
+  color: #b45309;
+  border: 1px solid var(--ep-warning-border);
+}
+
+.ep-badge-neutral {
+  background: var(--ep-surface-alt);
+  color: var(--ep-text-body);
+  border: 1px solid var(--ep-border-subtle);
+}
+
+/* Stream Specific Badges */
+.ep-badge-eng {
+  background: var(--ep-stream-eng-bg);
+  color: var(--ep-stream-eng);
+  border: 1px solid var(--ep-stream-eng-border);
+}
+.ep-badge-med {
+  background: var(--ep-stream-med-bg);
+  color: var(--ep-stream-med);
+  border: 1px solid var(--ep-stream-med-border);
+}
+.ep-badge-com {
+  background: var(--ep-stream-com-bg);
+  color: var(--ep-stream-com);
+  border: 1px solid var(--ep-stream-com-border);
+}
+.ep-badge-art {
+  background: var(--ep-stream-art-bg);
+  color: var(--ep-stream-art);
+  border: 1px solid var(--ep-stream-art-border);
+}
+
+/* ==========================================================================
+   7. FORM INPUTS & SELECT CONTROLS
+   ========================================================================== */
+.ep-input,
+.ep-select,
+.ep-textarea {
+  width: 100%;
+  background: #ffffff;
+  color: var(--ep-text-title);
+  border: 1.5px solid var(--ep-border-medium);
+  border-radius: var(--ep-radius-lg);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: border-color var(--ep-transition-fast), box-shadow var(--ep-transition-fast);
+}
+
+.ep-input:focus,
+.ep-select:focus,
+.ep-textarea:focus {
+  border-color: var(--ep-primary);
+  box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.15);
+  outline: none;
+}
+
+.ep-input::placeholder,
+.ep-textarea::placeholder {
+  color: var(--ep-text-faint);
+}
+
+/* ==========================================================================
+   8. TABS & SEGMENTED CONTROLS
+   ========================================================================== */
+.ep-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--ep-surface-alt);
+  border-radius: var(--ep-radius-lg);
+  border: 1px solid var(--ep-border-subtle);
+}
+
+.ep-tab-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ep-text-muted);
+  border-radius: var(--ep-radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--ep-transition-fast);
+}
+
+.ep-tab-item:hover {
+  color: var(--ep-text-title);
+}
+
+.ep-tab-item.active,
+.ep-tab-item[aria-selected="true"] {
+  background: #ffffff;
+  color: var(--ep-primary);
+  box-shadow: var(--ep-shadow-subtle);
+}
+
+/* ==========================================================================
+   9. MODAL & OVERLAY STYLING
+   ========================================================================== */
+.ep-modal-backdrop {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.ep-modal-dialog {
+  background: #ffffff;
+  border: 1px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-2xl);
+  box-shadow: var(--ep-shadow-modal);
+  animation: epModalEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes epModalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ==========================================================================
+   10. STATISTIC CARDS & PROGRESS VISUALIZERS
+   ========================================================================== */
+.ep-stat-card {
+  background: #ffffff;
+  border: 1px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-xl);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--ep-shadow-card);
+}
+
+.ep-stat-value {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: var(--ep-text-title);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.ep-stat-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ep-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Modern clean progress bar */
+.ep-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--ep-surface-alt);
+  border-radius: var(--ep-radius-full);
+  overflow: hidden;
+}
+
+.ep-progress-fill {
+  height: 100%;
+  background: var(--ep-primary-gradient);
+  border-radius: var(--ep-radius-full);
+  transition: width var(--ep-transition-smooth);
+}
+
+/* ==========================================================================
+   11. PRACTICE TEST & QUIZ SIMULATOR COMPONENTS
+   ========================================================================== */
+.ep-quiz-card {
+  background: #ffffff;
+  border: 1px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-2xl);
+  box-shadow: var(--ep-shadow-card);
+  padding: 1.5rem;
+}
+
+.ep-quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  background: #ffffff;
+  border: 1.5px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-xl);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--ep-transition-fast);
+}
+
+.ep-quiz-option:hover {
+  background: var(--ep-surface-subtle);
+  border-color: var(--ep-primary-border);
+  transform: translateX(2px);
+}
+
+.ep-option-circle {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--ep-radius-full);
+  border: 1.5px solid var(--ep-border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ep-text-muted);
+  flex-shrink: 0;
+  transition: all var(--ep-transition-fast);
+}
+
+.ep-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--ep-radius-full);
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #e11d48;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   12. 3D FLASHCARD STYLES
+   ========================================================================== */
+.ep-flashcard-stage {
+  perspective: 1200px;
+  width: 100%;
+  min-height: 340px;
+}
+
+.ep-flashcard-inner {
+  position: relative;
+  width: 100%;
+  min-height: 340px;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.ep-flashcard-stage.is-flipped .ep-flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.ep-flashcard-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: var(--ep-radius-2xl);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--ep-shadow-elevated);
+  border: 1px solid var(--ep-border-subtle);
+  background: #ffffff;
+}
+
+.ep-flashcard-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+  border-color: var(--ep-primary-border);
+}
+
+/* ==========================================================================
+   13. AI CHAT TUTOR COMPONENTS
+   ========================================================================== */
+.ep-chat-bubble-user {
+  background: var(--ep-primary-gradient);
+  color: #ffffff;
+  border-radius: var(--ep-radius-2xl);
+  border-bottom-right-radius: 4px;
+  padding: 0.875rem 1.25rem;
+  box-shadow: var(--ep-primary-glow);
+  max-width: 80%;
+  margin-left: auto;
+}
+
+.ep-chat-bubble-assistant {
+  background: #ffffff;
+  color: var(--ep-text-title);
+  border: 1px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-2xl);
+  border-bottom-left-radius: 4px;
+  padding: 1rem 1.25rem;
+  box-shadow: var(--ep-shadow-card);
+  max-width: 88%;
+}
+
+.ep-prompt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  background: #ffffff;
+  border: 1px solid var(--ep-border-subtle);
+  border-radius: var(--ep-radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ep-text-body);
+  cursor: pointer;
+  transition: all var(--ep-transition-fast);
+  white-space: nowrap;
+}
+
+.ep-prompt-chip:hover {
+  background: var(--ep-primary-light);
+  border-color: var(--ep-primary-border);
+  color: var(--ep-primary);
+  transform: translateY(-1px);
+}
+

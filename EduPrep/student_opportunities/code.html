@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — Student Opportunities, Hackathons &amp; Scholarships</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_chatbot.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .card-hover-shadow:hover { box-shadow: 0 10px 30px rgba(99, 102, 241, 0.08); transform: translateY(-2px); }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="antialiased min-h-screen flex flex-col relative pb-28 md:pb-10">
+  
+  <!-- TopAppBar -->
+  <header class="w-full top-0 sticky z-40 bg-surface shadow-sm border-b border-surface-container">
+    <div class="flex justify-between items-center px-4 md:px-8 py-3 w-full max-w-6xl mx-auto">
+      <div class="flex items-center gap-3">
+        <a href="../home_dashboard/code.html" class="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors" title="Back to Dashboard">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-tertiary to-primary flex items-center justify-center text-on-primary shadow-md">
+            <span class="material-symbols-outlined text-xl">campaign</span>
+          </div>
+          <div>
+            <span class="font-extrabold text-xl tracking-tight text-primary">EduPrep</span>
+            <span class="hidden sm:inline-block ml-2 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">Student Opportunities Hub</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="../admin_panel/code.html" class="px-3 py-1.5 rounded-full bg-primary-fixed hover:bg-primary-fixed-dim text-primary text-xs font-bold flex items-center gap-1 transition-colors" title="Add Opportunity in Admin Studio">
+          <span class="material-symbols-outlined text-sm">add_circle</span>
+          <span class="hidden sm:inline">Add Listing</span>
+        </a>
+        <a href="../user_profile_progress/code.html" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary-container">
+          <img id="oppAvatar" alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTVTYsIgi8LHdNnRRuWq7WIQKHVif0TlNP2ZGt5StF7Jud3Gs6vJQFkiI_qUrzoEb70z07NIkSS2_FPOt1QOJAbG_z1UCQF3WZREwn8LQ303AF2KGL_FvIsWwcEBv_58SCacYxsAa4LwQhFIaWqE0p3A6nQmz2-PaZX8Kg5GnREbykYMsqeY9iQUPepRuFz-BLvUMNC7zQs_yEkbyzAAZa8CifAo7-8Qk5s6x_H8lKuQkdoWTzOKzRA"/>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Canvas -->
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 md:px-8 pt-6 pb-12 space-y-6">
+    
+    <!-- Hero Banner -->
+    <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 border border-outline-variant/30 ambient-shadow">
+      <div class="flex items-center gap-2 mb-2 flex-wrap">
+        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-tertiary">Student Academic &amp; Career Hub</span>
+        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Sample Reference Listings Labeled Clearly</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mb-2">
+        Student Opportunities, Hackathons, Internships &amp; Scholarships
+      </h1>
+      <p class="text-xs sm:text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+        Explore national hackathons, research internships, merit scholarships, and technical symposiums relevant to engineering and technical students. Sample demonstration entries are explicitly labeled.
+      </p>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 ambient-shadow flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+      <div class="flex flex-wrap gap-2 items-center flex-1">
+        <div class="relative flex-1 min-w-[220px]">
+          <span class="material-symbols-outlined text-base text-outline absolute left-3 top-2.5">search</span>
+          <input id="searchOppInput" type="search" oninput="renderOpportunities()" placeholder="Search hackathons, internships, scholarships, or organizers..." aria-label="Search Opportunities" class="w-full pl-9 pr-3 py-2 rounded-xl border border-outline-variant bg-surface text-xs font-medium text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+        </div>
+        <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-outline-variant/60 bg-surface text-xs font-semibold text-on-surface cursor-pointer select-none">
+          <input id="chkHideExpired" type="checkbox" onchange="renderOpportunities()" class="rounded text-primary focus:ring-primary"/>
+          <span>Active Deadlines Only</span>
+        </label>
+        <button type="button" onclick="toggleSavedFilter()" id="btnSavedOppsOnly" class="px-3 py-2 rounded-xl border border-outline-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-sm">bookmark</span>
+          <span>Bookmarked</span>
+        </button>
+      </div>
+      <span id="oppTotalCountBadge" class="text-xs font-bold text-primary shrink-0">Showing 6 Opportunities</span>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex gap-2 overflow-x-auto pb-1 text-xs font-bold hide-scrollbar" id="catFilterContainer" role="tablist" aria-label="Opportunity Categories">
+      <button onclick="filterCategory('all')" id="btnCatAll" role="tab" aria-selected="true" class="px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs transition-colors whitespace-nowrap">All Opportunities (<span id="countAll">6</span>)</button>
+      <button onclick="filterCategory('Hackathon')" id="btnCatHack" role="tab" aria-selected="false" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap">Hackathons (<span id="countHack">2</span>)</button>
+      <button onclick="filterCategory('Internship')" id="btnCatIntern" role="tab" aria-selected="false" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap">Internships (<span id="countIntern">2</span>)</button>
+      <button onclick="filterCategory('Scholarship')" id="btnCatSchol" role="tab" aria-selected="false" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap">Scholarships (<span id="countSchol">1</span>)</button>
+      <button onclick="filterCategory('Event')" id="btnCatEvent" role="tab" aria-selected="false" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap">Tech Fests &amp; Workshops (<span id="countEvent">1</span>)</button>
+    </div>
+
+    <!-- Dynamic Opportunities Content Container -->
+    <div id="oppContainer">
+      <!-- Populated via renderOpportunities() -->
+    </div>
+
+  </main>
+
+  <!-- Opportunity Details Modal -->
+  <div id="oppDetailsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-outline-variant/40 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between border-b border-surface-container pb-3">
+        <div>
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-xs font-bold text-primary px-2.5 py-0.5 rounded bg-primary-fixed uppercase tracking-wider" id="modalOppCat">Hackathon</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800" id="modalOppVerification">Sample Listing</span>
+          </div>
+          <h3 class="font-bold text-base text-on-surface mt-1" id="modalOppTitle">Smart India Hackathon 2026</h3>
+          <p class="text-xs text-on-surface-variant" id="modalOppOrg">AICTE</p>
+        </div>
+        <button onclick="closeOppModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-on-surface-variant">
+        <!-- Highlights Box -->
+        <div class="grid grid-cols-2 gap-2.5 p-3 bg-surface-container-low rounded-xl border border-outline-variant/30">
+          <div>
+            <span class="font-bold text-on-surface block text-[11px]">Application Deadline</span>
+            <span id="modalOppDeadline" class="font-medium text-on-surface">Nov 30, 2026</span>
+          </div>
+          <div>
+            <span class="font-bold text-on-surface block text-[11px]">Mode &amp; Location</span>
+            <span id="modalOppMode" class="font-medium text-on-surface">Online</span>
+          </div>
+          <div class="col-span-2 pt-2 border-t border-surface-container">
+            <span class="font-bold text-on-surface block text-[11px]">Reward / Stipend / Benefit</span>
+            <span id="modalOppReward" class="font-semibold text-primary">Prize / Stipend</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="font-bold text-on-surface block mb-1">Eligibility:</span>
+          <p id="modalOppEligibility" class="leading-relaxed">Open to B.Tech / B.E. students across Semesters 1 to 8.</p>
+        </div>
+
+        <div>
+          <span class="font-bold text-on-surface block mb-1">Program Details &amp; Guidelines:</span>
+          <p id="modalOppDesc" class="leading-relaxed">Detailed program description and submission guidelines.</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-surface-container flex items-center justify-between gap-2">
+        <button onclick="reportCurrentOpp()" class="px-3 py-2 rounded-xl border border-outline-variant hover:bg-error-container/30 text-xs font-semibold text-on-surface-variant hover:text-error flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-sm">flag</span>
+          <span>Report Listing</span>
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeOppModal()" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors">
+            Close
+          </button>
+          <a id="modalApplyLink" href="https://www.sih.gov.in" target="_blank" rel="noopener noreferrer" class="px-5 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 flex items-center gap-1.5 shadow-sm transition-all">
+            <span class="material-symbols-outlined text-base">open_in_new</span>
+            <span>Open Portal</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BottomNavBar (Mobile Only) -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 bg-surface z-40 border-t border-surface-container shadow-lg">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../home_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">home</span>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../resources_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">library_books</span>
+      <span class="text-[10px] mt-0.5">Resources</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-primary font-bold transition-all text-xs" href="../student_opportunities/code.html">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">campaign</span>
+      <span class="text-[10px] mt-0.5">Updates</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();">
+      <span class="material-symbols-outlined text-xl">smart_toy</span>
+      <span class="text-[10px] mt-0.5">Study AI</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../user_profile_progress/code.html">
+      <span class="material-symbols-outlined text-xl">person</span>
+      <span class="text-[10px] mt-0.5">Profile</span>
+    </a>
+  </nav>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_chatbot.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    const BASE_OPPORTUNITIES = [
+      {
+        id: "opp_hack_1",
+        title: "Smart India Hackathon 2026 (SIH Senior Edition)",
+        organizer: "Ministry of Education Innovation Cell & AICTE (Sample Listing)",
+        category: "Hackathon",
+        status: "ongoing",
+        statusLabel: "Registration Open",
+        deadline: "Nov 30, 2026",
+        deadlineDate: "2026-11-30",
+        mode: "Hybrid / Nodal Centers",
+        location: "Designated Nodal Centers across Maharashtra & India",
+        prize: "₹1,00,000 per Problem Statement",
+        eligibility: "B.Tech / B.E. college teams of 6 students (minimum 1 female member mandatory)",
+        description: "National open innovation competition tackling real-world challenges formulated by ministries, public departments, and industry partners.",
+        verificationStatus: "sample",
+        applyUrl: "https://www.sih.gov.in"
+      },
+      {
+        id: "opp_hack_2",
+        title: "Maharashtra State Engineering AI & Systems Challenge",
+        organizer: "TechNova Campus Alliance (Sample Listing)",
+        category: "Hackathon",
+        status: "upcoming",
+        statusLabel: "Upcoming",
+        deadline: "Dec 15, 2026",
+        deadlineDate: "2026-12-15",
+        mode: "Online",
+        location: "Virtual (Pan-India)",
+        prize: "₹1,50,000 Prize Pool + Cloud Credits",
+        eligibility: "Open to all UG Engineering students across Semesters 1 to 8 (Teams of 2 to 4)",
+        description: "36-hour engineering hackathon focused on distributed systems, developer tooling, and educational AI assistants.",
+        verificationStatus: "sample",
+        applyUrl: "https://aicte-india.org"
+      },
+      {
+        id: "opp_intern_1",
+        title: "Summer Software Engineering Intern Track (2027)",
+        organizer: "Enterprise Cloud Systems Lab (Sample Listing)",
+        category: "Internship",
+        status: "open",
+        statusLabel: "Open",
+        deadline: "Dec 05, 2026",
+        deadlineDate: "2026-12-05",
+        mode: "Hybrid / Offline",
+        location: "Pune & Mumbai Engineering Campuses",
+        prize: "Monthly Stipend + Mentorship",
+        eligibility: "B.Tech/BE Computer, IT, AI & Data Science (3rd Year students)",
+        description: "12-week summer engineering internship working on distributed databases, backend APIs, and automated testing.",
+        verificationStatus: "sample",
+        applyUrl: "https://internships.aicte-india.org"
+      },
+      {
+        id: "opp_intern_2",
+        title: "Data Science & Academic Analytics Research Fellow",
+        organizer: "Quantus Research Institute (Sample Listing)",
+        category: "Internship",
+        status: "open",
+        statusLabel: "Open",
+        deadline: "Nov 25, 2026",
+        deadlineDate: "2026-11-25",
+        mode: "Remote / Online",
+        location: "Online / Virtual Lab",
+        prize: "Research Fellowship Stipend + Publication Guidance",
+        eligibility: "2nd to 4th year undergraduate engineering students proficient in Python & SQL",
+        description: "Collaborate on educational dataset modeling, learning progress analytics, and curriculum knowledge graphs.",
+        verificationStatus: "sample",
+        applyUrl: "https://internships.aicte-india.org"
+      },
+      {
+        id: "opp_schol_1",
+        title: "MahaDBT & STEM Merit-cum-Means Scholarship Window",
+        organizer: "Directorate of Technical Education Maharashtra (Sample Listing)",
+        category: "Scholarship",
+        status: "open",
+        statusLabel: "Open",
+        deadline: "Dec 20, 2026",
+        deadlineDate: "2026-12-20",
+        mode: "Online Application",
+        location: "Maharashtra DTE Approved Colleges",
+        prize: "Tuition & Exam Fee Reimbursement",
+        eligibility: "Students enrolled in AICTE/DTE recognized engineering colleges meeting eligibility criteria",
+        description: "Annual post-matric and merit-cum-means financial scholarship supporting undergraduate technical education.",
+        verificationStatus: "sample",
+        applyUrl: "https://mahadbt.maharashtra.gov.in"
+      },
+      {
+        id: "opp_event_1",
+        title: "Inter-Collegiate Technical Paper & Project Symposium",
+        organizer: "Autonomous Engineering Consortium (Sample Listing)",
+        category: "Event",
+        status: "upcoming",
+        statusLabel: "Upcoming",
+        deadline: "Nov 18, 2026",
+        deadlineDate: "2026-11-18",
+        mode: "Offline (Mumbai & Pune)",
+        location: "Participating Engineering Campuses",
+        prize: "Merit Certificates & Best Paper Awards",
+        eligibility: "Open to all engineering students, research scholars, and project groups",
+        description: "Annual student paper presentation and final-year project exhibition across computer, electronics, and mechanical tracks.",
+        verificationStatus: "sample",
+        applyUrl: "https://www.acm.org"
+      }
+    ];
+
+    let activeCat = "all";
+    let savedOnly = false;
+    let savedOppIds = new Set(["opp_hack_1"]);
+    let currentSelectedOpp = null;
+
+    try {
+      const stored = localStorage.getItem("eduprep_saved_opp_ids") || localStorage.getItem("eduvantage_saved_opp_ids");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) savedOppIds = new Set(parsed);
+      }
+    } catch (_) {}
+
+    function getAllOpportunities() {
+      const adminOpps = (EduPrep.getAdminCatalog && EduPrep.getAdminCatalog().opportunities) || [];
+      const normalizedAdmin = adminOpps.map(o => Object.assign({
+        status: "open",
+        statusLabel: "Open",
+        mode: o.location || "Online",
+        prize: o.prize || "Merit Opportunity",
+        eligibility: o.eligibility || "Open to all undergraduate students",
+        description: o.description || "Added via EduPrep Admin Content Studio.",
+        applyUrl: o.applyUrl || "https://aicte-india.org"
+      }, o));
+      return normalizedAdmin.concat(BASE_OPPORTUNITIES);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const state = EduPrep.getState();
+      if (state && state.user && state.user.avatar) {
+        const avatarEl = document.getElementById("oppAvatar");
+        if (avatarEl) avatarEl.src = state.user.avatar;
+      }
+      updateCategoryCounts();
+      renderOpportunities();
+    });
+
+    function updateCategoryCounts() {
+      const all = getAllOpportunities();
+      const hackCount = all.filter(o => o.category.toLowerCase() === "hackathon").length;
+      const internCount = all.filter(o => o.category.toLowerCase() === "internship").length;
+      const scholCount = all.filter(o => o.category.toLowerCase() === "scholarship").length;
+      const eventCount = all.filter(o => o.category.toLowerCase() === "event" || o.category.toLowerCase() === "workshop").length;
+
+      document.getElementById("countAll").textContent = all.length;
+      document.getElementById("countHack").textContent = hackCount;
+      document.getElementById("countIntern").textContent = internCount;
+      document.getElementById("countSchol").textContent = scholCount;
+      document.getElementById("countEvent").textContent = eventCount;
+    }
+
+    function toggleSavedFilter() {
+      savedOnly = !savedOnly;
+      const btn = document.getElementById("btnSavedOppsOnly");
+      if (savedOnly) {
+        btn.className = "px-3 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold flex items-center gap-1 transition-colors";
+      } else {
+        btn.className = "px-3 py-2 rounded-xl border border-outline-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container flex items-center gap-1 transition-colors";
+      }
+      renderOpportunities();
+    }
+
+    function filterCategory(cat) {
+      activeCat = cat;
+      const tabConfigs = [
+        { id: "btnCatAll", val: "all" },
+        { id: "btnCatHack", val: "Hackathon" },
+        { id: "btnCatIntern", val: "Internship" },
+        { id: "btnCatSchol", val: "Scholarship" },
+        { id: "btnCatEvent", val: "Event" }
+      ];
+
+      tabConfigs.forEach(t => {
+        const el = document.getElementById(t.id);
+        if (!el) return;
+        if (t.val.toLowerCase() === cat.toLowerCase()) {
+          el.className = "px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs transition-colors whitespace-nowrap";
+          el.setAttribute("aria-selected", "true");
+        } else {
+          el.className = "px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap";
+          el.setAttribute("aria-selected", "false");
+        }
+      });
+
+      renderOpportunities();
+    }
+
+    function renderOpportunities() {
+      const container = document.getElementById("oppContainer");
+      const searchQ = (document.getElementById("searchOppInput").value || "").toLowerCase().trim();
+      const hideExpired = document.getElementById("chkHideExpired").checked;
+
+      let list = getAllOpportunities();
+
+      if (activeCat !== "all") {
+        list = list.filter(o => {
+          if (activeCat.toLowerCase() === "event") {
+            return o.category.toLowerCase() === "event" || o.category.toLowerCase() === "workshop";
+          }
+          return o.category.toLowerCase() === activeCat.toLowerCase();
+        });
+      }
+
+      if (searchQ) {
+        list = list.filter(o =>
+          o.title.toLowerCase().includes(searchQ) ||
+          o.organizer.toLowerCase().includes(searchQ) ||
+          o.category.toLowerCase().includes(searchQ) ||
+          (o.location && o.location.toLowerCase().includes(searchQ))
+        );
+      }
+
+      if (hideExpired && window.EduPrepServices && window.EduPrepServices.Opportunity) {
+        list = list.filter(o => !window.EduPrepServices.Opportunity.isExpired(o.deadlineDate || o.deadline));
+      }
+
+      if (savedOnly) {
+        list = list.filter(o => savedOppIds.has(o.id));
+      }
+
+      document.getElementById("oppTotalCountBadge").textContent = `Showing ${list.length} Opportunit${list.length === 1 ? 'y' : 'ies'}`;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="bg-surface-container-lowest rounded-2xl p-8 border border-dashed border-outline-variant/40 text-center text-on-surface-variant my-3">
+            <div class="w-12 h-12 rounded-full bg-surface-container mx-auto flex items-center justify-center text-outline mb-2">
+              <span class="material-symbols-outlined text-2xl">search_off</span>
+            </div>
+            <p class="font-bold text-sm text-on-surface">No opportunities match your current filters</p>
+            <p class="text-xs text-on-surface-variant mt-1 max-w-sm mx-auto">Try clearing the search bar or switching categories.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          ${list.map(o => renderStandardCard(o)).join('')}
+        </div>
+      `;
+    }
+
+    function renderStandardCard(o) {
+      const isSaved = savedOppIds.has(o.id);
+      const isVerified = o.verificationStatus === "verified";
+      const verificationBadge = isVerified
+        ? `<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase">Verified</span>`
+        : `<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase">Sample Listing</span>`;
+
+      return `
+        <div class="bg-surface-container-lowest rounded-2xl p-5 md:p-6 border border-outline-variant/30 ambient-shadow card-hover-shadow transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-3 gap-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="bg-primary-fixed text-primary px-2.5 py-0.5 rounded-full text-xs font-bold">${o.category}</span>
+                ${verificationBadge}
+              </div>
+              <button onclick="toggleSaveOpp('${o.id}')" class="text-outline hover:text-tertiary transition-colors p-1" title="${isSaved ? 'Remove bookmark' : 'Bookmark this opportunity'}">
+                <span class="material-symbols-outlined text-xl ${isSaved ? 'text-tertiary font-bold' : ''}" style="${isSaved ? "font-variation-settings: 'FILL' 1;" : ''}">${isSaved ? 'bookmark' : 'bookmark_border'}</span>
+              </button>
+            </div>
+
+            <h3 class="font-bold text-base text-on-surface mb-1 line-clamp-2">${o.title}</h3>
+            <p class="text-xs text-on-surface-variant font-semibold mb-3.5">${o.organizer}</p>
+
+            <div class="space-y-2 text-xs text-on-surface-variant mb-5">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-primary shrink-0">calendar_clock</span>
+                <span class="truncate">Deadline: <strong>${o.deadline}</strong></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-secondary shrink-0">military_tech</span>
+                <span class="truncate">Benefit: <strong>${o.prize || 'Academic Credit / Stipend'}</strong></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-outline shrink-0">location_on</span>
+                <span class="truncate">Mode: <strong>${o.mode || o.location || 'Online'}</strong></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-outline shrink-0">verified_user</span>
+                <span class="line-clamp-1">${o.eligibility}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-surface-container flex gap-2">
+            <button onclick="openOppDetails('${o.id}')" class="flex-1 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-on-surface transition-colors">
+              View Details
+            </button>
+            <a href="${o.applyUrl || 'https://aicte-india.org'}" target="_blank" rel="noopener noreferrer" class="py-2 px-4 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1">
+              <span>Portal</span>
+              <span class="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleSaveOpp(id) {
+      const opp = getAllOpportunities().find(o => o.id === id);
+      const title = opp ? opp.title : "Opportunity";
+      if (savedOppIds.has(id)) {
+        savedOppIds.delete(id);
+        EduPrep.showToast(`Removed "${title}" from bookmarks`, "info");
+      } else {
+        savedOppIds.add(id);
+        EduPrep.showToast(`Bookmarked "${title}"!`, "success");
+      }
+
+      try {
+        const arr = Array.from(savedOppIds);
+        localStorage.setItem("eduprep_saved_opp_ids", JSON.stringify(arr));
+        localStorage.setItem("eduvantage_saved_opp_ids", JSON.stringify(arr));
+      } catch (_) {}
+
+      renderOpportunities();
+    }
+
+    function openOppDetails(id) {
+      const opp = getAllOpportunities().find(o => o.id === id);
+      if (!opp) return;
+      currentSelectedOpp = opp;
+
+      document.getElementById("modalOppCat").textContent = opp.category;
+      document.getElementById("modalOppVerification").textContent = opp.verificationStatus === "verified" ? "Verified Listing" : "Sample Reference Listing";
+      document.getElementById("modalOppTitle").textContent = opp.title;
+      document.getElementById("modalOppOrg").textContent = opp.organizer;
+      document.getElementById("modalOppDeadline").textContent = opp.deadline;
+      document.getElementById("modalOppMode").textContent = `${opp.mode || 'Online'}${opp.location ? ' • ' + opp.location : ''}`;
+      document.getElementById("modalOppReward").textContent = opp.prize || "Merit Certificate / Stipend";
+      document.getElementById("modalOppEligibility").textContent = opp.eligibility || "Open to all engineering students.";
+      document.getElementById("modalOppDesc").textContent = opp.description || "Student opportunity listing.";
+      document.getElementById("modalApplyLink").href = opp.applyUrl || "https://aicte-india.org";
+
+      document.getElementById("oppDetailsModal").classList.remove("hidden");
+    }
+
+    function closeOppModal() {
+      document.getElementById("oppDetailsModal").classList.add("hidden");
+    }
+
+    function reportCurrentOpp() {
+      if (!currentSelectedOpp) return;
+      EduPrep.reportContent("opportunity", currentSelectedOpp.id, "Student flagged opportunity listing", currentSelectedOpp.title);
+      EduPrep.showToast("Opportunity listing flagged for review in Admin Content Studio.", "info");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "eduprep",
+  "version": "1.0.0",
+  "description": "EduPrep — Your Exam Preparation Companion. Full-stack student exam preparation platform with curriculum discovery, PYQ archives, MCQ practice exams, 3D flashcards, and AI study assistant.",
+  "private": true,
+  "scripts": {
+    "dev": "node EduPrep/serve.js",
+    "start": "node EduPrep/serve.js",
+    "build": "node scripts/build.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "eduprep",
+    "exam-preparation",
+    "engineering",
+    "flashcards",
+    "mcq-exam",
+    "supabase"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3"
+  }
+}

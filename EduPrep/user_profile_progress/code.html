@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — Student Profile &amp; Progress</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_scroll_background.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <link rel="stylesheet" href="../shared/eduprep_chatbot.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fffbff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "surface-tint": "#494bd6",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "on-tertiary-fixed-variant": "#8c0053",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#3e0022",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-secondary-container": "#fefcff",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "on-secondary-fixed": "#001a42",
+            "background": "#f8f9fa",
+            "on-secondary-fixed-variant": "#004395",
+            "inverse-surface": "#2e3132",
+            "tertiary-fixed": "#ffd9e4",
+            "on-primary-fixed": "#07006c",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary-fixed-dim": "#ffb0cd",
+            "inverse-primary": "#c0c1ff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa",
+            "inverse-on-surface": "#f0f1f2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .academic-bg {
+      background-color: #f8f9fc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(70, 72, 212, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(177, 14, 107, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(70, 72, 212, 0.03) 0px, transparent 50%),
+        radial-gradient(#4648d4 0.6px, transparent 0.6px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+    }
+    :focus-visible {
+      outline: 2px solid #4648d4 !important;
+      outline-offset: 2px !important;
+    }
+  </style>
+</head>
+<body data-bg-intensity="subtle" class="bg-background text-on-background min-h-screen pb-24 md:pb-12 antialiased academic-bg">
+  
+  <!-- TopAppBar -->
+  <header class="w-full top-0 sticky bg-surface shadow-sm z-40 border-b border-surface-container">
+    <div class="flex justify-between items-center px-4 md:px-8 py-3 w-full max-w-6xl mx-auto">
+      <div class="flex items-center gap-3">
+        <a href="../home_dashboard/code.html" class="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors" title="Back to Dashboard">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-on-primary shadow-md">
+            <span class="material-symbols-outlined text-xl">person</span>
+          </div>
+          <div>
+            <span class="font-extrabold text-xl tracking-tight text-primary">EduPrep</span>
+            <span class="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">Profile &amp; Progress</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="../admin_panel/code.html" class="px-3.5 py-1.5 rounded-full border border-outline-variant hover:bg-surface-container text-xs font-bold text-on-surface flex items-center gap-1.5 transition-colors" title="Open Admin Content Studio">
+          <span class="material-symbols-outlined text-sm text-primary">admin_panel_settings</span>
+          <span class="hidden sm:inline">Admin Studio</span>
+        </a>
+        <button onclick="openEditProfileModal()" class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold hover:opacity-90 flex items-center gap-1 shadow-sm transition-opacity">
+          <span class="material-symbols-outlined text-sm">edit</span>
+          <span>Edit Profile</span>
+        </button>
+        <button onclick="handleSignOut()" class="p-2 rounded-full border border-outline-variant hover:bg-error-container/30 text-on-surface-variant hover:text-error transition-colors" title="Sign Out">
+          <span class="material-symbols-outlined text-base">logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 md:px-8 py-6 space-y-6">
+    
+    <!-- Profile Hero Card -->
+    <section class="flex flex-col md:flex-row items-center md:items-start gap-6 bg-surface-container-lowest p-6 md:p-8 rounded-2xl border border-outline-variant/30 ambient-shadow">
+      <!-- Avatar with Change Picture Controls -->
+      <div class="flex flex-col items-center shrink-0">
+        <div class="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-primary/20 shadow-md relative group">
+          <img id="profileAvatarImg" alt="Student Profile Picture" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTVTYsIgi8LHdNnRRuWq7WIQKHVif0TlNP2ZGt5StF7Jud3Gs6vJQFkiI_qUrzoEb70z07NIkSS2_FPOt1QOJAbG_z1UCQF3WZREwn8LQ303AF2KGL_FvIsWwcEBv_58SCacYxsAa4LwQhFIaWqE0p3A6nQmz2-PaZX8Kg5GnREbykYMsqeY9iQUPepRuFz-BLvUMNC7zQs_yEkbyzAAZa8CifAo7-8Qk5s6x_H8lKuQkdoWTzOKzRA"/>
+          <button onclick="openAvatarModal()" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity focus:opacity-100 focus:outline-none" title="Change Profile Picture">
+            <span class="material-symbols-outlined text-2xl">photo_camera</span>
+          </button>
+        </div>
+        <button onclick="openAvatarModal()" id="btnChangeAvatarHero" class="mt-2.5 px-3 py-1 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-primary flex items-center gap-1 transition-colors" title="Change Profile Picture">
+          <span class="material-symbols-outlined text-sm">photo_camera</span>
+          <span>Change Picture</span>
+        </button>
+        <button onclick="confirmRemoveAvatar()" id="btnRemoveAvatarHero" class="mt-1 text-[11px] font-semibold text-error hover:underline flex items-center gap-1" title="Restore Default Avatar">
+          <span>Remove Picture</span>
+        </button>
+      </div>
+
+      <!-- Identity Info -->
+      <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h1 class="text-xl md:text-2xl font-black text-on-surface" id="profileName">Aryan Sharma</h1>
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold" id="profileAuthBadge">Student Session</span>
+        </div>
+        
+        <p class="text-xs sm:text-sm text-on-surface-variant flex flex-wrap items-center justify-center md:justify-start gap-1.5 mb-3" id="profileCollegeUniv">
+          <span class="material-symbols-outlined text-sm text-primary">school</span>
+          <span>Vidyalankar Institute of Technology (VIT Wadala) • University of Mumbai</span>
+        </p>
+
+        <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+          <span class="bg-primary-fixed text-primary px-3 py-1 rounded-full text-xs font-bold" id="profileBranch">B.Tech • Computer Engineering</span>
+          <span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-xs font-bold" id="profileSem">Semester 4</span>
+          <span class="bg-secondary-fixed text-secondary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">bookmark</span>
+            <span id="profileBookmarksPill">0 Saved Items</span>
+          </span>
+        </div>
+
+        <div class="w-full max-w-md bg-surface-container-high rounded-full h-2.5 overflow-hidden">
+          <div id="profileCompletenessBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all" style="width: 100%"></div>
+        </div>
+        <span class="text-[11px] text-outline font-semibold mt-1" id="profileCompletenessLabel">Academic Context Configured</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
+        <a href="../academic_setup/code.html" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 flex items-center justify-center gap-1.5 shadow-sm transition-all" title="Open Study Planner and Syllabus Blueprint">
+          <span class="material-symbols-outlined text-base">explore</span>
+          <span>Curriculum Blueprint</span>
+        </a>
+        <button onclick="EduPrep.openSemesterModal(() => refreshProfileUI())" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-primary flex items-center justify-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-base">calendar_month</span>
+          <span>Switch Semester</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <div class="flex gap-2 border-b border-surface-container pb-2 text-xs font-bold overflow-x-auto">
+      <button onclick="setProfileTab('stats')" id="tabBtnStats" class="px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs transition-colors whitespace-nowrap">Real Progress Metrics</button>
+      <button onclick="setProfileTab('activity')" id="tabBtnActivity" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap">Quiz &amp; Bookmark History</button>
+      <button onclick="setProfileTab('badges')" id="tabBtnBadges" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap">Study Milestones</button>
+    </div>
+
+    <!-- TAB 1: REAL COMPUTED OVERVIEW STATS -->
+    <div id="tabContentStats" class="space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 ambient-shadow flex flex-col items-center justify-center text-center">
+          <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center mb-2 text-primary">
+            <span class="material-symbols-outlined">quiz</span>
+          </div>
+          <h3 class="text-2xl font-black text-on-surface" id="statQuizzes">0</h3>
+          <p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mt-0.5">MCQ Tests Taken</p>
+        </div>
+
+        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 ambient-shadow flex flex-col items-center justify-center text-center">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center mb-2 text-emerald-600">
+            <span class="material-symbols-outlined">analytics</span>
+          </div>
+          <h3 class="text-2xl font-black text-on-surface" id="statAccuracy">0%</h3>
+          <p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mt-0.5">Avg MCQ Accuracy</p>
+        </div>
+
+        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 ambient-shadow flex flex-col items-center justify-center text-center">
+          <div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center mb-2 text-tertiary">
+            <span class="material-symbols-outlined">style</span>
+          </div>
+          <h3 class="text-2xl font-black text-on-surface" id="statFlashcards">0</h3>
+          <p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mt-0.5">Flashcards Mastered</p>
+        </div>
+
+        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 ambient-shadow flex flex-col items-center justify-center text-center">
+          <div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center mb-2 text-secondary">
+            <span class="material-symbols-outlined">task_alt</span>
+          </div>
+          <h3 class="text-2xl font-black text-on-surface" id="statCompletedTopics">0</h3>
+          <p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mt-0.5">Topics Completed</p>
+        </div>
+
+      </div>
+
+      <!-- Calculated Study Effort Note -->
+      <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 ambient-shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="font-bold text-sm text-on-surface">Computed Study Time: <span class="text-primary font-black" id="statHours">0m</span></h3>
+          <p class="text-xs text-on-surface-variant mt-0.5">Calculated directly from your completed syllabus topics, mastered flashcards, and recorded MCQ quiz attempts (no artificial counters).</p>
+        </div>
+        <a href="../mcq_practice_exam/code.html" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 shrink-0">
+          Take Practice Quiz
+        </a>
+      </div>
+    </div>
+
+    <!-- TAB 2: QUIZ & BOOKMARK HISTORY -->
+    <div id="tabContentActivity" class="hidden space-y-4">
+      <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 ambient-shadow space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm text-on-surface">Recorded MCQ Quiz Attempts</h3>
+          <a href="../mcq_practice_exam/code.html" class="text-xs font-bold text-primary hover:underline">+ New Attempt</a>
+        </div>
+        <div id="quizHistoryContainer" class="space-y-2.5 text-xs">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MILESTONES & BADGES -->
+    <div id="tabContentBadges" class="hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="badgesGrid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-outline-variant/40 space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-surface-container pb-3">
+        <h3 class="font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">person_edit</span>
+          <span>Edit Student Profile &amp; Academic Context</span>
+        </h3>
+        <button onclick="closeEditProfileModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <!-- Profile Picture Customization Row -->
+        <div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/40 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/30 shrink-0">
+              <img id="editModalAvatarThumb" alt="Profile Picture Thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTVTYsIgi8LHdNnRRuWq7WIQKHVif0TlNP2ZGt5StF7Jud3Gs6vJQFkiI_qUrzoEb70z07NIkSS2_FPOt1QOJAbG_z1UCQF3WZREwn8LQ303AF2KGL_FvIsWwcEBv_58SCacYxsAa4LwQhFIaWqE0p3A6nQmz2-PaZX8Kg5GnREbykYMsqeY9iQUPepRuFz-BLvUMNC7zQs_yEkbyzAAZa8CifAo7-8Qk5s6x_H8lKuQkdoWTzOKzRA"/>
+            </div>
+            <div>
+              <span class="font-bold text-on-surface block text-xs">Profile Picture</span>
+              <span class="text-[11px] text-outline">JPG, PNG, WebP up to 3 MB</span>
+            </div>
+          </div>
+          <button type="button" onclick="openAvatarModal()" class="px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity">
+            Change Picture
+          </button>
+        </div>
+
+        <div>
+          <label for="inputEditName" class="font-bold text-on-surface block mb-1">Full Name</label>
+          <input id="inputEditName" class="w-full h-11 px-3.5 rounded-xl border border-outline-variant bg-surface-container-low focus:border-primary focus:ring-1 focus:ring-primary outline-none" type="text"/>
+          <p id="errEditName" class="hidden text-[11px] text-error font-semibold mt-1"></p>
+        </div>
+
+        <div>
+          <label for="selectEditUniversity" class="font-bold text-on-surface block mb-1">University</label>
+          <select id="selectEditUniversity" onchange="onEditUniversityChange()" class="w-full h-11 px-3.5 rounded-xl border border-outline-variant bg-surface-container-low focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+            <!-- Populated via script -->
+          </select>
+        </div>
+
+        <div>
+          <label for="selectEditCollege" class="font-bold text-on-surface block mb-1">College / Institute</label>
+          <select id="selectEditCollege" class="w-full h-11 px-3.5 rounded-xl border border-outline-variant bg-surface-container-low focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+            <!-- Populated via script -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="selectEditBranch" class="font-bold text-on-surface block mb-1">Branch</label>
+            <select id="selectEditBranch" class="w-full h-11 px-3 rounded-xl border border-outline-variant bg-surface-container-low focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <!-- Populated via script -->
+            </select>
+          </div>
+          <div>
+            <label for="selectEditSem" class="font-bold text-on-surface block mb-1">Semester (1–8)</label>
+            <select id="selectEditSem" class="w-full h-11 px-3 rounded-xl border border-outline-variant bg-surface-container-low focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-surface-container flex justify-end gap-2">
+        <button onclick="closeEditProfileModal()" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface">
+          Cancel
+        </button>
+        <button onclick="saveProfileChanges()" class="px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-opacity shadow-sm">
+          Save Profile Changes
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dedicated Profile Picture Customization Modal -->
+  <div id="avatarCustomizationModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-outline-variant/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-surface-container pb-3">
+        <h3 class="font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">account_circle</span>
+          <span>Profile Picture</span>
+        </h3>
+        <button onclick="closeAvatarModal()" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col items-center text-center space-y-3">
+        <!-- Live Circular Preview -->
+        <div class="w-28 h-28 rounded-full overflow-hidden border-4 border-primary/30 shadow-md">
+          <img id="avatarModalPreviewImg" alt="Profile Picture Preview" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKTVTYsIgi8LHdNnRRuWq7WIQKHVif0TlNP2ZGt5StF7Jud3Gs6vJQFkiI_qUrzoEb70z07NIkSS2_FPOt1QOJAbG_z1UCQF3WZREwn8LQ303AF2KGL_FvIsWwcEBv_58SCacYxsAa4LwQhFIaWqE0p3A6nQmz2-PaZX8Kg5GnREbykYMsqeY9iQUPepRuFz-BLvUMNC7zQs_yEkbyzAAZa8CifAo7-8Qk5s6x_H8lKuQkdoWTzOKzRA"/>
+        </div>
+
+        <div>
+          <button onclick="document.getElementById('avatarFileInput').click()" class="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 flex items-center gap-1.5 shadow-sm transition-all mx-auto">
+            <span class="material-symbols-outlined text-sm">upload_file</span>
+            <span>Upload From Device</span>
+          </button>
+          <input type="file" id="avatarFileInput" accept="image/png,image/jpeg,image/webp" class="hidden" onchange="handleAvatarFileSelect(event)"/>
+          <p class="text-[10px] text-outline mt-1.5">Supported: JPG, PNG, WebP (Max 3 MB)</p>
+        </div>
+
+        <!-- Validation Error Message -->
+        <div id="errAvatarUpload" class="hidden w-full p-2.5 rounded-xl bg-error-container/50 border border-error/20 text-error text-[11px] font-semibold text-left">
+          <!-- populated dynamically -->
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-surface-container flex items-center justify-between gap-2">
+        <button onclick="confirmRemoveAvatar()" id="btnModalRemoveAvatar" class="text-xs text-error font-bold hover:underline">
+          Remove Picture
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeAvatarModal()" class="px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface">
+            Cancel
+          </button>
+          <button onclick="saveAvatarModalPicture()" id="btnSaveAvatarModal" class="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity">
+            Save Picture
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BottomNavBar (Mobile Only) -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 bg-surface z-40 border-t border-surface-container shadow-lg">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../home_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">home</span>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../resources_dashboard/code.html">
+      <span class="material-symbols-outlined text-xl">library_books</span>
+      <span class="text-[10px] mt-0.5">Resources</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="../student_opportunities/code.html">
+      <span class="material-symbols-outlined text-xl">campaign</span>
+      <span class="text-[10px] mt-0.5">Updates</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all text-xs" href="javascript:void(0)" onclick="if(window.EduPrepChatbot) EduPrepChatbot.open();">
+      <span class="material-symbols-outlined text-xl">smart_toy</span>
+      <span class="text-[10px] mt-0.5">Study AI</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-primary font-bold transition-all text-xs" href="../user_profile_progress/code.html">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">person</span>
+      <span class="text-[10px] mt-0.5">Profile</span>
+    </a>
+  </nav>
+
+  <script src="../shared/env_config.js"></script>
+  <script src="../shared/supabase_client.js"></script>
+  <script src="../shared/eduprep_data.js"></script>
+  <script src="../shared/eduprep_services.js"></script>
+  <script src="../shared/eduprep_chatbot.js"></script>
+  <script src="../shared/eduprep_scroll_background.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      refreshProfileUI();
+      populateEditDropdowns();
+    });
+
+    function refreshProfileUI() {
+      const state = EduPrep.getState();
+      const metrics = EduPrep.getComputedMetrics();
+
+      document.getElementById("profileName").textContent = state.user.name || "Aryan Sharma";
+      
+      const col = EduPrep.colleges.find(c => c.id === state.academic.collegeId) || 
+                  EduPrep.colleges.find(c => c.name === state.academic.college);
+      const colCategory = col ? (col.isAutonomous ? "Autonomous" : "Affiliated") : "Autonomous";
+
+      document.getElementById("profileCollegeUniv").innerHTML = `
+        <span class="material-symbols-outlined text-sm text-primary">school</span>
+        <span>${state.academic.college || state.academic.collegeName}</span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary-fixed text-primary">${colCategory}</span>
+        <span>•</span>
+        <span>${state.academic.university || state.academic.universityName}</span>
+      `;
+      document.getElementById("profileBranch").textContent = `${state.academic.course || 'B.Tech'} • ${state.academic.branch || state.academic.branchName}`;
+      document.getElementById("profileSem").textContent = `Semester ${state.academic.semester || 4}`;
+      document.getElementById("profileBookmarksPill").textContent = `${metrics.totalBookmarks} Saved Item${metrics.totalBookmarks === 1 ? '' : 's'}`;
+
+      const currentAvatar = (state.user && state.user.avatar) || EduPrep.getDefaultAvatar();
+      const isDefault = currentAvatar === EduPrep.getDefaultAvatar();
+
+      const avatarHeroImg = document.getElementById("profileAvatarImg");
+      if (avatarHeroImg) avatarHeroImg.src = currentAvatar;
+
+      const editThumb = document.getElementById("editModalAvatarThumb");
+      if (editThumb) editThumb.src = currentAvatar;
+
+      const btnRemoveHero = document.getElementById("btnRemoveAvatarHero");
+      if (btnRemoveHero) {
+        if (isDefault) btnRemoveHero.classList.add("hidden");
+        else btnRemoveHero.classList.remove("hidden");
+      }
+
+      const btnRemoveModal = document.getElementById("btnModalRemoveAvatar");
+      if (btnRemoveModal) {
+        if (isDefault) btnRemoveModal.classList.add("hidden");
+        else btnRemoveModal.classList.remove("hidden");
+      }
+
+      // Real Computed Metrics (zero hardcoded fake counters)
+      document.getElementById("statQuizzes").textContent = String(metrics.testsTaken);
+      document.getElementById("statAccuracy").textContent = `${metrics.averageQuizScore}%`;
+      document.getElementById("statFlashcards").textContent = String(metrics.masteredFlashcards);
+      document.getElementById("statCompletedTopics").textContent = String(metrics.completedTopics);
+      document.getElementById("statHours").textContent = metrics.studyTimeLabel;
+
+      renderQuizHistory(state);
+      renderBadges(metrics);
+    }
+
+    function renderQuizHistory(state) {
+      const container = document.getElementById("quizHistoryContainer");
+      const scores = (state.progress && state.progress.quizScores) || [];
+      if (scores.length === 0) {
+        container.innerHTML = `<p class="text-on-surface-variant">No quiz attempts recorded yet. Take an MCQ Practice or Timed Exam to track your accuracy.</p>`;
+        return;
+      }
+      container.innerHTML = scores.map(item => `
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between gap-2">
+          <div>
+            <p class="font-bold text-on-surface">${item.subject || 'Operating Systems'} <span class="text-[10px] uppercase px-2 py-0.5 rounded bg-primary-fixed text-primary ml-1">${item.mode || 'practice'}</span></p>
+            <p class="text-[11px] text-outline mt-0.5">Date: ${item.date || 'Recent'} • Score: ${item.score}/${item.total}</p>
+          </div>
+          <span class="text-sm font-black text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">${item.accuracy || (item.scorePercent + '%')}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderBadges(metrics) {
+      const studentBadges = [
+        {
+          title: "First Topic Completed",
+          desc: `Completed ${metrics.completedTopics} syllabus topic(s)`,
+          unlocked: metrics.completedTopics >= 1,
+          icon: "menu_book"
+        },
+        {
+          title: "Flashcard Master",
+          desc: `Mastered ${metrics.masteredFlashcards} active-recall flashcard(s)`,
+          unlocked: metrics.masteredFlashcards >= 3,
+          icon: "style"
+        },
+        {
+          title: "MCQ Benchmark Solver",
+          desc: `Completed ${metrics.testsTaken} MCQ test session(s)`,
+          unlocked: metrics.testsTaken >= 1,
+          icon: "quiz"
+        },
+        {
+          title: "Distinction Accuracy",
+          desc: `Maintained ${metrics.averageQuizScore}% average MCQ accuracy (Target: ≥75%)`,
+          unlocked: metrics.testsTaken >= 1 && metrics.averageQuizScore >= 75,
+          icon: "workspace_premium"
+        },
+        {
+          title: "Resource Curator",
+          desc: `Bookmarked ${metrics.totalBookmarks} paper(s) or question(s)`,
+          unlocked: metrics.totalBookmarks >= 1,
+          icon: "bookmark_added"
+        },
+        {
+          title: "Consistent Scholar",
+          desc: `Logged ${metrics.studyTimeLabel} of computed study activity`,
+          unlocked: metrics.studyMinutes >= 30,
+          icon: "military_tech"
+        }
+      ];
+
+      const container = document.getElementById("badgesGrid");
+      container.innerHTML = studentBadges.map(b => `
+        <div class="p-4 bg-surface-container-lowest rounded-2xl border ${b.unlocked ? 'border-primary/40' : 'border-outline-variant/30 opacity-65'} ambient-shadow flex items-start gap-3">
+          <div class="w-11 h-11 rounded-xl ${b.unlocked ? 'bg-primary-fixed text-primary' : 'bg-surface-container text-outline'} flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-xl">${b.icon}</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h4 class="font-bold text-xs sm:text-sm text-on-surface">${b.title}</h4>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${b.unlocked ? 'bg-emerald-100 text-emerald-800' : 'bg-surface-container text-outline'}">${b.unlocked ? 'Unlocked' : 'In Progress'}</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">${b.desc}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setProfileTab(tab) {
+      ['tabBtnStats', 'tabBtnBadges', 'tabBtnActivity'].forEach(id => {
+        document.getElementById(id).className = "px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap";
+      });
+      ['tabContentStats', 'tabContentBadges', 'tabContentActivity'].forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+      });
+
+      if (tab === 'stats') {
+        document.getElementById('tabBtnStats').className = "px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs transition-colors whitespace-nowrap";
+        document.getElementById('tabContentStats').classList.remove("hidden");
+      } else if (tab === 'badges') {
+        document.getElementById('tabBtnBadges').className = "px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs transition-colors whitespace-nowrap";
+        document.getElementById('tabContentBadges').classList.remove("hidden");
+      } else if (tab === 'activity') {
+        document.getElementById('tabBtnActivity').className = "px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs transition-colors whitespace-nowrap";
+        document.getElementById('tabContentActivity').classList.remove("hidden");
+      }
+    }
+
+    function populateEditDropdowns() {
+      const state = EduPrep.getState();
+      const univSel = document.getElementById("selectEditUniversity");
+      univSel.innerHTML = EduPrep.universities.map(u => `
+        <option value="${u.id}">${u.name}</option>
+      `).join('');
+      univSel.value = state.academic.universityId || "mu";
+
+      onEditUniversityChange(state.academic.college);
+
+      const branchSel = document.getElementById("selectEditBranch");
+      branchSel.innerHTML = EduPrep.branches.map(b => `
+        <option value="${b.name}">${b.name}</option>
+      `).join('');
+    }
+
+    function onEditUniversityChange(preferredCollegeName) {
+      const univId = document.getElementById("selectEditUniversity").value;
+      const colleges = EduPrep.getColleges(univId);
+      const collegeSel = document.getElementById("selectEditCollege");
+      collegeSel.innerHTML = colleges.map(c => `
+        <option value="${c.name}">${c.name} (${c.location})</option>
+      `).join('');
+      if (preferredCollegeName && colleges.some(c => c.name === preferredCollegeName)) {
+        collegeSel.value = preferredCollegeName;
+      }
+    }
+
+    function openEditProfileModal() {
+      const state = EduPrep.getState();
+      document.getElementById("inputEditName").value = state.user.name || "";
+      document.getElementById("selectEditUniversity").value = state.academic.universityId || "mu";
+      onEditUniversityChange(state.academic.college);
+      document.getElementById("selectEditBranch").value = state.academic.branch;
+      document.getElementById("selectEditSem").value = String(state.academic.semester || 4);
+      document.getElementById("errEditName").classList.add("hidden");
+
+      document.getElementById("editProfileModal").classList.remove("hidden");
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById("editProfileModal").classList.add("hidden");
+    }
+
+    function saveProfileChanges() {
+      const name = document.getElementById("inputEditName").value.trim();
+      const errName = document.getElementById("errEditName");
+      if (!name || name.length < 2) {
+        errName.textContent = "Please enter your full name (at least 2 characters).";
+        errName.classList.remove("hidden");
+        return;
+      }
+      errName.classList.add("hidden");
+
+      const univId = document.getElementById("selectEditUniversity").value;
+      const univObj = EduPrep.universities.find(u => u.id === univId);
+      const collegeName = document.getElementById("selectEditCollege").value;
+      const colObj = EduPrep.colleges.find(c => c.name === collegeName);
+      const branchName = document.getElementById("selectEditBranch").value;
+      const branchObj = EduPrep.branches.find(b => b.name === branchName);
+      const sem = parseInt(document.getElementById("selectEditSem").value, 10);
+
+      EduPrep.updateProfile({ name: name });
+      EduPrep.updateAcademic({
+        universityId: univId,
+        university: univObj ? univObj.name : "University of Mumbai",
+        collegeId: colObj ? colObj.id : "",
+        college: collegeName,
+        branchId: branchObj ? branchObj.id : "ce",
+        branch: branchName,
+        semester: sem
+      });
+
+      closeEditProfileModal();
+      refreshProfileUI();
+      EduPrep.showToast("Student profile and academic setup saved!", "success");
+    }
+
+    let pendingAvatarDataUrl = null;
+
+    function openAvatarModal() {
+      const state = EduPrep.getState();
+      const currentAvatar = (state.user && state.user.avatar) || EduPrep.getDefaultAvatar();
+      pendingAvatarDataUrl = null;
+
+      const previewImg = document.getElementById("avatarModalPreviewImg");
+      if (previewImg) previewImg.src = currentAvatar;
+
+      const errEl = document.getElementById("errAvatarUpload");
+      if (errEl) {
+        errEl.textContent = "";
+        errEl.classList.add("hidden");
+      }
+
+      const fileInput = document.getElementById("avatarFileInput");
+      if (fileInput) fileInput.value = "";
+
+      const btnSave = document.getElementById("btnSaveAvatarModal");
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.textContent = "Save Picture";
+      }
+
+      const modal = document.getElementById("avatarCustomizationModal");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function closeAvatarModal() {
+      pendingAvatarDataUrl = null;
+      const fileInput = document.getElementById("avatarFileInput");
+      if (fileInput) fileInput.value = "";
+      const modal = document.getElementById("avatarCustomizationModal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function handleAvatarFileSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const errEl = document.getElementById("errAvatarUpload");
+      const previewImg = document.getElementById("avatarModalPreviewImg");
+
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (!allowedTypes.includes(file.type.toLowerCase())) {
+        if (errEl) {
+          errEl.textContent = "Unsupported file format. Please upload a JPEG, PNG, or WebP image.";
+          errEl.classList.remove("hidden");
+        }
+        return;
+      }
+
+      // Max size: 3 MB
+      const maxBytes = 3 * 1024 * 1024;
+      if (file.size > maxBytes) {
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        if (errEl) {
+          errEl.textContent = `File is too large (${sizeMb} MB). Maximum allowed size is 3 MB.`;
+          errEl.classList.remove("hidden");
+        }
+        return;
+      }
+
+      if (errEl) {
+        errEl.textContent = "";
+        errEl.classList.add("hidden");
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        pendingAvatarDataUrl = evt.target.result;
+        if (previewImg) previewImg.src = pendingAvatarDataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function saveAvatarModalPicture() {
+      if (!pendingAvatarDataUrl) {
+        closeAvatarModal();
+        return;
+      }
+
+      const btnSave = document.getElementById("btnSaveAvatarModal");
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.textContent = "Saving...";
+      }
+
+      try {
+        EduPrep.updateProfile({ avatar: pendingAvatarDataUrl });
+
+        if (window.EduPrepSupabase && window.EduPrepSupabase.client) {
+          const user = await window.EduPrepSupabase.auth.getUser().catch(() => null);
+          if (user && user.id) {
+            await window.EduPrepSupabase.client
+              .from("profiles")
+              .update({ avatar_url: pendingAvatarDataUrl, updated_at: new Date().toISOString() })
+              .eq("id", user.id)
+              .catch(() => null);
+          }
+        }
+
+        refreshProfileUI();
+        closeAvatarModal();
+        EduPrep.showToast("Profile picture updated successfully!", "success");
+      } catch (err) {
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.textContent = "Save Picture";
+        }
+        EduPrep.showToast("Failed to save profile picture. Please try again.", "error");
+      }
+    }
+
+    async function confirmRemoveAvatar() {
+      const defaultAvatar = EduPrep.getDefaultAvatar();
+      EduPrep.updateProfile({ avatar: defaultAvatar });
+
+      if (window.EduPrepSupabase && window.EduPrepSupabase.client) {
+        const user = await window.EduPrepSupabase.auth.getUser().catch(() => null);
+        if (user && user.id) {
+          await window.EduPrepSupabase.client
+            .from("profiles")
+            .update({ avatar_url: defaultAvatar, updated_at: new Date().toISOString() })
+            .eq("id", user.id)
+            .catch(() => null);
+        }
+      }
+
+      refreshProfileUI();
+      closeAvatarModal();
+      EduPrep.showToast("Profile picture removed. Default avatar restored.", "info");
+    }
+
+    async function handleSignOut() {
+      EduPrep.showToast("Signing out of EduPrep session...", "info");
+      if (window.EduPrep && typeof window.EduPrep.logout === "function") {
+        await window.EduPrep.logout();
+      } else if (window.EduPrepSupabase && window.EduPrepSupabase.auth) {
+        await window.EduPrepSupabase.auth.signOut();
+        window.location.href = "../login_registration/code.html";
+      }
+    }
+  </script>
+</body>
+</html>

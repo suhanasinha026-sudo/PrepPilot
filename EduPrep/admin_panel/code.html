@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EduPrep — Admin Content Management</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/eduprep_design_system.css"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e1e3e4",
+            "primary-container": "#6063ee",
+            "primary-fixed": "#e1e0ff",
+            "tertiary-container": "#d23284",
+            "on-surface-variant": "#464554",
+            "surface-container": "#edeeef",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#fffbff",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#767586",
+            "primary": "#4648d4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e7e8e9",
+            "tertiary": "#b10e6b",
+            "surface-container-low": "#f3f4f5",
+            "outline-variant": "#c7c4d7",
+            "secondary": "#0058be",
+            "error-container": "#ffdad6",
+            "background": "#f8f9fa",
+            "tertiary-fixed": "#ffd9e4",
+            "secondary-fixed": "#d8e2ff",
+            "on-surface": "#191c1d",
+            "surface": "#f8f9fa"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="w-full top-0 sticky bg-surface-container-lowest shadow-xs z-40 border-b border-surface-container">
+    <div class="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="../home_dashboard/code.html" class="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors" title="Back to Student Dashboard">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
+            EP
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg text-primary tracking-tight">EduPrep</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary">Admin Content Studio</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant hidden sm:block">Manage Academic Catalog, Question Papers, MCQs, Flashcards & Opportunities</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span id="roleStatusBadge" class="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">verified_user</span>
+          <span id="roleStatusText">Role: Student</span>
+        </span>
+        <button id="toggleAdminRoleBtn" onclick="toggleDemoAdminRole()" class="px-3.5 py-1.5 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-surface-container text-xs font-bold text-on-surface transition-colors">
+          Switch Role (Demo)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto w-full px-4 md:px-8 py-8 flex-1 space-y-6">
+    <!-- Role Guard Notice -->
+    <div id="unauthorizedNotice" class="hidden bg-error-container/40 border border-error/30 rounded-2xl p-6 text-center space-y-3">
+      <span class="material-symbols-outlined text-4xl text-error">lock</span>
+      <h1 class="text-lg font-extrabold text-on-surface">Admin Authorization Required</h1>
+      <p class="text-xs sm:text-sm text-on-surface-variant max-w-xl mx-auto">
+        Your current profile role is <strong class="text-on-surface">student</strong>. In production, Supabase Row Level Security (`public.is_admin()`) restricts write access on catalog tables to administrators. For local review and evaluation, click the button below to elevate your local session to Admin Role.
+      </p>
+      <button onclick="enableAdminRoleNow()" class="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-95 shadow-sm">
+        Activate Admin Role for Local Review
+      </button>
+    </div>
+
+    <!-- Admin Workspace -->
+    <div id="adminWorkspaceContent" class="space-y-6">
+      <!-- Summary Metrics -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40">
+          <span class="text-[11px] font-semibold text-on-surface-variant block">Universities</span>
+          <span class="text-xl font-black text-primary" id="statAdminUnivs">0</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40">
+          <span class="text-[11px] font-semibold text-on-surface-variant block">Colleges</span>
+          <span class="text-xl font-black text-secondary" id="statAdminCols">0</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40">
+          <span class="text-[11px] font-semibold text-on-surface-variant block">Past Papers</span>
+          <span class="text-xl font-black text-primary" id="statAdminPapers">0</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40">
+          <span class="text-[11px] font-semibold text-on-surface-variant block">MCQ Bank</span>
+          <span class="text-xl font-black text-emerald-700" id="statAdminMcqs">0</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40">
+          <span class="text-[11px] font-semibold text-on-surface-variant block">Flashcards</span>
+          <span class="text-xl font-black text-tertiary" id="statAdminFlash">0</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40">
+          <span class="text-[11px] font-semibold text-on-surface-variant block">Opportunities</span>
+          <span class="text-xl font-black text-amber-700" id="statAdminOpps">0</span>
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="flex flex-wrap gap-2 border-b border-surface-container pb-3">
+        <button onclick="switchAdminTab('mcq')" id="tab-mcq" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-primary text-white">Add Practice MCQ</button>
+        <button onclick="switchAdminTab('flashcard')" id="tab-flashcard" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high">Add Flashcard</button>
+        <button onclick="switchAdminTab('paper')" id="tab-paper" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high">Add Question Paper</button>
+        <button onclick="switchAdminTab('opportunity')" id="tab-opportunity" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high">Add Opportunity</button>
+        <button onclick="switchAdminTab('college')" id="tab-college" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high">Add College / Subject</button>
+        <button onclick="switchAdminTab('reports')" id="tab-reports" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high">Content Reports</button>
+      </div>
+
+      <!-- Inline Feedback Banner -->
+      <div id="adminFeedbackBanner" class="hidden p-3.5 rounded-xl border text-xs font-semibold flex items-center justify-between">
+        <span id="adminFeedbackText"></span>
+        <button onclick="document.getElementById('adminFeedbackBanner').classList.add('hidden')" class="material-symbols-outlined text-sm">close</button>
+      </div>
+
+      <!-- Panel 1: Add MCQ -->
+      <section id="panel-mcq" class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-4">
+        <h2 class="font-bold text-base text-on-surface">Create Validated Multiple-Choice Question (MCQ)</h2>
+        <form id="formAddMcq" onsubmit="handleCreateMcq(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="block font-semibold mb-1">Subject *</label>
+            <select id="mcqSubject" required class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="Operating Systems">Operating Systems (CSC401)</option>
+              <option value="Computer Networks">Computer Networks (CSC402)</option>
+              <option value="Database Management Systems">Database Management Systems (CSC403)</option>
+              <option value="Data Structures & Algorithms">Data Structures & Algorithms (CSC404)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Syllabus Unit *</label>
+            <input id="mcqUnit" type="text" required value="Unit 1" class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. Unit 3"/>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Question Stem (min 10 characters) *</label>
+            <textarea id="mcqText" rows="2" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Enter a clear, unambiguous university exam multiple-choice question..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Option A *</label>
+            <input id="mcqOpt0" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="First choice"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Option B *</label>
+            <input id="mcqOpt1" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Second choice"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Option C *</label>
+            <input id="mcqOpt2" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Third choice"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Option D *</label>
+            <input id="mcqOpt3" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Fourth choice"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Correct Option *</label>
+            <select id="mcqCorrectIdx" required class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="0">Option A</option>
+              <option value="1">Option B</option>
+              <option value="2">Option C</option>
+              <option value="3">Option D</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Difficulty *</label>
+            <select id="mcqDifficulty" class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="Low">Easy</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">Hard</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Detailed Answer Explanation *</label>
+            <textarea id="mcqExplanation" rows="2" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Explain why the correct option is right and why distractors fail..."></textarea>
+          </div>
+          <div class="md:col-span-2 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:opacity-95">
+              Publish Question to MCQ Bank
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel 2: Add Flashcard -->
+      <section id="panel-flashcard" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-4">
+        <h2 class="font-bold text-base text-on-surface">Create Revision Flashcard</h2>
+        <form onsubmit="handleCreateFlashcard(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="block font-semibold mb-1">Subject *</label>
+            <select id="fcSubject" required class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="Operating Systems">Operating Systems</option>
+              <option value="Computer Networks">Computer Networks</option>
+              <option value="Database Management Systems">Database Management Systems</option>
+              <option value="Data Structures & Algorithms">Data Structures & Algorithms</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Topic / Unit Tag *</label>
+            <input id="fcTopic" type="text" required value="Core Concept" class="w-full rounded-xl border-outline-variant text-xs"/>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Front Side (Prompt / Term / Formula Question) *</label>
+            <input id="fcFront" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. State Amdahl's Law speedup formula"/>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Back Side (Concise Exam Definition / Formula) *</label>
+            <textarea id="fcBack" rows="3" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Enter clear answer shown when the card flips..."></textarea>
+          </div>
+          <div class="md:col-span-2 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:opacity-95">
+              Publish Flashcard
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel 3: Add Question Paper -->
+      <section id="panel-paper" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-4">
+        <h2 class="font-bold text-base text-on-surface">Publish Past Question Paper Record (PYQ)</h2>
+        <form onsubmit="handleCreatePaper(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div>
+            <label class="block font-semibold mb-1">Subject Name *</label>
+            <select id="pyqSubject" required class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="Operating Systems" data-code="CSC401">Operating Systems (CSC401)</option>
+              <option value="Computer Networks" data-code="CSC402">Computer Networks (CSC402)</option>
+              <option value="Database Management Systems" data-code="CSC403">Database Management Systems (CSC403)</option>
+              <option value="Analysis of Algorithms" data-code="CSC404">Analysis of Algorithms (CSC404)</option>
+              <option value="Microprocessor & Interfacing" data-code="CSC405">Microprocessor & Interfacing (CSC405)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Exam Year *</label>
+            <select id="pyqYear" required class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="2025">2025</option>
+              <option value="2024" selected>2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Exam Session *</label>
+            <select id="pyqSession" required class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="May">May / June</option>
+              <option value="Dec">Nov / Dec</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Semester (1–8) *</label>
+            <input id="pyqSemester" type="number" min="1" max="8" value="4" required class="w-full rounded-xl border-outline-variant text-xs"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Verification Status *</label>
+            <select id="pyqStatus" class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="verified">Verified Institutional Paper</option>
+              <option value="sample" selected>Sample / Practice Paper</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">External PDF URL (Optional)</label>
+            <input id="pyqUrl" type="url" class="w-full rounded-xl border-outline-variant text-xs" placeholder="https://..."/>
+          </div>
+          <div class="md:col-span-3 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:opacity-95">
+              Publish Question Paper
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel 4: Add Opportunity -->
+      <section id="panel-opportunity" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-4">
+        <h2 class="font-bold text-base text-on-surface">Publish Student Opportunity</h2>
+        <form onsubmit="handleCreateOpportunity(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="block font-semibold mb-1">Opportunity Title *</label>
+            <input id="oppTitle" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. Summer Systems Research Internship"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Organization / Host *</label>
+            <input id="oppOrg" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. IIT Bombay FOSSEE"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Category *</label>
+            <select id="oppCat" class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="Hackathon">Hackathon</option>
+              <option value="Internship">Internship</option>
+              <option value="Scholarship">Scholarship</option>
+              <option value="Event">Workshop / Event</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Application Deadline *</label>
+            <input id="oppDeadline" type="date" required value="2026-12-15" class="w-full rounded-xl border-outline-variant text-xs"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Mode & Location *</label>
+            <input id="oppLocation" type="text" required value="Online / Hybrid" class="w-full rounded-xl border-outline-variant text-xs"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Stipend / Prize / Benefit *</label>
+            <input id="oppPrize" type="text" required value="Certificate & Fellowship Stipend" class="w-full rounded-xl border-outline-variant text-xs"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Official Registration Link (https://) *</label>
+            <input id="oppUrl" type="url" required value="https://fossee.in" class="w-full rounded-xl border-outline-variant text-xs"/>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Listing Verification Badge *</label>
+            <select id="oppVerification" class="w-full rounded-xl border-outline-variant text-xs">
+              <option value="verified">Verified Official Link</option>
+              <option value="sample" selected>Sample / Demo Listing</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Eligibility & Description *</label>
+            <textarea id="oppDesc" rows="2" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="Describe student eligibility criteria and deliverables..."></textarea>
+          </div>
+          <div class="md:col-span-2 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:opacity-95">
+              Publish Opportunity Listing
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel 5: Add College / Subject -->
+      <section id="panel-college" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-6">
+        <div>
+          <h2 class="font-bold text-base text-on-surface mb-3">Add Affiliated or Autonomous College</h2>
+          <form onsubmit="handleCreateCollege(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div>
+              <label class="block font-semibold mb-1">Parent University *</label>
+              <select id="colUnivId" required class="w-full rounded-xl border-outline-variant text-xs"></select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">College Full Name *</label>
+              <input id="colName" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. Fr. Conceicao Rodrigues College of Engineering"/>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Shortcode / Abbreviation *</label>
+              <input id="colShort" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. FRCRCE"/>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">City / Location *</label>
+              <input id="colLocation" type="text" required class="w-full rounded-xl border-outline-variant text-xs" placeholder="e.g. Bandra, Mumbai"/>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Institution Type *</label>
+              <select id="colAuto" class="w-full rounded-xl border-outline-variant text-xs">
+                <option value="true">Autonomous Institution</option>
+                <option value="false">Affiliated College</option>
+              </select>
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:opacity-95">
+                Add College to Directory
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Panel 6: Content Reports -->
+      <section id="panel-reports" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-4">
+        <h2 class="font-bold text-base text-on-surface">Student-Submitted Content Reports</h2>
+        <div id="reportsListContainer" class="space-y-2.5 text-xs"></div>
+      </section>
+
+      <!-- Custom Added Items List -->
+      <section class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/40 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm text-on-surface">Custom Admin-Added Catalog Entries</h3>
+          <span class="text-xs text-on-surface-variant" id="customItemsCountLabel">0 Custom Entries</span>
+        </div>
+        <div id="customItemsList" class="space-y-2 text-xs"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../shared/eduprep_data.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      populateUniversityDropdown();
+      refreshAdminView();
+    });
+
+    function populateUniversityDropdown() {
+      const sel = document.getElementById("colUnivId");
+      if (!sel) return;
+      sel.innerHTML = EduPrep.universities.map(u => `<option value="${u.id}">${u.name} (${u.shortName})</option>`).join("");
+    }
+
+    function refreshAdminView() {
+      const state = EduPrep.getState();
+      const isAdmin = state.user && state.user.role === "admin";
+      const badge = document.getElementById("roleStatusBadge");
+      const text = document.getElementById("roleStatusText");
+
+      if (isAdmin) {
+        badge.className = "text-xs font-bold px-3 py-1.5 rounded-full bg-primary-fixed text-primary flex items-center gap-1";
+        text.textContent = "Role: Admin (Authorized)";
+        document.getElementById("unauthorizedNotice").classList.add("hidden");
+        document.getElementById("adminWorkspaceContent").classList.remove("hidden");
+      } else {
+        badge.className = "text-xs font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1";
+        text.textContent = "Role: Student (Read-Only)";
+        document.getElementById("unauthorizedNotice").classList.remove("hidden");
+        document.getElementById("adminWorkspaceContent").classList.add("hidden");
+      }
+
+      document.getElementById("statAdminUnivs").textContent = EduPrep.universities.length;
+      document.getElementById("statAdminCols").textContent = EduPrep.colleges.length;
+      document.getElementById("statAdminPapers").textContent = EduPrep.pyqPapers.length;
+      document.getElementById("statAdminMcqs").textContent = EduPrep.getMcqBank().length;
+      document.getElementById("statAdminFlash").textContent = EduPrep.getFlashcards().length;
+      document.getElementById("statAdminOpps").textContent = EduPrep.opportunities.length;
+
+      renderCustomItems();
+      renderContentReports();
+    }
+
+    function toggleDemoAdminRole() {
+      const state = EduPrep.getState();
+      const nextRole = state.user.role === "admin" ? "student" : "admin";
+      EduPrep.updateProfile({ role: nextRole });
+      refreshAdminView();
+      EduPrep.showToast(`Switched session role to ${nextRole.toUpperCase()}`, "info");
+    }
+
+    function enableAdminRoleNow() {
+      EduPrep.updateProfile({ role: "admin" });
+      refreshAdminView();
+      EduPrep.showToast("Admin role activated for local content management.", "success");
+    }
+
+    function switchAdminTab(tabKey) {
+      ["mcq", "flashcard", "paper", "opportunity", "college", "reports"].forEach(k => {
+        const btn = document.getElementById(`tab-${k}`);
+        const panel = document.getElementById(`panel-${k}`);
+        if (k === tabKey) {
+          btn.className = "admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-primary text-white";
+          panel.classList.remove("hidden");
+        } else {
+          btn.className = "admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high";
+          panel.classList.add("hidden");
+        }
+      });
+    }
+
+    function showFeedback(message, isError = false) {
+      const banner = document.getElementById("adminFeedbackBanner");
+      const text = document.getElementById("adminFeedbackText");
+      banner.className = isError
+        ? "p-3.5 rounded-xl border border-error bg-error-container/40 text-error text-xs font-semibold flex items-center justify-between"
+        : "p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-50 text-emerald-900 text-xs font-semibold flex items-center justify-between";
+      text.textContent = message;
+      banner.classList.remove("hidden");
+    }
+
+    function handleCreateMcq(e) {
+      e.preventDefault();
+      const item = {
+        id: "mcq_custom_" + Date.now(),
+        subject: document.getElementById("mcqSubject").value,
+        unit: document.getElementById("mcqUnit").value.trim(),
+        topic: document.getElementById("mcqUnit").value.trim(),
+        q: document.getElementById("mcqText").value.trim(),
+        options: [
+          document.getElementById("mcqOpt0").value.trim(),
+          document.getElementById("mcqOpt1").value.trim(),
+          document.getElementById("mcqOpt2").value.trim(),
+          document.getElementById("mcqOpt3").value.trim()
+        ],
+        answer: parseInt(document.getElementById("mcqCorrectIdx").value, 10),
+        ans: parseInt(document.getElementById("mcqCorrectIdx").value, 10),
+        difficulty: document.getElementById("mcqDifficulty").value,
+        explanation: document.getElementById("mcqExplanation").value.trim(),
+        verificationStatus: "verified"
+      };
+
+      if (window.EduPrepServices && window.EduPrepServices.Validation) {
+        const check = window.EduPrepServices.Validation.validateMcqSubmission(item);
+        if (!check.valid) {
+          showFeedback(check.error, true);
+          return;
+        }
+      }
+
+      EduPrep.addAdminItem("mcqs", item);
+      e.target.reset();
+      refreshAdminView();
+      showFeedback(`Published MCQ "${item.q.slice(0, 50)}..." to ${item.subject}!`);
+    }
+
+    function handleCreateFlashcard(e) {
+      e.preventDefault();
+      const item = {
+        id: "fc_custom_" + Date.now(),
+        subject: document.getElementById("fcSubject").value,
+        topic: document.getElementById("fcTopic").value.trim(),
+        q: document.getElementById("fcFront").value.trim(),
+        a: document.getElementById("fcBack").value.trim(),
+        difficulty: "Medium"
+      };
+      if (item.q.length < 4 || item.a.length < 4) {
+        showFeedback("Both front and back text must be at least 4 characters.", true);
+        return;
+      }
+      EduPrep.addAdminItem("flashcards", item);
+      e.target.reset();
+      refreshAdminView();
+      showFeedback(`Added Flashcard "${item.q}" to ${item.subject}!`);
+    }
+
+    function handleCreatePaper(e) {
+      e.preventDefault();
+      const sel = document.getElementById("pyqSubject");
+      const subjectName = sel.value;
+      const code = sel.options[sel.selectedIndex].dataset.code || "CSC401";
+      const year = document.getElementById("pyqYear").value;
+      const session = document.getElementById("pyqSession").value;
+      const semester = parseInt(document.getElementById("pyqSemester").value, 10);
+      const status = document.getElementById("pyqStatus").value;
+      const url = document.getElementById("pyqUrl").value.trim();
+
+      const item = {
+        id: `pyq_custom_${Date.now()}`,
+        university: "University of Mumbai",
+        universityId: "mu",
+        subject: subjectName,
+        subjectCode: code,
+        code: code,
+        semester: semester,
+        year: year,
+        session: session,
+        examPeriod: `${session} ${year}`,
+        paperCode: `${code}-${session.toUpperCase()}${year.slice(-2)}`,
+        maxMarks: 80,
+        marks: 80,
+        duration: "3 Hours",
+        questionsCount: 6,
+        isSolved: true,
+        solved: true,
+        verificationStatus: status,
+        isSample: status === "sample",
+        externalUrl: url || null
+      };
+
+      EduPrep.addAdminItem("papers", item);
+      e.target.reset();
+      refreshAdminView();
+      showFeedback(`Published ${subjectName} (${session} ${year}) question paper!`);
+    }
+
+    function handleCreateOpportunity(e) {
+      e.preventDefault();
+      const deadlineDate = document.getElementById("oppDeadline").value;
+      const item = {
+        id: "opp_custom_" + Date.now(),
+        title: document.getElementById("oppTitle").value.trim(),
+        organizer: document.getElementById("oppOrg").value.trim(),
+        category: document.getElementById("oppCat").value,
+        deadline: deadlineDate,
+        deadlineDate: deadlineDate,
+        location: document.getElementById("oppLocation").value.trim(),
+        mode: document.getElementById("oppLocation").value.trim(),
+        prize: document.getElementById("oppPrize").value.trim(),
+        applyUrl: document.getElementById("oppUrl").value.trim(),
+        verificationStatus: document.getElementById("oppVerification").value,
+        isSample: document.getElementById("oppVerification").value === "sample",
+        eligibility: document.getElementById("oppDesc").value.trim(),
+        description: document.getElementById("oppDesc").value.trim(),
+        tags: [document.getElementById("oppCat").value, document.getElementById("oppVerification").value === "verified" ? "Verified" : "Sample Listing"]
+      };
+      EduPrep.addAdminItem("opportunities", item);
+      e.target.reset();
+      refreshAdminView();
+      showFeedback(`Published Opportunity "${item.title}"!`);
+    }
+
+    function handleCreateCollege(e) {
+      e.preventDefault();
+      const isAuto = document.getElementById("colAuto").value === "true";
+      const item = {
+        id: "col_custom_" + Date.now(),
+        universityId: document.getElementById("colUnivId").value,
+        name: document.getElementById("colName").value.trim(),
+        abbreviation: document.getElementById("colShort").value.trim().toUpperCase(),
+        location: document.getElementById("colLocation").value.trim(),
+        city: document.getElementById("colLocation").value.trim(),
+        code: String(Math.floor(1000 + Math.random() * 9000)),
+        isAutonomous: isAuto,
+        category: isAuto ? "Autonomous Institution" : "Affiliated College",
+        badge: isAuto ? "Autonomous" : "Affiliated"
+      };
+      EduPrep.addAdminItem("colleges", item);
+      e.target.reset();
+      refreshAdminView();
+      showFeedback(`Added ${item.name} (${item.abbreviation}) to the college directory!`);
+    }
+
+    function renderCustomItems() {
+      const cat = EduPrep.getAdminCatalog();
+      const rows = [];
+      Object.keys(cat).forEach(key => {
+        (cat[key] || []).forEach(item => {
+          rows.push({
+            category: key,
+            id: item.id || item.code,
+            label: item.title || item.name || item.q || item.subject || item.id
+          });
+        });
+      });
+
+      document.getElementById("customItemsCountLabel").textContent = `${rows.length} Custom Entries`;
+      const container = document.getElementById("customItemsList");
+      if (rows.length === 0) {
+        container.innerHTML = `<p class="text-on-surface-variant py-3 text-center">No custom catalog items added in this browser session yet. Use any tab above to add items.</p>`;
+        return;
+      }
+
+      container.innerHTML = rows.map(r => `
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between gap-2">
+          <div>
+            <span class="px-2 py-0.5 rounded bg-primary-fixed text-primary font-bold uppercase text-[10px] mr-2">${r.category}</span>
+            <span class="font-semibold text-on-surface">${r.label}</span>
+          </div>
+          <button onclick="removeCustomEntry('${r.category}', '${r.id}')" class="px-2.5 py-1 rounded-lg bg-error-container text-error font-bold text-[11px] hover:opacity-90">
+            Delete
+          </button>
+        </div>
+      `).join("");
+    }
+
+    function removeCustomEntry(cat, id) {
+      EduPrep.deleteAdminItem(cat, id);
+      refreshAdminView();
+      EduPrep.showToast("Removed custom catalog item.", "info");
+    }
+
+    function renderContentReports() {
+      const reports = EduPrep.getContentReports();
+      const container = document.getElementById("reportsListContainer");
+      if (!reports || reports.length === 0) {
+        container.innerHTML = `<p class="text-on-surface-variant py-4 text-center">No content reports submitted by students yet.</p>`;
+        return;
+      }
+      container.innerHTML = reports.map(rep => `
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-center justify-between">
+          <div>
+            <span class="font-bold text-primary uppercase text-[10px]">${rep.itemType} • ${rep.itemId}</span>
+            <p class="font-semibold text-on-surface mt-0.5">${rep.reason}</p>
+            <p class="text-on-surface-variant text-[11px]">${rep.details || ''}</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px] uppercase">${rep.status}</span>
+        </div>
+      `).join("");
+    }
+  </script>
+</body>
+</html>
