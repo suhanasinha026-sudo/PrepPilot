@@ -2,6 +2,7 @@
   "version": 2,
   "name": "eduprep",
   "cleanUrls": false,
+  "outputDirectory": ".",
   "rewrites": [
     {
       "source": "/api/ai-assistant",
